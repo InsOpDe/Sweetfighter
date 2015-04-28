@@ -25,8 +25,8 @@ var multiplayer = {
 //                if(actions['blue'])keyboard.state[action] = actions['blue'][action];
 //                if(actions['red'])keyboard.state[action] = actions['red'][action];
 //            }
-            keyboard.player['blue'] = actions['blue']
-            keyboard.player['red'] = actions['red']
+            if(actions['blue']) keyboard.player['blue'] = actions['blue']
+            if(actions['red']) keyboard.player['red'] = actions['red']
 //            console.log(keyboard.state );
 //            if(actions['blue'])keyboard.state = actions['blue'];
 //            else if(actions['red'])keyboard.state = actions['red'];
