@@ -15,26 +15,17 @@ var multiplayer = {
     
     run:function(){
         multiplayer.socket.on('command', function (data) {
-//            console.log(data);
-//            chat.display(data);
             var actions = data.actions;
-//            console.log( actions['blue'] );
-//            console.log( actions['red']  );
             
-//            for (var action in keyboard.state){
-//                if(actions['blue'])keyboard.state[action] = actions['blue'][action];
-//                if(actions['red'])keyboard.state[action] = actions['red'][action];
-//            }
-            if(actions['blue']) keyboard.player['blue'] = actions['blue']
-            if(actions['red']) keyboard.player['red'] = actions['red']
-//            console.log(keyboard.state );
-//            if(actions['blue'])keyboard.state = actions['blue'];
-//            else if(actions['red'])keyboard.state = actions['red'];
+            //hier werden die positionen übertragen
+            for(var color in actions){
+                if(game[color])game[color].x = actions[color].x
+                if(game[color])game[color].y = actions[color].y
+            }
             
-//            keyboard.state[action]=data.state;
 
-            
         });
     
-    }
+    },
+
 };

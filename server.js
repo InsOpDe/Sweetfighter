@@ -26,67 +26,73 @@ app.get('/', function (req, res) {
 var clients = {};    
 var intervalTimer = 50;
 var controls = {};
+var character = [];
+    character["blue"] = {x:0,y:0,hp:100};
+    character["red"] = {x:0,y:0,hp:100};
 
 // Websocket
 io.sockets.on('connection', function (socket) {
-        clients[socket.id] = socket;
-        socket.controls = [];
-        
-        // der Client ist verbunden
-	socket.emit('chat', { tick: new Date(), text: 'Du bist nun mit dem Server verbunden!' });
-        
-        socket.emit('chat', { tick: new Date(), text: 'Du bist Spieler: '+team[team.length-1] });
-        console.log("Player "+team[team.length-1]+" joined");
-        socket.emit('gameOptions', { team: team[team.length-1] });
+    
+    clients[socket.id] = socket;
+    socket.controls = [];
 
-        //disconnect old Player if new Player (same Team) logs in elsewhere
-        for(var socketId in player){
-            if(player[socketId].color == team[team.length-1]){
-                clients[socketId].disconnect();
-                delete player[socketId]
-            }
+    // der Client ist verbunden
+    socket.emit('chat', { tick: new Date(), text: 'Du bist nun mit dem Server verbunden!' });
+
+    socket.emit('chat', { tick: new Date(), text: 'Du bist Spieler: '+team[team.length-1] });
+    console.log("Player "+team[team.length-1]+" joined");
+    
+    // options an client schicken
+    var options = {
+        mapX : 800,
+        mapY : 600,
+        player1 : team[team.length-1],
+        playerStartDelta : 100,
+    }
+    
+    options.player1start = character["blue"].x = options.playerStartDelta;
+    options.player2start = character["red"].x = options.mapX - options.playerStartDelta;
+    character["blue"].y=character["red"].y= options.mapY;
+    socket.emit('gameOptions', options );
+    
+
+    //disconnect old Player if new Player (same Team) logs in elsewhere
+    for(var socketId in player){
+        if(player[socketId].color == team[team.length-1]){
+            clients[socketId].disconnect();
+            delete player[socketId]
         }
-        player[socket.id] = {};
-        player[socket.id].color = team[team.length-1];
-        controls[player[socket.id].color] = { left:false , right:false , moveup:false , movedown:false};
-        team.pop();
+    }
+    player[socket.id] = {};
+    player[socket.id].color = team[team.length-1];
+    controls[player[socket.id].color] = { left:false , right:false , moveup:false , movedown:false};
+    team.pop();
 
-	
+
+
+    // wenn ein Benutzer einen Text senden
+    socket.on('chat', function (data) {
+            var cur = new Date();
+            // so wird dieser Text an alle anderen Benutzer gesendet
+            io.sockets.emit('chat', { tick: cur, player: data.name || 'Anonym', text: data.text });
+            console.log( 
+                    "["+ (cur.getHours()<10?'0'+cur.getHours():cur.getHours())
+                    +":"+(cur.getMinutes()<10?'0'+cur.getMinutes():cur.getMinutes())
+                    +":"+(cur.getSeconds()<10?'0'+cur.getSeconds():cur.getSeconds()) 
+                    +"] " +(data.name || 'Anonym') + ": " + data.text );
+    });
         
-	// wenn ein Benutzer einen Text senden
-	socket.on('chat', function (data) {
-                var cur = new Date();
-		// so wird dieser Text an alle anderen Benutzer gesendet
-		io.sockets.emit('chat', { tick: cur, player: data.name || 'Anonym', text: data.text });
-		console.log( 
-                        "["+ (cur.getHours()<10?'0'+cur.getHours():cur.getHours())
-                        +":"+(cur.getMinutes()<10?'0'+cur.getMinutes():cur.getMinutes())
-                        +":"+(cur.getSeconds()<10?'0'+cur.getSeconds():cur.getSeconds()) 
-                        +"] " +(data.name || 'Anonym') + ": " + data.text );
-	});
-        
-        //Processing commands
-        socket.on('command', function (data) {
-           var action = data.action;
-//           console.lo
-//            console.log(player[socket.id]);
-            controls[player[socket.id].color] = data.state ;
-//           socket.controls[action] = data.state ;
-           
-//           console.log('command received: ' + action);
-//           console.log('command received: ' + JSON.parse(action));
-//           io.sockets.emit('command', { tick: new Date(), player: player[socket.id] , action : action });
-           
-        });
+    //Processing commands
+    socket.on('command', function (data) {
+//           var action = data.action;
+       controls[player[socket.id].color] = data.state ;
+       
+    });
     
       
     //disconnect
     socket.on('disconnect', function(){
-//        if(player[socket.id]){
-            
-            //siehe paar zeilenweiter oben
-            team.push(player[socket.id].color);
-//        }
+        team.push(player[socket.id].color);
         console.log("Player "+player[socket.id].color+" disconnected ("+socket.id+")");
         delete player[socket.id]
 
@@ -94,28 +100,40 @@ io.sockets.on('connection', function (socket) {
 
 });
 
-//var controls = { left:false , right:false , moveup:false , movedown:false};
-var gameloop = setInterval(function(){
-//    console.log(player);
-//    console.log("+++++" + player[socket.id]);
-//    console.log(socket.controls );
-//        for (var action in socket.controls){
-//            if (socket.controls[action] == true) {
-//                console.log('command received: ' + action);
-//                io.sockets.emit('command', { tick: new Date(), player: player[socket.id] , action : action , state : true });
-//            } else {
-//                io.sockets.emit('command', { tick: new Date(), player: player[socket.id] , action : action , state : false });
-//            }
-//        }
-//    for (var a in player){
-//        for (var action in player[a].controls){
-//            controls[action] = player[a].controls[action];
-//        }
-//    }
-//    console.log(controls);
-    io.sockets.emit('command', { tick: new Date(), actions : controls });
-},50)
+// main physics loop on server
+var physicsloop = setInterval(function(){
+    //check which buttons are pressed
+    handleCommand();
+
+},15)
+
+//updateloop
+var updateloop = setInterval(function(){
+    var update = {};
+    update["red"] = {x : character["red"].x , y : character["red"].y }
+    update["blue"] = {x : character["blue"].x , y : character["blue"].y }
+    io.sockets.emit('command', { tick: new Date(), actions : update });
+},45)
 
 
 // Portnummer in die Konsole schreiben
 console.log('Der Server läuft nun auf dem Port ' + conf.port);
+
+var movementSpeed = 5;
+function handleCommand(){
+    for(var p in controls){
+        var playerCommands = controls[p];
+        if(playerCommands.left){
+            character[p].x -= movementSpeed;
+        } else if (playerCommands.right){
+            character[p].x += movementSpeed;
+        }
+        
+        if(playerCommands.moveup){
+            character[p].y -= movementSpeed;
+        } else if (playerCommands.movedown){
+            character[p].y += movementSpeed;
+        }
+    }
+   
+}

@@ -9,7 +9,9 @@ var debug = {
 		}
 
 		debugKeys = document.createElement("p");
-		debugKeys2 = document.createElement("p");
+		debugPlayerRed = document.createElement("p");
+		debugPlayerBlue = document.createElement("p");
+
 		pFrames = document.createElement("p");
 
 		
@@ -22,16 +24,19 @@ var debug = {
 		fpsAverage = 0;
 		
 		debugWindow.appendChild(debugKeys);
-		debugWindow.appendChild(debugKeys2);
+		debugWindow.appendChild(debugPlayerRed);
+		debugWindow.appendChild(debugPlayerBlue);
 		debugWindow.appendChild(pFrames);
 
 	},
 	
 	run : function(){
 		
-		debugKeys.innerHTML = "Controls: " + JSON.stringify(keyboard.player["red"]);
+		debugKeys.innerHTML = "Controls: " + JSON.stringify(keyboard.state);
+		debugPlayerRed.innerHTML = "Pos Red " + "x: " + Math.round(game.red.x) + " "  + "y: " + Math.round(game.red.y);
+		debugPlayerBlue.innerHTML = "Pos Blue " + "x: " + Math.round(game.blue.x) + " "  + "y: " + Math.round(game.blue.y);
 //		debugKeys.innerHTML = "Controls: " + JSON.stringify(keyboard.state);
-		debugKeys2.innerHTML = "Controls: " + JSON.stringify(keyboard.player["blue"]);
+//		debugKeys2.innerHTML = "Controls: " + JSON.stringify(keyboard.player["blue"]);
                 pFrames.innerHTML = "FPS: " + debug.requestAnimFrame();
 		
 	},
