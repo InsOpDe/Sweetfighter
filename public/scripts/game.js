@@ -38,6 +38,7 @@ var game = {
         
         //set anchors
         game.blue.anchor.y = game.red.anchor.y = 1;
+        game.blue.anchor.x = game.red.anchor.x = 0;
 
         var text = game.phaser.add.text(20, 20, 'move with arrow keys', { fill: '#ffffff' });
 

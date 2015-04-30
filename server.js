@@ -27,8 +27,9 @@ var clients = {};
 var intervalTimer = 50;
 var controls = {};
 var character = [];
-    character["blue"] = {x:0,y:0,hp:100};
-    character["red"] = {x:0,y:0,hp:100};
+    character["blue"] = {x:0,y:0,hp:100,jumping:false,width:26};
+    character["red"] = {x:0,y:0,hp:100,jumping:false,width:26};
+var options;
 
 // Websocket
 io.sockets.on('connection', function (socket) {
@@ -43,7 +44,7 @@ io.sockets.on('connection', function (socket) {
     console.log("Player "+team[team.length-1]+" joined");
     
     // options an client schicken
-    var options = {
+    options = {
         mapX : 800,
         mapY : 600,
         player1 : team[team.length-1],
@@ -120,20 +121,44 @@ var updateloop = setInterval(function(){
 console.log('Der Server läuft nun auf dem Port ' + conf.port);
 
 var movementSpeed = 5;
+var gravityAccelerationY = 1;
+var jumpHeightSquared = -25;
+var minJumpHeight = ( jumpHeightSquared / 3 )
+var velocityY = 0;
 function handleCommand(){
     for(var p in controls){
         var playerCommands = controls[p];
         if(playerCommands.left){
-            character[p].x -= movementSpeed;
+            if(character[p].x - movementSpeed >= 0){
+                character[p].x -= movementSpeed;
+            }
         } else if (playerCommands.right){
-            character[p].x += movementSpeed;
+            if(character[p].x + movementSpeed <= (options.mapX-character[p].width)){
+                character[p].x += movementSpeed;
+            }
         }
         
         if(playerCommands.moveup){
-            character[p].y -= movementSpeed;
-        } else if (playerCommands.movedown){
-            character[p].y += movementSpeed;
+            if(!character[p].jump) {
+                velocityY = jumpHeightSquared
+                character[p].jump = true;
+            }
+        } else {
+            if(velocityY < minJumpHeight){
+                velocityY = minJumpHeight;
+            }
         }
+
+        velocityY += gravityAccelerationY ;
+        character[p].y += velocityY ;
+        if (character[p].y > options.mapY) {
+            character[p].y = options.mapY;
+            character[p].jump = false;
+            velocityY = 0;
+            
+        }
+        
+        
     }
    
 }
