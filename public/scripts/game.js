@@ -34,6 +34,10 @@ var game = {
         //vertically flip
         game.red.scale.x *= -1;
         
+        //jump animation
+        game.blue.animations.add('jump',[3]);
+        game.red.animations.add('jump',[3]);
+        
 
 
         //  Enable if for physics. This creates a default rectangular body.
@@ -58,6 +62,18 @@ var game = {
     jumpTimer : 0,
     update : function() {
         debug.run();
+        
+        if(game.blue.y < game.options.mapY){
+            game.blue.animations.play('jump', 10, true);
+        } else {
+            game.blue.animations.play('stand', 10, true);
+        }
+        
+        if(game.red.y < game.options.mapY){
+            game.red.animations.play('jump', 10, true);
+        } else {
+            game.red.animations.play('stand', 10, true);
+        }
 
     },
             
