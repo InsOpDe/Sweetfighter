@@ -21,8 +21,18 @@ var game = {
         game.phaser.physics.p2.defaultRestitution = 0.8;
 
         //  Add a sprite
-        game.blue = game.phaser.add.sprite(game.options.player1start, game.options.mapY, 'player');
-        game.red = game.phaser.add.sprite(game.options.player2start, game.options.mapY, 'player');
+//        game.blue = game.phaser.add.sprite(game.options.player1start, game.options.mapY, 'player');
+        game.blue = game.phaser.add.sprite(game.options.player1start, game.options.mapY, 'muaythai');
+        game.red = game.phaser.add.sprite(game.options.player2start, game.options.mapY, 'muaythai');
+        
+        //stand consists of frames 0,1,2
+        game.blue.animations.add('stand',[0,1,2,2,1,0]);
+        //10 fps
+        game.blue.animations.play('stand', 10, true);
+        game.red.animations.add('stand',[0,1,2,2,1,0]);
+        game.red.animations.play('stand', 10, true);
+        //vertically flip
+        game.red.scale.x *= -1;
         
 
 
