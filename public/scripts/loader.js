@@ -25,6 +25,9 @@ var loader = {
     },
     preload : function() {
 
+        game.phaser.load.spritesheet('muaythai', 'spritesheet_mt_stand_right.png', 183, 350, 3);
+//        game.phaser.load.spritesheet('muaythai', 'spritesheet_mt_stand_right.png', 350, 182, 3);
+        
         game.phaser.load.image('player', 'bunny.png');
 //        game.phaser.load.image('sky', 'assets/skies/sunset.png');
 
