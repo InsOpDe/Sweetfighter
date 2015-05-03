@@ -27,9 +27,11 @@ var game = {
         
         //stand consists of frames 0,1,2
         game.blue.animations.add('stand',[0,1,2,2,1,0]);
+        //10 fps
         game.blue.animations.play('stand', 10, true);
         game.red.animations.add('stand',[0,1,2,2,1,0]);
         game.red.animations.play('stand', 10, true);
+        //vertically flip
         game.red.scale.x *= -1;
         
 
