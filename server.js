@@ -121,6 +121,7 @@ var updateloop = setInterval(function(){
 console.log('Der Server läuft nun auf dem Port ' + conf.port);
 
 var movementSpeed = 5;
+var hitSpeed = 1;
 var gravityAccelerationY = 1;
 var jumpHeightSquared = -25;
 var minJumpHeight = ( jumpHeightSquared / 3 )
@@ -139,13 +140,17 @@ function handleCommand(){
         
         if(playerCommands.moveup){
             if(!character[p].jump) {
-                character[p].velocityY = jumpHeightSquared
+                character[p].velocityY = jumpHeightSquared;
                 character[p].jump = true;
             }
         } else {
             if(character[p].velocityY < minJumpHeight){
                 character[p].velocityY = minJumpHeight;
             }
+        }
+        
+        if(playerCommands.hit){
+                character[p].x -= hitSpeed;
         }
 
         character[p].velocityY += gravityAccelerationY ;

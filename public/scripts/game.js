@@ -25,6 +25,13 @@ var game = {
         game.blue = game.phaser.add.sprite(game.options.player1start, game.options.mapY, 'muaythai');
         game.red = game.phaser.add.sprite(game.options.player2start, game.options.mapY, 'muaythai');
         
+        
+        //game.physics.p2.enable(game.red);
+        //game.physics.p2.enable(game.blue);
+        //game.red.body.collideWorldBounds = true;
+        //game.blue.body.collideWorldBounds = true;
+        //game.camera.follow(game.red);
+        
         //stand consists of frames 0,1,2
         game.blue.animations.add('stand',[0,1,2,2,1,0]);
         //10 fps
@@ -76,7 +83,7 @@ var game = {
         }
 
     },
-            
-
+    
+    
 }
 
