@@ -1,0 +1,45 @@
+0 info it worked if it ends with ok
+1 verbose cli [ 'c:\\Program Files\\nodejs\\node.exe',
+1 verbose cli   'c:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js',
+1 verbose cli   'install',
+1 verbose cli   '-g' ]
+2 info using npm@1.4.28
+3 info using node@v0.10.33
+4 verbose cache add [ '.', null ]
+5 verbose cache add name=undefined spec="." args=[".",null]
+6 verbose parsed url { protocol: null,
+6 verbose parsed url   slashes: null,
+6 verbose parsed url   auth: null,
+6 verbose parsed url   host: null,
+6 verbose parsed url   port: null,
+6 verbose parsed url   hostname: null,
+6 verbose parsed url   hash: null,
+6 verbose parsed url   search: null,
+6 verbose parsed url   query: null,
+6 verbose parsed url   pathname: '.',
+6 verbose parsed url   path: '.',
+6 verbose parsed url   href: '.' }
+7 silly lockFile 3a52ce78- .
+8 verbose lock . C:\Users\Katharina\AppData\Roaming\npm-cache\3a52ce78-.lock
+9 silly lockFile 3a52ce78- .
+10 silly lockFile 3a52ce78- .
+11 error addLocal Could not install .
+12 error Error: No version provided
+12 error     at needVersion (c:\Program Files\nodejs\node_modules\npm\lib\cache\add-local.js:144:40)
+12 error     at c:\Program Files\nodejs\node_modules\npm\lib\cache\add-local.js:77:10
+12 error     at c:\Program Files\nodejs\node_modules\npm\node_modules\read-package-json\read-json.js:51:40
+12 error     at final (c:\Program Files\nodejs\node_modules\npm\node_modules\read-package-json\read-json.js:349:17)
+12 error     at then (c:\Program Files\nodejs\node_modules\npm\node_modules\read-package-json\read-json.js:126:33)
+12 error     at c:\Program Files\nodejs\node_modules\npm\node_modules\read-package-json\read-json.js:331:40
+12 error     at evalmachine.<anonymous>:271:14
+12 error     at c:\Program Files\nodejs\node_modules\npm\node_modules\graceful-fs\graceful-fs.js:102:5
+12 error     at Object.oncomplete (evalmachine.<anonymous>:107:15)
+13 error If you need help, you may report this *entire* log,
+13 error including the npm and node versions, at:
+13 error     <http://github.com/npm/npm/issues>
+14 error System Windows_NT 6.2.9200
+15 error command "c:\\Program Files\\nodejs\\node.exe" "c:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js" "install" "-g"
+16 error cwd c:\Users\Katharina\Desktop\Streetfighter
+17 error node -v v0.10.33
+18 error npm -v 1.4.28
+19 verbose exit [ 1, true ]

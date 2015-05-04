@@ -1,5 +1,5 @@
 var keyboard = {
-    state : { left:false , right:false , moveup:false , movedown:false},
+    state : { left:false , right:false , moveup:false , movedown:false, hit:false},
     player : { blue:{} , red:{} },
     init: function() {
         var keyboardInput = $(window);
@@ -33,6 +33,11 @@ var keyboard = {
 //                multiplayer.sendCommand({ action : "movedown" , state: true });
     //            game.sprite.body.moveDown(400);
             }
+            
+            if (ev.which == 13) {
+                keyboard.state["hit"] = true;
+                
+            }
             multiplayer.sendCommand({ action : "movedown" , state: keyboard.state });
 
         });
@@ -59,6 +64,11 @@ var keyboard = {
             {
                 keyboard.state["movedown"] = false;
 //                multiplayer.sendCommand({ action : "movedown" , state: false });
+            }
+            
+            if (ev.which == 13) {
+                keyboard.state["hit"] = false;
+                
             }
             
             multiplayer.sendCommand({ action : "movedown" , state: keyboard.state });
