@@ -27,8 +27,8 @@ var clients = {};
 var intervalTimer = 50;
 var controls = {};
 var character = [];
-    character["blue"] = {x:0,y:0,hp:100,jumping:false,width:26};
-    character["red"] = {x:0,y:0,hp:100,jumping:false,width:26};
+    character["blue"] = {x:0,y:0,hp:100,jumping:false,width:26,velocityY:0};
+    character["red"] = {x:0,y:0,hp:100,jumping:false,width:26,velocityY:0};
 var options;
 
 // Websocket
@@ -124,7 +124,6 @@ var movementSpeed = 5;
 var gravityAccelerationY = 1;
 var jumpHeightSquared = -25;
 var minJumpHeight = ( jumpHeightSquared / 3 )
-var velocityY = 0;
 function handleCommand(){
     for(var p in controls){
         var playerCommands = controls[p];
@@ -140,21 +139,21 @@ function handleCommand(){
         
         if(playerCommands.moveup){
             if(!character[p].jump) {
-                velocityY = jumpHeightSquared
+                character[p].velocityY = jumpHeightSquared
                 character[p].jump = true;
             }
         } else {
-            if(velocityY < minJumpHeight){
-                velocityY = minJumpHeight;
+            if(character[p].velocityY < minJumpHeight){
+                character[p].velocityY = minJumpHeight;
             }
         }
 
-        velocityY += gravityAccelerationY ;
-        character[p].y += velocityY ;
+        character[p].velocityY += gravityAccelerationY ;
+        character[p].y += character[p].velocityY ;
         if (character[p].y > options.mapY) {
             character[p].y = options.mapY;
             character[p].jump = false;
-            velocityY = 0;
+            character[p].velocityY = 0;
             
         }
         
