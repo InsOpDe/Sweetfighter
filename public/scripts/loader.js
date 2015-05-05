@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 window.addEventListener("load", function () {
 	loader.init();
         keyboard.init();
