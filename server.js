@@ -27,8 +27,8 @@ var clients = {};
 var intervalTimer = 50;
 var controls = {};
 var character = [];
-    character["blue"] = {x:0,y:0,hp:100,jumping:false,width:26,crouch:false,velocityY:0,attack:{jab:false}}
-    character["red"] = {x:0,y:0,hp:100,jumping:false,width:26,crouch:false,velocityY:0,attack:{jab:false}};
+    character["blue"] = {x:0,y:0,hp:100,jumping:false,width:26,crouch:false,velocityY:0,attack:{jab:false},moving:false}
+    character["red"] = {x:0,y:0,hp:100,jumping:false,width:26,crouch:false,velocityY:0,attack:{jab:false},moving:false};
 var options;
 
 // Websocket
@@ -131,11 +131,15 @@ function handleCommand(){
         if(playerCommands.left){
             if(character[p].x - movementSpeed >= 0){
                 character[p].x -= movementSpeed;
+                character[p].moving = true;
             }
         } else if (playerCommands.right){
             if(character[p].x + movementSpeed <= (options.mapX-character[p].width)){
                 character[p].x += movementSpeed;
+                character[p].moving = true;
             }
+        } else {
+            character[p].moving = false;
         }
         
         if(playerCommands.moveup){

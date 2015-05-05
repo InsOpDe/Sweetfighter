@@ -45,21 +45,35 @@ var game = {
         
         for(var key in game.players){
             var color = game.players[key]
+            
+            
             //stand consists of frames 0,1,2
             game[color].animations.add('stand',[0,1,2,2,1,0]);
             //10 fps
             game[color].animations.play('stand', 10, true);
             //jump animation
-            game[color].animations.add('jump',[3]);
+            var isJumping = game[color].animations.add('jump',[3]);
             //crouch
-            game[color].animations.add('crouch',[5]);
+            var isCrouching = game[color].animations.add('crouch',[5]);
             //defence
-            game[color].animations.add('defence',[4]);
+            var isDefending = game[color].animations.add('defence',[4]);
             //move
-            game[color].animations.add('walk',[7,8,9,8]);
+            var isWalking = game[color].animations.add('walk',[7,8,9,8]);
             //jab
-            game[color].animations.add('jab',[10,11,11,11,10]);
+            var isJabbing = game[color].animations.add('jab',[10,11,11,11,10]);
 //            game[color].animations.add('jab',[11]);
+
+            //add attributes
+            var attributes = {
+                    isWalking:isWalking,
+                    isWalkingSince:Date.now(),
+                    isJumping:isJumping,
+                    isCrouching:isCrouching,
+                    isDefending:isDefending,
+                    isAttacking:false,
+                    isJabbing:isJabbing};
+            game[color] = $.extend(game[color],attributes);
+            
         }
         
         //vertically flip
@@ -97,21 +111,19 @@ var game = {
             var color = game.players[key]
             
             //if is attacking, then first make the move
+//            if(!game[color].isJabbing.isPlaying){
             if(game[color].jabTimer >= Date.now()){
-                game[color].animations.play('jab', 20, true);
+                game[color].animations.play('jab', 20, false);
             } else {
-                
-
                 if(game[color].crouch){
                     game[color].animations.play('crouch', 10, true);
                 } else {
                     if(game[color].oldX==undefined){
                         game[color].oldX=game[color].x;
-                    }else if((game[color].x-game[color].oldX) != 0){
-                        game[color].animations.play('walk', 10, true);
-                        game[color].oldX=game[color].x;
                     } else if(game[color].y < game.options.mapY){
                         game[color].animations.play('jump', 10, true);
+                    }else if(game[color].isWalking){
+                            game[color].animations.play('walk', 10, true);
                     } else {
                         game[color].animations.play('stand', 10, true);
                     }
