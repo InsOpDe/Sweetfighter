@@ -1,4 +1,5 @@
 var multiplayer = {
+    
     init:function(){
         multiplayer.socket = io.connect();
 
@@ -19,8 +20,9 @@ var multiplayer = {
             
             //hier werden die positionen übertragen
             for(var color in actions){
-                if(game[color])game[color].x = actions[color].x
-                if(game[color])game[color].y = actions[color].y
+               
+                if(game[color])game[color].x = actions[color].x;
+                if(game[color])game[color].y = actions[color].y;
             }
             
 

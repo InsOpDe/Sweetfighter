@@ -45,8 +45,10 @@ io.sockets.on('connection', function (socket) {
     
     // options an client schicken
     options = {
-        mapX : 800,
-        mapY : 600,
+        //mapX : 800,
+        //mapY : 600,
+        mapX : 2000,
+        mapY : 400,
         player1 : team[team.length-1],
         playerStartDelta : 100,
     }
