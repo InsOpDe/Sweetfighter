@@ -1,4 +1,6 @@
 var game = {
+    oldX: undefined,
+    oldY: undefined,
     players : ['blue','red'],
     init: function() {
         game.phaser = new Phaser.Game(game.options.mapX, game.options.mapY, Phaser.CANVAS, 'phaser-example', { preload: loader.preload, create: game.create, update: game.update });
@@ -19,6 +21,14 @@ var game = {
         //  Make things a bit more bouncey
 //        game.phaser.physics.p2.gravity.y = 10000;
         game.phaser.physics.p2.defaultRestitution = 0.8;
+
+        //Hintergrund
+        game.ebene1 = game.phaser.add.tileSprite(0, 0, game.options.mapX, game.options.mapY, 'ebene1');
+        game.ebene2 = game.phaser.add.tileSprite(0, 0, game.options.mapX, game.options.mapY, 'ebene2');
+        game.ebene3 = game.phaser.add.tileSprite(0, 0, game.options.mapX, game.options.mapY, 'ebene3');
+        game.ebene4 = game.phaser.add.tileSprite(0, 0, game.options.mapX, game.options.mapY, 'ebene4');
+
+        game.phaser.world.setBounds(0, 0, game.options.mapX, game.options.mapY);
 
         //  Add a sprite
 //        game.blue = game.phaser.add.sprite(game.options.player1start, game.options.mapY, 'player');
@@ -54,7 +64,7 @@ var game = {
         game.red.scale.x *= -1;
         
         
-        
+        game.phaser.camera.follow(game.red);
 
 
         //  Enable if for physics. This creates a default rectangular body.
@@ -99,9 +109,27 @@ var game = {
             }
         }
         
+        
+        if(game.oldX==undefined && game.oldY==undefined){
+            game.oldX=game.red.x;
+            game.oldY=game.red.y;
+        }else{
+            var diffX=(game.red.x-game.oldX)* (-1);
+            var vz = Math.sign(diffX);
+            game.ebene2.tilePosition.x += vz*1;
+            game.ebene3.tilePosition.x += vz*2;
+            game.ebene4.tilePosition.x += vz*3;
+            game.oldX = game.red.x;
+            
+            var diffY=(game.red.y-game.oldY)* (-1);
+            vz = Math.sign(diffY);
+            game.ebene2.tilePosition.y += vz*.25;
+            game.ebene3.tilePosition.y += vz*.5;
+            game.oldY = game.red.y;
+        }
+        
 
     },
     
     
 }
-
