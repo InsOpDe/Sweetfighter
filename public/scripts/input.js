@@ -11,34 +11,26 @@ var keyboard = {
             if (ev.which == 37)
             {
                 keyboard.state["left"] = true;
-//                multiplayer.sendCommand({ action : "left" , state: true });
-    //            game.sprite.body.moveLeft(400);
             }
             else if (ev.which == 39)
             {
                 keyboard.state["right"] = true;
-//                multiplayer.sendCommand({ action : "right" , state: true });
-    //            game.sprite.body.moveRight(400);
             }
 
             if (ev.which == 38)
             {
                 keyboard.state["moveup"] = true;
-//                multiplayer.sendCommand({ action : "moveup" , state: true });
-    //            game.sprite.body.moveUp(400);
             }
             else if (ev.which == 40)
             {
                 keyboard.state["movedown"] = true;
-//                multiplayer.sendCommand({ action : "movedown" , state: true });
-    //            game.sprite.body.moveDown(400);
             }
             
-            if (ev.which == 13) {
+            //spacebar
+            if (ev.which == 32) {
                 keyboard.state["hit"] = true;
-                
             }
-            multiplayer.sendCommand({ action : "movedown" , state: keyboard.state });
+            multiplayer.sendCommand({ state: keyboard.state });
 
         });
         
@@ -47,31 +39,27 @@ var keyboard = {
             if (ev.which == 37)
             {
                 keyboard.state["left"] = false;
-//                multiplayer.sendCommand({ action : "left" , state: false });
             }
             else if (ev.which == 39)
             {
                 keyboard.state["right"] = false;
-//                multiplayer.sendCommand({ action : "right" , state: false });
             }
 
             if (ev.which == 38)
             {
                 keyboard.state["moveup"] = false;
-//                multiplayer.sendCommand({ action : "moveup" , state: false });
             }
             else if (ev.which == 40)
             {
                 keyboard.state["movedown"] = false;
-//                multiplayer.sendCommand({ action : "movedown" , state: false });
             }
             
-            if (ev.which == 13) {
+            if (ev.which == 32) {
                 keyboard.state["hit"] = false;
                 
             }
             
-            multiplayer.sendCommand({ action : "movedown" , state: keyboard.state });
+            multiplayer.sendCommand({ state: keyboard.state });
 
         });
 

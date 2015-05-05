@@ -3,7 +3,8 @@ var game = {
     oldY: undefined,
     players : ['blue','red'],
     init: function() {
-        game.phaser = new Phaser.Game(game.options.mapX, game.options.mapY, Phaser.CANVAS, 'phaser-example', { preload: loader.preload, create: game.create, update: game.update });
+        game.phaser = new Phaser.Game(1000, game.options.mapY, Phaser.CANVAS, 'phaser-example', { preload: loader.preload, create: game.create, update: game.update });
+//        game.phaser = new Phaser.Game(game.options.mapX, game.options.mapY, Phaser.CANVAS, 'phaser-example', { preload: loader.preload, create: game.create, update: game.update });
         
     },
     sprite:undefined,
@@ -55,9 +56,10 @@ var game = {
             //defence
             game[color].animations.add('defence',[4]);
             //move
-            game[color].animations.add('move',[7,8,9,8]);
+            game[color].animations.add('walk',[7,8,9,8]);
             //jab
             game[color].animations.add('jab',[10,11,11,11,10]);
+//            game[color].animations.add('jab',[11]);
         }
         
         //vertically flip
@@ -90,26 +92,34 @@ var game = {
     update : function() {
         debug.run();
         
-        if(game.blue.y < game.options.mapY){
-            game.blue.animations.play('jump', 10, true);
-        } else {
-            game.blue.animations.play('stand', 10, true);
-        }
-        
-        if(game.red.y < game.options.mapY){
-            game.red.animations.play('jump', 10, true);
-        } else {
-            game.red.animations.play('stand', 10, true);
-        }
-        
+        //players
         for(var key in game.players){
             var color = game.players[key]
-            if(game[color].crouch){
-                game[color].animations.play('crouch', 10, true);
+            
+            //if is attacking, then first make the move
+            if(game[color].jabTimer >= Date.now()){
+                game[color].animations.play('jab', 20, true);
+            } else {
+                
+
+                if(game[color].crouch){
+                    game[color].animations.play('crouch', 10, true);
+                } else {
+                    if(game[color].oldX==undefined){
+                        game[color].oldX=game[color].x;
+                    }else if((game[color].x-game[color].oldX) != 0){
+                        game[color].animations.play('walk', 10, true);
+                        game[color].oldX=game[color].x;
+                    } else if(game[color].y < game.options.mapY){
+                        game[color].animations.play('jump', 10, true);
+                    } else {
+                        game[color].animations.play('stand', 10, true);
+                    }
+                }
             }
         }
         
-        
+        //camera
         if(game.oldX==undefined && game.oldY==undefined){
             game.oldX=game.red.x;
             game.oldY=game.red.y;

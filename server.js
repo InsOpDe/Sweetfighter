@@ -45,7 +45,7 @@ io.sockets.on('connection', function (socket) {
     
     // options an client schicken
     options = {
-        mapX : 2000,
+        mapX : 1500,
         mapY : 400,
         player1 : team[team.length-1],
         playerStartDelta : 100,
@@ -158,7 +158,9 @@ function handleCommand(){
         
         
         if(playerCommands.hit){
-                character[p].x -= hitSpeed;
+            character[p].attack.jab = true;
+        } else {
+            character[p].attack.jab = false;
         }
 
         character[p].velocityY += gravityAccelerationY ;
