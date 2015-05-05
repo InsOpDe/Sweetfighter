@@ -32,18 +32,28 @@ var game = {
         //game.blue.body.collideWorldBounds = true;
         //game.camera.follow(game.red);
         
-        //stand consists of frames 0,1,2
-        game.blue.animations.add('stand',[0,1,2,2,1,0]);
-        //10 fps
-        game.blue.animations.play('stand', 10, true);
-        game.red.animations.add('stand',[0,1,2,2,1,0]);
-        game.red.animations.play('stand', 10, true);
+        for(var key in game.players){
+            var color = game.players[key]
+            //stand consists of frames 0,1,2
+            game[color].animations.add('stand',[0,1,2,2,1,0]);
+            //10 fps
+            game[color].animations.play('stand', 10, true);
+            //jump animation
+            game[color].animations.add('jump',[3]);
+            //crouch
+            game[color].animations.add('crouch',[5]);
+            //defence
+            game[color].animations.add('defence',[4]);
+            //move
+            game[color].animations.add('move',[7,8,9,8]);
+            //jab
+            game[color].animations.add('jab',[10,11,11,11,10]);
+        }
+        
         //vertically flip
         game.red.scale.x *= -1;
         
-        //jump animation
-        game.blue.animations.add('jump',[3]);
-        game.red.animations.add('jump',[3]);
+        
         
 
 
@@ -81,6 +91,14 @@ var game = {
         } else {
             game.red.animations.play('stand', 10, true);
         }
+        
+        for(var key in game.players){
+            var color = game.players[key]
+            if(game[color].crouch){
+                game[color].animations.play('crouch', 10, true);
+            }
+        }
+        
 
     },
     

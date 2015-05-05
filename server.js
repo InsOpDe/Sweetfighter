@@ -27,8 +27,8 @@ var clients = {};
 var intervalTimer = 50;
 var controls = {};
 var character = [];
-    character["blue"] = {x:0,y:0,hp:100,jumping:false,width:26,velocityY:0};
-    character["red"] = {x:0,y:0,hp:100,jumping:false,width:26,velocityY:0};
+    character["blue"] = {x:0,y:0,hp:100,jumping:false,width:26,crouch:false,velocityY:0,attack:{jab:false}}
+    character["red"] = {x:0,y:0,hp:100,jumping:false,width:26,crouch:false,velocityY:0,attack:{jab:false}};
 var options;
 
 // Websocket
@@ -110,9 +110,9 @@ var physicsloop = setInterval(function(){
 
 //updateloop
 var updateloop = setInterval(function(){
-    var update = {};
-    update["red"] = {x : character["red"].x , y : character["red"].y }
-    update["blue"] = {x : character["blue"].x , y : character["blue"].y }
+    var update = {red: character["red"], blue: character["blue"]};
+//    update["red"] = {x : character["red"].x , y : character["red"].y }
+//    update["blue"] = {x : character["blue"].x , y : character["blue"].y }
     io.sockets.emit('command', { tick: new Date(), actions : update });
 },45)
 
@@ -146,8 +146,16 @@ function handleCommand(){
         } else {
             if(character[p].velocityY < minJumpHeight){
                 character[p].velocityY = minJumpHeight;
+            } else {
+                if (playerCommands.movedown) {
+                    character[p].crouch=true;
+                } else {
+                    character[p].crouch=false;
+                }
             }
         }
+        
+        
         
         if(playerCommands.hit){
                 character[p].x -= hitSpeed;

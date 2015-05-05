@@ -19,8 +19,11 @@ var multiplayer = {
             
             //hier werden die positionen übertragen
             for(var color in actions){
-                if(game[color])game[color].x = actions[color].x
-                if(game[color])game[color].y = actions[color].y
+                if(game[color]){
+                    game[color].x = actions[color].x
+                    game[color].y = actions[color].y
+                    game[color].crouch = actions[color].crouch
+                }
             }
             
 

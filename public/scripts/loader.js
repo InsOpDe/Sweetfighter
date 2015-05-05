@@ -25,7 +25,7 @@ var loader = {
     },
     preload : function() {
 
-        game.phaser.load.spritesheet('muaythai', 'muaythai.png', 183, 350, 4);
+        game.phaser.load.spritesheet('muaythai', 'muay_thai.png', 360, 360, 14);
 //        game.phaser.load.spritesheet('muaythai', 'spritesheet_mt_stand_right.png', 350, 182, 3);
         
         game.phaser.load.image('player', 'bunny.png');
