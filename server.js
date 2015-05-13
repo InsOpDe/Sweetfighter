@@ -27,8 +27,8 @@ var clients = {};
 var intervalTimer = 50;
 var controls = {};
 var character = [];
-    character["blue"] = {x:0,y:0,hp:100,jumping:false,width:26,crouch:false,velocityY:0,attack:{jab:false},moving:false}
-    character["red"] = {x:0,y:0,hp:100,jumping:false,width:26,crouch:false,velocityY:0,attack:{jab:false},moving:false};
+    character["blue"] = {x:0,y:0,hp:100,jumping:false,width:26,crouch:false,velocityY:0,attack:{jab:false, kick:false},moving:false}
+    character["red"] = {x:0,y:0,hp:100,jumping:false,width:26,crouch:false,velocityY:0,attack:{jab:false, kick:false},moving:false};
 var options;
 
 // Websocket
@@ -165,6 +165,12 @@ function handleCommand(){
             character[p].attack.jab = true;
         } else {
             character[p].attack.jab = false;
+        }
+        
+        if(playerCommands.kick){
+            character[p].attack.kick = true;
+        } else {
+            character[p].attack.kick = false;
         }
 
         character[p].velocityY += gravityAccelerationY ;

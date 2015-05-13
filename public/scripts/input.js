@@ -1,5 +1,5 @@
 var keyboard = {
-    state : { left:false , right:false , moveup:false , movedown:false, hit:false},
+    state : { left:false , right:false , moveup:false , movedown:false, hit:false, kick:false},
     player : { blue:{} , red:{} },
     init: function() {
         var keyboardInput = $(window);
@@ -26,9 +26,13 @@ var keyboard = {
                 keyboard.state["movedown"] = true;
             }
             
-            //spacebar
+            //spacebar jab
             if (ev.which == 32) {
                 keyboard.state["hit"] = true;
+            }
+            //return kick
+            if (ev.which == 13) {
+                keyboard.state["kick"] = true;
             }
             multiplayer.sendCommand({ state: keyboard.state });
 
@@ -56,6 +60,11 @@ var keyboard = {
             
             if (ev.which == 32) {
                 keyboard.state["hit"] = false;
+                
+            }
+            
+            if (ev.which == 13) {
+                keyboard.state["kick"] = false;
                 
             }
             

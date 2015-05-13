@@ -63,6 +63,8 @@ var game = {
             //jab
             var isJabbing = game[color].animations.add('jab',[10,11,11,11,10]);
 //            game[color].animations.add('jab',[11]);
+            //kick
+            var isKicking = game[color].animations.add('kick',[4,4,6,6,4,4]);
 
             //add attributes
             var attributes = {
@@ -72,7 +74,8 @@ var game = {
                     isCrouching:isCrouching,
                     isDefending:isDefending,
                     isAttacking:false,
-                    isJabbing:isJabbing};
+                    isJabbing:isJabbing,
+                    isKicking:isKicking};
             game[color] = $.extend(game[color],attributes);
             
         }
@@ -113,9 +116,15 @@ var game = {
             
             //if is attacking, then first make the move
 //            if(!game[color].isJabbing.isPlaying){
+            
             if(game[color].jabTimer >= Date.now()){
+                console.log("jab");
                 game[color].animations.play('jab', 20, false);
-            } else {
+            }else if(game[color].kickTimer >= Date.now()){
+                console.log("kick");
+                game[color].animations.play('kick', 20, false);
+            }
+            else {
                 if(game[color].crouch){
                     game[color].animations.play('crouch', 10, true);
                 } else {

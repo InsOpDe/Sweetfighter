@@ -24,10 +24,13 @@ var multiplayer = {
                     game[color].y = actions[color].y
                     game[color].crouch = actions[color].crouch
                     game[color].jab = actions[color].attack.jab
-                    game[color].isWalking = actions[color].moving;
-                    
+                    game[color].isWalking = actions[color].moving
+                    game[color].kick = actions[color].attack.kick;
                     if(game[color].jab){
                         game[color].jabTimer = Date.now() + 200; //genaue zeit wielange ein jab dauert!
+                    }
+                    if(game[color].kick){
+                        game[color].kickTimer = Date.now() + 200; //genaue zeit wielange ein jab dauert!
                     }
                 }
             }
