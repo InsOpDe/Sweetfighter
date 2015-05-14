@@ -40,19 +40,25 @@ io.sockets.on('connection', function (socket) {
     console.log(timeStamp() + " connection established");
     clients[socket.id] = socket;
     socket.controls = [];
+    var slot = "observer"
+    if(team.length > 0){
+        slot = team[team.length-1];
+        team.pop();
+    }
+    
 
     // der Client ist verbunden
     socket.emit('chat', { tick: new Date(), text: 'Du bist nun mit dem Server verbunden!' });
 
-    socket.emit('chat', { tick: new Date(), text: 'Du bist Spieler: '+team[team.length-1] });
-    console.log("Player "+team[team.length-1]+" joined");
+    socket.emit('chat', { tick: new Date(), text: 'Du bist Spieler: '+slot });
+    console.log("Player "+slot+" joined");
     
     // options an client schicken
     options = {
         mapX : 700, //1500
         mapY : 400,
         playerStartDelta : 100,
-        color : team[team.length-1],
+        color : slot,
         
     }
     
@@ -66,15 +72,15 @@ io.sockets.on('connection', function (socket) {
 
     //disconnect old Player if new Player (same Team) logs in elsewhere
     for(var socketId in player){
-        if(player[socketId].color == team[team.length-1]){
+        if(player[socketId].color == slot){
             clients[socketId].disconnect();
             delete player[socketId]
         }
     }
     player[socket.id] = {};
-    player[socket.id].color = team[team.length-1];
-    controls[player[socket.id].color] = { left:false , right:false , moveup:false , movedown:false};
-    team.pop();
+    player[socket.id].color = slot;
+    if(slot != "observer") controls[player[socket.id].color] = { left:false , right:false , moveup:false , movedown:false};
+    
 
 
 
@@ -93,7 +99,10 @@ io.sockets.on('connection', function (socket) {
     //Processing commands
     socket.on('command', function (data) {
 //           var action = data.action;
-       controls[player[socket.id].color] = data.state ;
+        if(slot != "observer"){
+            controls[player[socket.id].color] = data.state ;
+        }
+       
        
     });
     
@@ -135,7 +144,6 @@ var minJumpHeight = ( jumpHeightSquared / 3 )
 function handleCommand(){
     for(var p in controls){
         var playerCommands = controls[p];
-        
         var p1 = character[p];
         var p2 = (p == "red")? character["blue"] : character["red"];
         
@@ -223,7 +231,7 @@ function handleCollision(){
 
         //detect whether characters bounce into each other
         if (p1.x + (p1.w/2) > p2.x - (p2.w/2) && p1.x - (p1.w/2) < p2.x + (p2.w/2)){
-            console.log(timeStamp()," collision!");
+//            console.log(timeStamp()," collision!");
 //            if(controls[color[p]])
         }
 
