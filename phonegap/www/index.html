@@ -29,8 +29,12 @@
 		
         <script type="text/javascript">
             var serverIP = '';
-            if (screen.width < 980) { 
-                console.log("mobile");
+            if (screen.width < 1500) { //muss noch n besserer weg gefunden werden
+                window.onerror = function(message, url, lineNumber) {  
+                    alert(message + " " + url + " " + lineNumber);
+                    return true;
+                }; 
+                alert("mobile");
                 serverIP = 'http://10.0.2.2:8887';
                 document.write('\x3Cscript src="http://10.0.2.2:8887/socket.io/socket.io.js">\x3C/script>');
                 document.write('\x3Cscript type="text/javascript" src="cordova.js">\x3C/script>');

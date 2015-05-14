@@ -11,6 +11,8 @@ var debug = {
 		debugKeys = document.createElement("p");
 		debugPlayerRed = document.createElement("p");
 		debugPlayerBlue = document.createElement("p");
+		debugPlayerBlueHp = document.createElement("p");
+		debugPlayerRedHp = document.createElement("p");
 
 		pFrames = document.createElement("p");
 
@@ -27,19 +29,32 @@ var debug = {
 		debugWindow.appendChild(debugPlayerRed);
 		debugWindow.appendChild(debugPlayerBlue);
 		debugWindow.appendChild(pFrames);
+		debugWindow.appendChild(debugPlayerBlueHp);
+		debugWindow.appendChild(debugPlayerRedHp);
 
 	},
 	
 	run : function(){
 		
-		debugKeys.innerHTML = "Controls: " + JSON.stringify(keyboard.state);
-		debugPlayerRed.innerHTML = "Pos Red " + "x: " + Math.round(game.red.x) + " "  + "y: " + Math.round(game.red.y) + " " + "anim: " + game["red"].animations.currentAnim.name;
-		debugPlayerBlue.innerHTML = "Pos Blue " + "x: " + Math.round(game.blue.x) + " "  + "y: " + Math.round(game.blue.y) + " " + "anim: " + game["blue"].animations.currentAnim.name;;
+		debugKeys.innerHTML = JSON.stringify(keyboard.state);
+		debugPlayerRed.innerHTML = "Pos Red " + "x: " + Math.round(game.red.realX) + " "  + "y: " + Math.round(game.red.realY) + " " + "anim: " + game["red"].animations.currentAnim.name;
+		debugPlayerBlue.innerHTML = "Pos Blue " + "x: " + Math.round(game.blue.realX) + " "  + "y: " + Math.round(game.blue.realY) + " " + "anim: " + game["blue"].animations.currentAnim.name;;
 //		debugKeys.innerHTML = "Controls: " + JSON.stringify(keyboard.state);
 //		debugKeys2.innerHTML = "Controls: " + JSON.stringify(keyboard.player["blue"]);
                 pFrames.innerHTML = "FPS: " + debug.requestAnimFrame();
+                debugPlayerBlueHp.innerHTML = "blue: " + debug.hitpoints("blue");
+                debugPlayerRedHp.innerHTML = "red: &nbsp;" + debug.hitpoints("red");
 		
 	},
+        
+        hitpoints : function(color){
+//            if(!game[color].hp) return "";
+            var hp = "";
+            for(var i = 0; i < game[color].hp; i=i+2){
+                hp += "|";
+            }
+            return hp;
+        },
 
 	
 	requestAnimFrame : function(){
@@ -66,8 +81,3 @@ var debug = {
 	},
 	
 };
-
-window.onerror = function(message, url, lineNumber) {  
-	alert(message + " " + url + " " + lineNumber);
-  return true;
-}; 

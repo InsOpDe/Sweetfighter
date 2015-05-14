@@ -2,6 +2,7 @@ var keyboard = {
     state : { left:false , right:false , moveup:false , movedown:false, hit:false, kick:false},
     player : { blue:{} , red:{} },
     init: function() {
+        
         var keyboardInput = $(window);
         
         keyboardInput.keydown(function(ev) {

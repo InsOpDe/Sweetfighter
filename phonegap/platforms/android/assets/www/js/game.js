@@ -1,9 +1,10 @@
 var game = {
     oldX: undefined,
     oldY: undefined,
+    offset: 180,
     players : ['blue','red'],
     init: function() {
-        game.phaser = new Phaser.Game(1000, game.options.mapY, Phaser.CANVAS, 'phaser-example', { preload: loader.preload, create: game.create, update: game.update });
+        game.phaser = new Phaser.Game(700, game.options.mapY, Phaser.CANVAS, 'phaser-example', { preload: loader.preload, create: game.create, update: game.update });
 //       game.phaser = new Phaser.Game(game.options.mapX, game.options.mapY, Phaser.CANVAS, 'phaser-example', { preload: loader.preload, create: game.create, update: game.update });
        
         
@@ -18,11 +19,11 @@ var game = {
 //        game.phaser.add.image(0, 0, 'sky');
 
         //	Enable p2 physics
-        game.phaser.physics.startSystem(Phaser.Physics.P2JS);
+//        game.phaser.physics.startSystem(Phaser.Physics.P2JS);
 
         //  Make things a bit more bouncey
 //        game.phaser.physics.p2.gravity.y = 10000;
-        game.phaser.physics.p2.defaultRestitution = 0.8;
+//        game.phaser.physics.p2.defaultRestitution = 0.8;
 
         //Hintergrund
         game.ebene1 = game.phaser.add.tileSprite(0, 0, game.options.mapX, game.options.mapY, 'ebene1');
@@ -31,21 +32,58 @@ var game = {
         game.ebene4 = game.phaser.add.tileSprite(0, 0, game.options.mapX, game.options.mapY, 'ebene4');
 
         game.phaser.world.setBounds(0, 0, game.options.mapX, game.options.mapY);
+        
+        
+        //hit animations
+        game.hitAnimations = {};
+        game.hitAnimations.hit1 = game.phaser.add.sprite(0, 0, 'fx1');
+        game.hitAnimations.hit1.animations.add('fx1',[0,1,2,3]);
+        game.hitAnimations.hit1.alpha = 0;
+        
+        
 
-        //  Add a sprite
-//        game.blue = game.phaser.add.sprite(game.options.player1start, game.options.mapY, 'player');
-        game.blue = game.phaser.add.sprite(game.options.player1start, game.options.mapY, 'muaythai');
-        game.red = game.phaser.add.sprite(game.options.player2start, game.options.mapY, 'muaythai');
-        
-        
-        //game.physics.p2.enable(game.red);
-        //game.physics.p2.enable(game.blue);
-        //game.red.body.collideWorldBounds = true;
-        //game.blue.body.collideWorldBounds = true;
-        //game.camera.follow(game.red);
-        
+        //player animations etc
         for(var key in game.players){
             var color = game.players[key]
+            console.log(game.options.characters);
+            
+//            game[color] = game.options.characters[color];
+//            game[color] = $.extend(game[color],);
+            game[color] = game.phaser.add.sprite(game.options.characters[color].start, game.options.mapY, 'muaythai');
+            game[color] = $.extend(game[color],game.options.characters[color]);
+            console.log(game[color]);
+            
+            
+            //center of player
+            var bmd = game.phaser.add.bitmapData(20, 20);
+            bmd.ctx.beginPath();
+            bmd.ctx.rect(0, 0, 20, 20);
+            bmd.ctx.fillStyle = '#ff0000';
+            bmd.ctx.fill();
+            game[color].center = game.phaser.add.sprite(game[color].x-10, game[color].y-10, bmd);
+            if(!debug.debugModeOn)game[color].center.alpha = 0;
+            
+            //boundingbox of player
+            var width = game[color].w;
+            var height = game[color].h;
+            var bmd = game.phaser.add.bitmapData(width, height);
+            bmd.ctx.beginPath();
+            bmd.ctx.rect(0, 0, width, height);
+            bmd.ctx.strokeStyle = '#ff0000';
+            bmd.ctx.stroke();
+            game[color].box = game.phaser.add.sprite(game[color].x, game[color].y-10, bmd);
+            if(!debug.debugModeOn)game[color].box.alpha = 0;
+            
+            //boundingbox of attack
+            var width = 40;
+            var height = 40 ;
+            var bmd = game.phaser.add.bitmapData(width, height);
+            bmd.ctx.beginPath();
+            bmd.ctx.rect(0, 0, width, height);
+            bmd.ctx.strokeStyle = '#0000ff';
+            bmd.ctx.stroke();
+            game[color].attackRange = game.phaser.add.sprite(game[color].x, game[color].y, bmd);
+            if(!debug.debugModeOn)game[color].attackRange.alpha = 0;
             
             
             //stand consists of frames 0,1,2
@@ -84,24 +122,17 @@ var game = {
         game.red.scale.x *= -1;
         
         
-        game.phaser.camera.follow(game.red);
-
-
-        //  Enable if for physics. This creates a default rectangular body.
-//        game.phaser.physics.p2.enable(game.blue);
-//        game.phaser.physics.p2.enable(game.red);
-        
-
-        //  Modify a few body properties
-//        game.sprite.body.setZeroDamping();
-//        game.blue.body.fixedRotation = true;
-//        game.red.body.fixedRotation = true;
+        game.phaser.camera.follow(game[game.options.color]);
         
         //set anchors
         game.blue.anchor.y = game.red.anchor.y = 1;
-        game.blue.anchor.x = game.red.anchor.x = 0;
+//        game.blue.anchor.x = game.red.anchor.x = 0;
+//        game.blue.anchor.x = game.red.anchor.x = 0.5;
+        game.blue.anchor.x = 1;
+        game.red.anchor.x = 0;
+        
 
-        var text = game.phaser.add.text(20, 20, 'move with arrow keys', { fill: '#ffffff' });
+//        var text = game.phaser.add.text(20, 20, 'move with arrow keys', { fill: '#ffffff' });
 
 //        game.cursors = game.phaser.input.keyboard.createCursorKeys();
 
@@ -110,18 +141,34 @@ var game = {
     update : function() {
         debug.run();
         
+        
+        
         //players
         for(var key in game.players){
             var color = game.players[key]
+            
+            //debug collision
+            //center
+            game[color].center.x = game[color].realX-10;
+            game[color].center.y = game[color].realY-10;
+            
+            //box
+            game[color].box.x = game[color].realX-(game[color].w/2);
+            game[color].box.y = game[color].realY-game[color].h;
+            
+            //attackrange
+//            game[color].attackRange.x = game[color].realX-(game[color].w/1.2);
+//            game[color].attackRange.y = game[color].realY-(game[color].h/1.2);
+            
             
             //if is attacking, then first make the move
 //            if(!game[color].isJabbing.isPlaying){
             
             if(game[color].jabTimer >= Date.now()){
-                console.log("jab");
+//                console.log("jab");
                 game[color].animations.play('jab', 20, false);
             }else if(game[color].kickTimer >= Date.now()){
-                console.log("kick");
+//                console.log("kick");
                 game[color].animations.play('kick', 20, false);
             }
             else {
@@ -141,6 +188,8 @@ var game = {
             }
         }
         
+        game.ebene2.tilePosition.x += .25;
+        
         //camera
         if(game.oldX==undefined && game.oldY==undefined){
             game.oldX=game.red.x;
@@ -149,9 +198,8 @@ var game = {
             var diffX=(game.red.x-game.oldX)* (-1);
             //var vz = Math.sign(diffX);
 			var vz = (diffX >= 0) ? ((diffX == 0) ? 0 : 1) : -1;
-            game.ebene2.tilePosition.x += vz*1;
-            game.ebene3.tilePosition.x += vz*2;
-            game.ebene4.tilePosition.x += vz*3;
+            game.ebene3.tilePosition.x += vz*.5;
+//            game.ebene4.tilePosition.x += vz*3;
             game.oldX = game.red.x;
             
             var diffY=(game.red.y-game.oldY)* (-1);
