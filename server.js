@@ -7,6 +7,7 @@ var express = require('express')
 ,   io = require('socket.io').listen(server)
 ,   conf = require('./config.json')
 ,   team = ['blue','red']
+,   color = ['blue','red']
 ,   player = []
 ,   fs = require('fs');
 
@@ -28,9 +29,10 @@ app.get('/cordova.js', function (req, res) {
 var clients = {};    
 var intervalTimer = 50;
 var controls = {};
+var characterAttributes = {x:0,y:0,hp:100,jumping:false,w:120,h:380,crouch:false,velocityY:0,attack:{jab:false, kick:false},moving:false};
 var character = [];
-    character["blue"] = {x:0,y:0,hp:100,jumping:false,width:26,crouch:false,velocityY:0,attack:{jab:false, kick:false},moving:false}
-    character["red"] = {x:0,y:0,hp:100,jumping:false,width:26,crouch:false,velocityY:0,attack:{jab:false, kick:false},moving:false};
+    character["blue"] = extend({},characterAttributes)
+    character["red"] = extend({},characterAttributes)
 var options;
 
 // Websocket
@@ -47,15 +49,18 @@ io.sockets.on('connection', function (socket) {
     
     // options an client schicken
     options = {
-        mapX : 1500,
+        mapX : 700, //1500
         mapY : 400,
-        player1 : team[team.length-1],
         playerStartDelta : 100,
+        color : team[team.length-1],
+        
     }
     
-    options.player1start = character["blue"].x = options.playerStartDelta;
-    options.player2start = character["red"].x = options.mapX - options.playerStartDelta;
+    character["blue"].start = character["blue"].x = options.playerStartDelta;
+    character["red"].start = character["red"].x = options.mapX - options.playerStartDelta;
     character["blue"].y=character["red"].y= options.mapY;
+//    console.log(JSON.stringify(character));
+    options.characters = {"red" : character["red"] , "blue" : character["blue"]};
     socket.emit('gameOptions', options );
     
 
@@ -107,7 +112,7 @@ io.sockets.on('connection', function (socket) {
 var physicsloop = setInterval(function(){
     //check which buttons are pressed
     handleCommand();
-
+    handleCollision();
 },15)
 
 //updateloop
@@ -130,33 +135,53 @@ var minJumpHeight = ( jumpHeightSquared / 3 )
 function handleCommand(){
     for(var p in controls){
         var playerCommands = controls[p];
+        
+        var p1 = character[p];
+        var p2 = (p == "red")? character["blue"] : character["red"];
+        
         if(playerCommands.left){
-            if(character[p].x - movementSpeed >= 0){
-                character[p].x -= movementSpeed;
-                character[p].moving = true;
+            if(p1.x - movementSpeed >= (p1.w / 2)){
+                if (p1.x - movementSpeed + (p1.w/2) > p2.x - (p2.w/2) && p1.x - movementSpeed - (p1.w/2) < p2.x + (p2.w/2)){
+                    var slowerMovementSpeed = movementSpeed * .5;
+                    if(p2.x - slowerMovementSpeed >= (p1.w / 2)){
+                        p1.x -= slowerMovementSpeed;
+                        p2.x -= slowerMovementSpeed;
+                    }
+                } else {
+                    p1.x -= movementSpeed;
+                    p1.moving = true;
+                }
             }
         } else if (playerCommands.right){
-            if(character[p].x + movementSpeed <= (options.mapX-character[p].width)){
-                character[p].x += movementSpeed;
-                character[p].moving = true;
+            if(p1.x + movementSpeed <= (options.mapX) - (p1.w / 2)){
+                 if (p1.x + movementSpeed + (p1.w/2) > p2.x - (p2.w/2) && p1.x + movementSpeed - (p1.w/2) < p2.x + (p2.w/2)){
+                    var slowerMovementSpeed = movementSpeed * .5;
+                    if(p2.x + slowerMovementSpeed <= (options.mapX) - (p1.w / 2)){
+                        p1.x += slowerMovementSpeed;
+                        p2.x += slowerMovementSpeed;
+                    }
+                } else {
+                    p1.x += movementSpeed;
+                    p1.moving = true;
+                }
             }
         } else {
-            character[p].moving = false;
+            p1.moving = false;
         }
         
         if(playerCommands.moveup){
-            if(!character[p].jump) {
-                character[p].velocityY = jumpHeightSquared;
-                character[p].jump = true;
+            if(!p1.jump) {
+                p1.velocityY = jumpHeightSquared;
+                p1.jump = true;
             }
         } else {
-            if(character[p].velocityY < minJumpHeight){
-                character[p].velocityY = minJumpHeight;
+            if(p1.velocityY < minJumpHeight){
+                p1.velocityY = minJumpHeight;
             } else {
                 if (playerCommands.movedown) {
-                    character[p].crouch=true;
+                    p1.crouch=true;
                 } else {
-                    character[p].crouch=false;
+                    p1.crouch=false;
                 }
             }
         }
@@ -164,27 +189,44 @@ function handleCommand(){
         
         
         if(playerCommands.hit){
-            character[p].attack.jab = true;
+//            console.log(p);
+            p1.attack.jab = true;
         } else {
-            character[p].attack.jab = false;
+            p1.attack.jab = false;
         }
         
         if(playerCommands.kick){
-            character[p].attack.kick = true;
+            p1.attack.kick = true;
         } else {
-            character[p].attack.kick = false;
+            p1.attack.kick = false;
         }
 
-        character[p].velocityY += gravityAccelerationY ;
-        character[p].y += character[p].velocityY ;
-        if (character[p].y > options.mapY) {
-            character[p].y = options.mapY;
-            character[p].jump = false;
-            character[p].velocityY = 0;
+        p1.velocityY += gravityAccelerationY ;
+        p1.y += p1.velocityY ;
+        if (p1.y > options.mapY) {
+            p1.y = options.mapY;
+            p1.jump = false;
+            p1.velocityY = 0;
             
         }
         
         
+    }
+}
+
+function handleCollision(){
+    for (var p in color){
+        
+        var p1 = character[color[p]];
+        var p2 = (color[p] == "red")? character["blue"] : character["red"];
+//        console.log(p1.x,p2.x,p1.w,p2.w);
+
+        //detect whether characters bounce into each other
+        if (p1.x + (p1.w/2) > p2.x - (p2.w/2) && p1.x - (p1.w/2) < p2.x + (p2.w/2)){
+            console.log(timeStamp()," collision!");
+//            if(controls[color[p]])
+        }
+
     }
 }
 
@@ -208,10 +250,10 @@ function timeStamp() {
   var suffix = ( time[0] < 12 ) ? "AM" : "PM";
  
 // Convert hour from military time
-  time[0] = ( time[0] < 12 ) ? time[0] : time[0] - 12;
+//  time[0] = ( time[0] < 12 ) ? time[0] : time[0] - 12;
  
 // If hour is 0, set it to 12
-  time[0] = time[0] || 12;
+//  time[0] = time[0] || 12;
  
 // If seconds and minutes are less than 10, add a zero
   for ( var i = 1; i < 3; i++ ) {
@@ -221,5 +263,14 @@ function timeStamp() {
   }
  
 // Return the formatted string
-  return date.join("/") + " " + time.join(":") + " " + suffix;
+//  return date.join("/") + " " + time.join(":") + " " + suffix;
+  return time.join(":");
+}
+
+function extend(){
+    for(var i=1; i<arguments.length; i++)
+        for(var key in arguments[i])
+            if(arguments[i].hasOwnProperty(key))
+                arguments[0][key] = JSON.parse(JSON.stringify(arguments[i][key]));
+    return arguments[0];
 }

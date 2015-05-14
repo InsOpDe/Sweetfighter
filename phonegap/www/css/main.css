@@ -37,6 +37,7 @@ a {
     padding: 20px 30px;
     margin:60px;
     z-index:35;
+    word-wrap: break-word;
 }
 
 #chatWindow {
