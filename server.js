@@ -262,7 +262,7 @@ function handleCollision(){
         if (p1.attack.attacking && p1.attack.x + (p1.attack.w/2) > p2.x - (p2.w/2) && p1.attack.x - (p1.attack.w/2) < p2.x + (p2.w/2)){
             p2.gotHit.x = p1.attack.x - (p1.attack.w/2);
             p2.gotHit.y = p1.attack.y - (p1.attack.h/2);
-            p2.gotHit.damage = 100;
+            p2.gotHit.damage = 7;
         }
 
     }

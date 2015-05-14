@@ -11,6 +11,8 @@ var debug = {
 		debugKeys = document.createElement("p");
 		debugPlayerRed = document.createElement("p");
 		debugPlayerBlue = document.createElement("p");
+		debugPlayerBlueHp = document.createElement("p");
+		debugPlayerRedHp = document.createElement("p");
 
 		pFrames = document.createElement("p");
 
@@ -27,6 +29,8 @@ var debug = {
 		debugWindow.appendChild(debugPlayerRed);
 		debugWindow.appendChild(debugPlayerBlue);
 		debugWindow.appendChild(pFrames);
+		debugWindow.appendChild(debugPlayerBlueHp);
+		debugWindow.appendChild(debugPlayerRedHp);
 
 	},
 	
@@ -38,8 +42,19 @@ var debug = {
 //		debugKeys.innerHTML = "Controls: " + JSON.stringify(keyboard.state);
 //		debugKeys2.innerHTML = "Controls: " + JSON.stringify(keyboard.player["blue"]);
                 pFrames.innerHTML = "FPS: " + debug.requestAnimFrame();
+                debugPlayerBlueHp.innerHTML = "blue: " + debug.hitpoints("blue");
+                debugPlayerRedHp.innerHTML = "red: &nbsp;" + debug.hitpoints("red");
 		
 	},
+        
+        hitpoints : function(color){
+//            if(!game[color].hp) return "";
+            var hp = "";
+            for(var i = 0; i < game[color].hp; i=i+2){
+                hp += "|";
+            }
+            return hp;
+        },
 
 	
 	requestAnimFrame : function(){

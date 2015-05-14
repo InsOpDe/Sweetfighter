@@ -38,6 +38,7 @@ a {
     margin:60px;
     z-index:35;
     word-wrap: break-word;
+    letter-spacing: -1px;
 }
 
 #chatWindow {

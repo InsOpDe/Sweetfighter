@@ -37,6 +37,7 @@ var multiplayer = {
                     game[color].attackRange.y = actions[color].attack.y - (actions[color].attack.h / 2);
                     
                     if(actions[color].gotHit.damage > 0){
+                        game[color].hp -= actions[color].gotHit.damage;
                         game.hitAnimations.hit1.x = actions[color].gotHit.x-10;
                         game.hitAnimations.hit1.y = actions[color].gotHit.y-20;
                         var animation = game.hitAnimations.hit1.animations.play('fx1', 20, false);
