@@ -32,8 +32,17 @@ var game = {
         game.ebene4 = game.phaser.add.tileSprite(0, 0, game.options.mapX, game.options.mapY, 'ebene4');
 
         game.phaser.world.setBounds(0, 0, game.options.mapX, game.options.mapY);
-
         
+        
+        //hit animations
+        game.hitAnimations = {};
+        game.hitAnimations.hit1 = game.phaser.add.sprite(0, 0, 'fx1');
+        game.hitAnimations.hit1.animations.add('fx1',[0,1,2,3]);
+        game.hitAnimations.hit1.alpha = 0;
+        
+        
+
+        //player animations etc
         for(var key in game.players){
             var color = game.players[key]
             console.log(game.options.characters);

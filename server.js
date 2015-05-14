@@ -29,7 +29,7 @@ app.get('/cordova.js', function (req, res) {
 var clients = {};    
 var intervalTimer = 50;
 var controls = {};
-var characterAttributes = {x:0,y:0,hp:100,jumping:false,w:120,h:380,crouch:false,velocityY:0,attack:{jab:false, kick:false},moving:false};
+var characterAttributes = {x:0,y:0,hp:100,jumping:false,w:120,h:380,crouch:false,velocityY:0,attack:{timer:0,jab:false, kick:false},moving:false,gotHit:{x:0,y:0,damage:0}};
 var character = [];
     character["blue"] = extend({},characterAttributes)
     character["red"] = extend({},characterAttributes)
@@ -120,6 +120,7 @@ io.sockets.on('connection', function (socket) {
 // main physics loop on server
 var physicsloop = setInterval(function(){
     //check which buttons are pressed
+    handleAttackTimings();
     handleCommand();
     handleCollision();
 },15)
@@ -130,11 +131,28 @@ var updateloop = setInterval(function(){
 //    update["red"] = {x : character["red"].x , y : character["red"].y }
 //    update["blue"] = {x : character["blue"].x , y : character["blue"].y }
     io.sockets.emit('command', { tick: new Date(), actions : update });
+    
+    resetVals();
 },45)
 
 
 // Portnummer in die Konsole schreiben
 console.log('Der Server läuft nun auf dem Port ' + conf.port);
+
+
+
+function handleAttackTimings(){
+//    for (var p in color){
+//        var p1 = character[color[p]];
+//        var c1 = controls[p];
+//        if(p1.attack.jab){
+//            p1.attack.timer = Date.now()+300;
+//            
+//            console.log("jab");
+//        }
+//    }
+}
+
 
 var movementSpeed = 5;
 var hitSpeed = 1;
@@ -143,12 +161,12 @@ var jumpHeightSquared = -25;
 var minJumpHeight = ( jumpHeightSquared / 3 )
 function handleCommand(){
     for(var p in controls){
-        var playerCommands = controls[p];
+        var c1 = controls[p];
         var p1 = character[p];
         var p2 = (p == "red")? character["blue"] : character["red"];
         var vz = (p1.x > p2.x)? -1 : 1;
         
-        if(playerCommands.left){
+        if(c1.left){
             if(p1.x - movementSpeed >= (p1.w / 2)){
                 if (p1.x - movementSpeed + (p1.w/2) > p2.x - (p2.w/2) && p1.x - movementSpeed - (p1.w/2) < p2.x + (p2.w/2)){
                     var slowerMovementSpeed = movementSpeed * .5;
@@ -161,7 +179,7 @@ function handleCommand(){
                     p1.moving = true;
                 }
             }
-        } else if (playerCommands.right){
+        } else if (c1.right){
             if(p1.x + movementSpeed <= (options.mapX) - (p1.w / 2)){
                  if (p1.x + movementSpeed + (p1.w/2) > p2.x - (p2.w/2) && p1.x + movementSpeed - (p1.w/2) < p2.x + (p2.w/2)){
                     var slowerMovementSpeed = movementSpeed * .5;
@@ -178,7 +196,7 @@ function handleCommand(){
             p1.moving = false;
         }
         
-        if(playerCommands.moveup){
+        if(c1.moveup){
             if(!p1.jump) {
                 p1.velocityY = jumpHeightSquared;
                 p1.jump = true;
@@ -187,7 +205,7 @@ function handleCommand(){
             if(p1.velocityY < minJumpHeight){
                 p1.velocityY = minJumpHeight;
             } else {
-                if (playerCommands.movedown) {
+                if (c1.movedown) {
                     p1.crouch=true;
                 } else {
                     p1.crouch=false;
@@ -197,20 +215,24 @@ function handleCommand(){
         
         
         
-        if(playerCommands.hit){
-//            console.log(p);
-            p1.attack.jab = true;
-            p1.attack.attacking = true;
-            p1.attack.x = p1.x+vz*(p1.w/1)
-            p1.attack.y = p1.y-(p1.h/1.3)
-            p1.attack.w = 40;
-            p1.attack.h = 40;
+        if(c1.hit){
+           if(Date.now() > p1.attack.timer){
+                p1.attack.timer = Date.now()+400;
+                p1.attack.jab = true;
+                p1.attack.attacking = true;
+                p1.attack.x = p1.x+vz*(p1.w/1)
+                p1.attack.y = p1.y-(p1.h/1.3)
+                p1.attack.w = 40;
+                p1.attack.h = 40;
+//                console.log("jab");
+           }
+            
         } else {
             p1.attack.attacking = false;
             p1.attack.jab = false;
         }
         
-        if(playerCommands.kick){
+        if(c1.kick){
             p1.attack.kick = true;
         } else {
             p1.attack.kick = false;
@@ -238,9 +260,22 @@ function handleCollision(){
 
         //detect whether characters can hit each other
         if (p1.attack.attacking && p1.attack.x + (p1.attack.w/2) > p2.x - (p2.w/2) && p1.attack.x - (p1.attack.w/2) < p2.x + (p2.w/2)){
-            
+            p2.gotHit.x = p1.attack.x - (p1.attack.w/2);
+            p2.gotHit.y = p1.attack.y - (p1.attack.h/2);
+            p2.gotHit.damage = 100;
         }
 
+    }
+}
+
+
+function resetVals(){
+    for (var p in color){
+        var p1 = character[color[p]];
+        p1.gotHit.damage = 0;
+        p1.attack.jab = false;
+        p1.attack.kick = false;
+        p1.attack.attacking = false;
     }
 }
 
