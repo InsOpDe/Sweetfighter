@@ -47,23 +47,34 @@ var game = {
             
             //center of player
             var bmd = game.phaser.add.bitmapData(20, 20);
-
             bmd.ctx.beginPath();
             bmd.ctx.rect(0, 0, 20, 20);
             bmd.ctx.fillStyle = '#ff0000';
             bmd.ctx.fill();
             game[color].center = game.phaser.add.sprite(game[color].x-10, game[color].y-10, bmd);
-            console.log(game[color].w,game[color].h);
+            if(!debug.debugModeOn)game[color].center.alpha = 0;
+            
             //boundingbox of player
-            var width = game[color].w // example;
-            var height = game[color].h // example;
+            var width = game[color].w;
+            var height = game[color].h;
             var bmd = game.phaser.add.bitmapData(width, height);
-
             bmd.ctx.beginPath();
             bmd.ctx.rect(0, 0, width, height);
             bmd.ctx.strokeStyle = '#ff0000';
             bmd.ctx.stroke();
             game[color].box = game.phaser.add.sprite(game[color].x, game[color].y-10, bmd);
+            if(!debug.debugModeOn)game[color].box.alpha = 0;
+            
+            //boundingbox of attack
+            var width = 40;
+            var height = 40 ;
+            var bmd = game.phaser.add.bitmapData(width, height);
+            bmd.ctx.beginPath();
+            bmd.ctx.rect(0, 0, width, height);
+            bmd.ctx.strokeStyle = '#0000ff';
+            bmd.ctx.stroke();
+            game[color].attackRange = game.phaser.add.sprite(game[color].x, game[color].y, bmd);
+            if(!debug.debugModeOn)game[color].attackRange.alpha = 0;
             
             
             //stand consists of frames 0,1,2
@@ -132,10 +143,13 @@ var game = {
             game[color].center.x = game[color].realX-10;
             game[color].center.y = game[color].realY-10;
             
-            
             //box
             game[color].box.x = game[color].realX-(game[color].w/2);
             game[color].box.y = game[color].realY-game[color].h;
+            
+            //attackrange
+//            game[color].attackRange.x = game[color].realX-(game[color].w/1.2);
+//            game[color].attackRange.y = game[color].realY-(game[color].h/1.2);
             
             
             //if is attacking, then first make the move

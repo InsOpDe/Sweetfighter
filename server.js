@@ -146,6 +146,7 @@ function handleCommand(){
         var playerCommands = controls[p];
         var p1 = character[p];
         var p2 = (p == "red")? character["blue"] : character["red"];
+        var vz = (p1.x > p2.x)? -1 : 1;
         
         if(playerCommands.left){
             if(p1.x - movementSpeed >= (p1.w / 2)){
@@ -199,7 +200,13 @@ function handleCommand(){
         if(playerCommands.hit){
 //            console.log(p);
             p1.attack.jab = true;
+            p1.attack.attacking = true;
+            p1.attack.x = p1.x+vz*(p1.w/1)
+            p1.attack.y = p1.y-(p1.h/1.3)
+            p1.attack.w = 40;
+            p1.attack.h = 40;
         } else {
+            p1.attack.attacking = false;
             p1.attack.jab = false;
         }
         
@@ -229,10 +236,9 @@ function handleCollision(){
         var p2 = (color[p] == "red")? character["blue"] : character["red"];
 //        console.log(p1.x,p2.x,p1.w,p2.w);
 
-        //detect whether characters bounce into each other
-        if (p1.x + (p1.w/2) > p2.x - (p2.w/2) && p1.x - (p1.w/2) < p2.x + (p2.w/2)){
-//            console.log(timeStamp()," collision!");
-//            if(controls[color[p]])
+        //detect whether characters can hit each other
+        if (p1.attack.attacking && p1.attack.x + (p1.attack.w/2) > p2.x - (p2.w/2) && p1.attack.x - (p1.attack.w/2) < p2.x + (p2.w/2)){
+            
         }
 
     }
