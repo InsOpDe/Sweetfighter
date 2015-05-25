@@ -5,7 +5,6 @@ var game = {
     players : ['blue','red'],
     init: function() {
         game.phaser = new Phaser.Game(700, game.options.mapY, Phaser.CANVAS, 'phaser-example', { preload: loader.preload, create: game.create, update: game.update });
-        //game.phaser = new Phaser.Game(700, game.options.mapY, Phaser.CANVAS, 'phaser-example', { preload: loader.preload, create: game.create, update: game.update });
 //       game.phaser = new Phaser.Game(game.options.mapX, game.options.mapY, Phaser.CANVAS, 'phaser-example', { preload: loader.preload, create: game.create, update: game.update });
         initTouchInterface();
     },
@@ -15,6 +14,11 @@ var game = {
     create : function() {
         // spiel ist aktiv auch wenn das fenster nicht fokussiert ist
         game.phaser.stage.disableVisibilityChange = true;
+
+        //SCALING FOR MOBILE DEVICES
+        if (this.game.device.desktop === false){
+            this.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
+        }
         
 //        game.phaser.add.image(0, 0, 'sky');
 
