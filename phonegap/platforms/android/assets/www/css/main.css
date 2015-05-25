@@ -150,3 +150,9 @@ a {
 #gamebackgroundcanvas{
 	z-index:20;
 }
+
+/*Touchinterface*/
+#touchInterface{
+    position:absolute;
+    z-index:1000;
+}
