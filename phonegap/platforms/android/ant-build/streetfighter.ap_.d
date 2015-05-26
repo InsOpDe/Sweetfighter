@@ -52,6 +52,7 @@ D:\Dokumente\GIT\SweetFighter\phonegap\platforms\android\assets\www\js\loader.js
 D:\Dokumente\GIT\SweetFighter\phonegap\platforms\android\assets\www\js\loadingscreen.js \
 D:\Dokumente\GIT\SweetFighter\phonegap\platforms\android\assets\www\js\multiplayer.js \
 D:\Dokumente\GIT\SweetFighter\phonegap\platforms\android\assets\www\js\phaser.js \
+D:\Dokumente\GIT\SweetFighter\phonegap\platforms\android\assets\www\js\shake.js \
 D:\Dokumente\GIT\SweetFighter\phonegap\platforms\android\assets\www\js\touchInterface.js \
 D:\Dokumente\GIT\SweetFighter\phonegap\platforms\android\assets\www\js\vector2D.js \
 D:\Dokumente\GIT\SweetFighter\phonegap\platforms\android\assets\www\Pyramiden\Ebene1.png \

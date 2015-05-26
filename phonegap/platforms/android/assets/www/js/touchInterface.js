@@ -211,3 +211,8 @@ function draw(){
         }
     }
 }
+
+function removeTouchInterface(){
+    var remove = document.getElementById("touchInterface");
+    remove.parentNode.removeChild(remove);
+}

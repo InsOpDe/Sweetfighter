@@ -7,6 +7,7 @@ var game = {
         game.phaser = new Phaser.Game(700, game.options.mapY, Phaser.CANVAS, 'phaser-example', { preload: loader.preload, create: game.create, update: game.update });
 //       game.phaser = new Phaser.Game(game.options.mapX, game.options.mapY, Phaser.CANVAS, 'phaser-example', { preload: loader.preload, create: game.create, update: game.update });
         initTouchInterface();
+        initShake();
     },
     sprite:undefined,
     cursors:undefined,
