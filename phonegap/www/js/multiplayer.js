@@ -34,10 +34,8 @@ var multiplayer = {
             var received = Date.now();
             var send = data.send;
             var server = data.server;
-            console.log(data);
             for(var i in multiplayer.heartbeats){
                 var beat = multiplayer.heartbeats[i];
-                console.log(beat.send == send,beat.send,send);
                 if(beat.send == send){
                     beat.received = received;
                     beat.server = server;

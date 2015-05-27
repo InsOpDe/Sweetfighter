@@ -15,6 +15,7 @@ var debug = {
 		debugPlayerRedHp = document.createElement("p");
 
 		pFrames = document.createElement("p");
+		debugPing = document.createElement("p");
 
 		
 		
@@ -29,6 +30,7 @@ var debug = {
 		debugWindow.appendChild(debugPlayerRed);
 		debugWindow.appendChild(debugPlayerBlue);
 		debugWindow.appendChild(pFrames);
+		debugWindow.appendChild(debugPing);
 		debugWindow.appendChild(debugPlayerBlueHp);
 		debugWindow.appendChild(debugPlayerRedHp);
 
@@ -42,6 +44,7 @@ var debug = {
 //		debugKeys.innerHTML = "Controls: " + JSON.stringify(keyboard.state);
 //		debugKeys2.innerHTML = "Controls: " + JSON.stringify(keyboard.player["blue"]);
                 pFrames.innerHTML = "FPS: " + debug.requestAnimFrame();
+                debugPing.innerHTML = "Ping: " + debug.pingCalc() + " (" + debug.pingCalc("toServer") + " + " + debug.pingCalc("fromServer") +")";
                 debugPlayerBlueHp.innerHTML = "blue: " + debug.hitpoints("blue");
                 debugPlayerRedHp.innerHTML = "red: &nbsp;" + debug.hitpoints("red");
 		
@@ -54,6 +57,26 @@ var debug = {
                 hp += "|";
             }
             return hp;
+        },
+        
+        pingCalc : function(string){
+            var sum = 0;
+            var diff = 6182;
+            for(var i in multiplayer.heartbeats){
+                var beat = multiplayer.heartbeats[i];
+                if(string == "toServer"){
+                    sum += Math.abs(beat.send - beat.server);
+                    sum -= diff;
+                } else if(string == "fromServer"){
+                    sum += Math.abs(beat.server - beat.received);
+                    sum -= diff;
+                } else {
+                    sum += Math.abs(beat.send - beat.received);
+                }
+                
+            }
+            
+            return (Math.round((sum/multiplayer.heartbeats.length)*10))/10;
         },
 
 	

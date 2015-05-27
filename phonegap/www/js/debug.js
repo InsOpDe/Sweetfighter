@@ -61,12 +61,15 @@ var debug = {
         
         pingCalc : function(string){
             var sum = 0;
+            var diff = 6182;
             for(var i in multiplayer.heartbeats){
                 var beat = multiplayer.heartbeats[i];
                 if(string == "toServer"){
                     sum += Math.abs(beat.send - beat.server);
+                    sum -= diff;
                 } else if(string == "fromServer"){
                     sum += Math.abs(beat.server - beat.received);
+                    sum -= diff;
                 } else {
                     sum += Math.abs(beat.send - beat.received);
                 }
