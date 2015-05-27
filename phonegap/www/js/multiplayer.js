@@ -8,12 +8,47 @@ var multiplayer = {
 
     },
     socket:null,
+    lastHeartbeat: [],
+    heartbeats: [],
     timestamp:new Date().valueOf(),
     sendCommand:function(details){
+        var time = Date.now();
         multiplayer.socket.emit('command', details );
+//        multiplayer.lastHeartbeat = time;
+//        multiplayer.heartbeats.push({send:time,received:0,server:0});
     },
     
     run:function(){
+        
+        
+        var heartbeatInterval = setInterval(function(){
+            var time = Date.now();
+            if(Math.abs(multiplayer.lastHeartbeat - time) > 1000){
+                multiplayer.socket.emit('heartbeat',{send:time});
+                multiplayer.lastHeartbeat = time;
+                multiplayer.heartbeats.push({send:time,received:0,server:0});
+            }
+        },1000)
+        
+        multiplayer.socket.on('heartbeat', function (data) {
+            var received = Date.now();
+            var send = data.send;
+            var server = data.server;
+            console.log(data);
+            for(var i in multiplayer.heartbeats){
+                var beat = multiplayer.heartbeats[i];
+                console.log(beat.send == send,beat.send,send);
+                if(beat.send == send){
+                    beat.received = received;
+                    beat.server = server;
+                    if(multiplayer.heartbeats.length > 5){
+                        multiplayer.heartbeats.shift();
+                    }
+                }
+            }
+        });
+        
+        
         multiplayer.socket.on('command', function (data) {
             var actions = data.actions;
             

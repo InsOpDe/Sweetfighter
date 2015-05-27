@@ -95,6 +95,16 @@ io.sockets.on('connection', function (socket) {
                     +":"+(cur.getSeconds()<10?'0'+cur.getSeconds():cur.getSeconds()) 
                     +"] " +(data.name || 'Anonym') + ": " + data.text );
     });
+    
+    
+    //Processing commands
+    socket.on('heartbeat', function (data) {
+        var time = Date.now();
+        player[socket.id].heartbeat = time;
+        data.server = time;
+//        console.log(JSON.stringify(data));
+        socket.emit('heartbeat', data );
+    });
         
     //Processing commands
     socket.on('command', function (data) {
