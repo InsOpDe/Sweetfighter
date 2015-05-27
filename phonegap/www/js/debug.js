@@ -44,7 +44,7 @@ var debug = {
 //		debugKeys.innerHTML = "Controls: " + JSON.stringify(keyboard.state);
 //		debugKeys2.innerHTML = "Controls: " + JSON.stringify(keyboard.player["blue"]);
                 pFrames.innerHTML = "FPS: " + debug.requestAnimFrame();
-                debugPing.innerHTML = "Ping: " + debug.pingCalc() + " toServer: " + debug.pingCalc("toServer") + " fromServer: " + debug.pingCalc("fromServer");
+                debugPing.innerHTML = "Ping: " + debug.pingCalc() + " (" + debug.pingCalc("toServer") + " + " + debug.pingCalc("fromServer") +")";
                 debugPlayerBlueHp.innerHTML = "blue: " + debug.hitpoints("blue");
                 debugPlayerRedHp.innerHTML = "red: &nbsp;" + debug.hitpoints("red");
 		
@@ -73,7 +73,7 @@ var debug = {
                 
             }
             
-            return sum/multiplayer.heartbeats.length;
+            return (Math.round((sum/multiplayer.heartbeats.length)*10))/10;
         },
 
 	
