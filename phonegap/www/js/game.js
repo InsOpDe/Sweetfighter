@@ -4,13 +4,18 @@ var game = {
     offset: 180,
     players : ['blue','red'],
     init: function() {
-        game.phaser = new Phaser.Game(700, game.options.mapY, Phaser.CANVAS, 'phaser-example', { preload: loader.preload, create: game.create, update: game.update });
-//       game.phaser = new Phaser.Game(game.options.mapX, game.options.mapY, Phaser.CANVAS, 'phaser-example', { preload: loader.preload, create: game.create, update: game.update });
+        game.phaser = new Phaser.Game(704, 396, Phaser.CANVAS, 'phaser-example', { preload: loader.preload, create: game.create, update: game.update });
         initTouchInterface();
         initShake();
     },
     sprite:undefined,
     cursors:undefined,
+    interface:undefined,
+    interface_background:undefined,
+    healthbar_p1:undefined,
+    healthbar_p2:undefined,
+    meterbar_p1:undefined,
+    meterbar_p2:undefined,
 
     create : function() {
         // spiel ist aktiv auch wenn das fenster nicht fokussiert ist
@@ -20,15 +25,6 @@ var game = {
         if (this.game.device.desktop === false){
             this.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
         }
-        
-//        game.phaser.add.image(0, 0, 'sky');
-
-        //	Enable p2 physics
-//        game.phaser.physics.startSystem(Phaser.Physics.P2JS);
-
-        //  Make things a bit more bouncey
-//        game.phaser.physics.p2.gravity.y = 10000;
-//        game.phaser.physics.p2.defaultRestitution = 0.8;
 
         //Hintergrund
         game.ebene1 = game.phaser.add.tileSprite(0, 0, game.options.mapX, game.options.mapY, 'ebene1');
@@ -131,22 +127,42 @@ var game = {
         
         //set anchors
         game.blue.anchor.y = game.red.anchor.y = 1;
-//        game.blue.anchor.x = game.red.anchor.x = 0;
-//        game.blue.anchor.x = game.red.anchor.x = 0.5;
         game.blue.anchor.x = 1;
         game.red.anchor.x = 0;
         
-
-//        var text = game.phaser.add.text(20, 20, 'move with arrow keys', { fill: '#ffffff' });
-
-//        game.cursors = game.phaser.input.keyboard.createCursorKeys();
-
+        //Add Userinterface
+        game.interface_background = game.phaser.add.image(2,0, 'interface_background');
+        game.healthbar_p1 = game.phaser.add.image(100,41, 'healthbar_p1');
+        game.healthbar_p2 = game.phaser.add.image(387,41, 'healthbar_p2');
+        game.meterbar_p1 = game.phaser.add.image(102,63, 'meterbar_p1');
+        game.meterbar_p2 = game.phaser.add.image(452,63, 'meterbar_p2');
+        game.interface = game.phaser.add.image(2, 0, 'interface');
+        
+        game.interface.scale.setTo(0.5, 0.5);
+        game.interface.fixedToCamera = true;
+        game.interface.cameraOffset.setTo(2,0);
+        
+        game.healthbar_p1.scale.setTo(0.5,0.5);
+        game.healthbar_p1.fixedToCamera = true;
+        game.healthbar_p1.cameraOffset.setTo(102,41); 
+        game.healthbar_p2.scale.setTo(0.5,0.5);
+        game.healthbar_p2.fixedToCamera = true;
+        game.healthbar_p2.cameraOffset.setTo(387,41);
+        
+        game.meterbar_p1.scale.setTo(0.5,0.5);
+        game.meterbar_p1.fixedToCamera = true;
+        game.meterbar_p1.cameraOffset.setTo(102,63);
+        game.meterbar_p2.scale.setTo(0.5,0.5);
+        game.meterbar_p2.fixedToCamera = true;
+        game.meterbar_p2.cameraOffset.setTo(452,63);
+        
+        game.interface_background.scale.setTo(0.5, 0.5);
+        game.interface_background.fixedToCamera = true;
+        game.interface_background.cameraOffset.setTo(2,0);
     },
     jumpTimer : 0,
     update : function() {
         debug.run();
-        
-        
         
         //players
         for(var key in game.players){
@@ -214,9 +230,5 @@ var game = {
             game.ebene3.tilePosition.y += vz*.5;
             game.oldY = game.red.y;
         }
-        
-
-    },
-    
-    
-}
+    }
+};

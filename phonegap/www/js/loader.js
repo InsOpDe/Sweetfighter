@@ -28,11 +28,16 @@ var loader = {
 
         game.phaser.load.spritesheet('muaythai', 'muay_thai.png', 400, 300, 14);
         game.phaser.load.spritesheet('fx1', 'img/fx1.png', 70, 70, 4);
-//        game.phaser.load.spritesheet('muaythai', 'spritesheet_mt_stand_right.png', 350, 182, 3);
         game.phaser.load.image('ebene1', 'Pyramiden/Ebene1.png');
         game.phaser.load.image('ebene2', 'Pyramiden/Ebene2.png');
         game.phaser.load.image('ebene3', 'Pyramiden/Ebene3.png');
         game.phaser.load.image('ebene4', 'Pyramiden/Ebene4.png');
+        game.phaser.load.image('interface', 'img/Interface.png');
+        game.phaser.load.image('interface_background', 'img/Interface_Background.png');
+        game.phaser.load.image('healthbar_p1', 'img/Healthbar_P1.png');
+        game.phaser.load.image('healthbar_p2', 'img/Healthbar_P2.png');
+        game.phaser.load.image('meterbar_p1', 'img/Meterbar_P1.png');
+        game.phaser.load.image('meterbar_p2', 'img/Meterbar_P2.png');
 
     },
 }
