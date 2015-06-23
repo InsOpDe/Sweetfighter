@@ -46,7 +46,8 @@ var debug = {
                 pFrames.innerHTML = "FPS: " + debug.requestAnimFrame();
                 debugPing.innerHTML = "Ping: " + debug.pingCalc() + " (" + debug.pingCalc("toServer") + " + " + debug.pingCalc("fromServer") +")";
                 debugPlayerBlueHp.innerHTML = "blue: " + debug.hitpoints("blue");
-                debugPlayerRedHp.innerHTML = "red: &nbsp;" + debug.hitpoints("red");
+                //debugPlayerRedHp.innerHTML = "red: &nbsp;" + debug.hitpoints("red");
+                debugPlayerRedHp.innerHTML = timerCountdown.timer;
 		
 	},
         

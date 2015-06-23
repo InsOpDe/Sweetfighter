@@ -159,6 +159,8 @@ var game = {
         game.interface_background.scale.setTo(0.5, 0.5);
         game.interface_background.fixedToCamera = true;
         game.interface_background.cameraOffset.setTo(2,0);
+        
+        timerCountdown.initTimer();
     },
     jumpTimer : 0,
     update : function() {
@@ -230,5 +232,51 @@ var game = {
             game.ebene3.tilePosition.y += vz*.5;
             game.oldY = game.red.y;
         }
+    }
+};
+
+var timerCountdown = {
+    timer:undefined,
+    text:undefined,
+    timerInterval:undefined,
+    
+    initTimer:function(){
+        timerCountdown.timer = 99;
+        timerCountdown.text = game.phaser.add.text(321, 21, timerCountdown.timer,{
+            font: "bold 54px Arial",
+            fill: "555151",
+            align: "center"
+        });
+        timerCountdown.text.bringToTop();
+        timerCountdown.text.fixedToCamera = true;
+        timerCountdown.text.cameraOffset.setTo(321,21);
+        timerCountdown.startTimer();
+    },
+    
+    startTimer:function(){
+        timerCountdown.timerInterval = setInterval(function(){
+            timerCountdown.timer--;
+            
+            if(timerCountdown.timer >= 10){
+                timerCountdown.text.setText(timerCountdown.timer);
+            } else {
+                timerCountdown.text.setText("0" + timerCountdown.timer);
+            }
+            
+            if(timerCountdown.timer < 0){
+            timerCountdown.resetTimer();
+        }
+        },1000);
+    },
+    
+    stopTimer:function(){
+        clearInterval(timerCountdown.timerInterval);
+    },
+    
+    resetTimer:function(){
+        timerCountdown.stopTimer();
+        timerCountdown.timer = 99;
+        timerCountdown.text.setText(timerCountdown.timer);
+        timerCountdown.startTimer();
     }
 };
