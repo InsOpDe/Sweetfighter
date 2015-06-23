@@ -74,7 +74,8 @@ var multiplayer = {
                     if(actions[color].gotHit.damage > 0){
                         //game[color].hp -= actions[color].gotHit.damage;
                         game.hitAnimations.hit1.x = actions[color].gotHit.x-10;
-                        game.hitAnimations.hit1.y = actions[color].gotHit.y-20;
+//                        game.hitAnimations.hit1.y = actions[color].gotHit.y-20;
+                        game.hitAnimations.hit1.y = actions[color].gotHit.y+20;
                         var animation = game.hitAnimations.hit1.animations.play('fx1', 20, false);
                         game.hitAnimations.hit1.alpha = 1;
                         var stillPlayer = setInterval(function(){
@@ -89,12 +90,24 @@ var multiplayer = {
                     game[color].jab = actions[color].attack.jab
                     game[color].isWalking = actions[color].moving
                     game[color].kick = actions[color].attack.kick;
+                    game[color].special1 = actions[color].attack.special1;
+                    game[color].special2 = actions[color].attack.special2;
+                    game[color].hyper = actions[color].attack.hyper;
                     if(game[color].jab){
                         game[color].jabTimer = Date.now() + 180; //genaue zeit wielange ein jab dauert!
 //                        attackTimer = Date.now() + 500;
                     }
                     if(game[color].kick){
                         game[color].kickTimer = Date.now() + 200; //genaue zeit wielange ein jab dauert!
+                    }
+                    if(game[color].special1){
+                        game[color].special1Timer = Date.now() + 200; //genaue zeit wielange ein special dauert!
+                    }
+                    if(game[color].special2){
+                        game[color].special2Timer = Date.now() + 200; //genaue zeit wielange ein special dauert!
+                    }
+                    if(game[color].hyper){
+                        game[color].hyperTimer = Date.now() + 200; //genaue zeit wielange ein special dauert!
                     }
                 }
             }

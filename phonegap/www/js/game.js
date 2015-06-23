@@ -4,7 +4,8 @@ var game = {
     offset: 180,
     players : ['blue','red'],
     init: function() {
-        game.phaser = new Phaser.Game(704, 396, Phaser.CANVAS, 'phaser-example', { preload: loader.preload, create: game.create, update: game.update });
+        game.phaser = new Phaser.Game(704, 396, Phaser.AUTO, 'phaser-example', { preload: loader.preload, create: game.create, update: game.update });
+//        game.phaser = new Phaser.Game(704, 396, Phaser.CANVAS, 'phaser-example', { preload: loader.preload, create: game.create, update: game.update });
         initTouchInterface();
         initShake();
     },
@@ -32,14 +33,12 @@ var game = {
         game.ebene3 = game.phaser.add.tileSprite(0, 0, game.options.mapX, game.options.mapY, 'ebene3');
         game.ebene4 = game.phaser.add.tileSprite(0, 0, game.options.mapX, game.options.mapY, 'ebene4');
 
+//        game.ebene1.alpha = game.ebene2.alpha = game.ebene3.alpha = game.ebene4.alpha = 0
+
         game.phaser.world.setBounds(0, 0, game.options.mapX, game.options.mapY);
         
         
-        //hit animations
-        game.hitAnimations = {};
-        game.hitAnimations.hit1 = game.phaser.add.sprite(0, 0, 'fx1');
-        game.hitAnimations.hit1.animations.add('fx1',[0,1,2,3]);
-        game.hitAnimations.hit1.alpha = 0;
+
         
         
 
@@ -50,6 +49,7 @@ var game = {
             
 //            game[color] = game.options.characters[color];
 //            game[color] = $.extend(game[color],);
+//            game[color] = game.phaser.add.sprite(game.options.characters[color].start, game.options.mapY, 'muaythai');
 //            game[color] = game.phaser.add.sprite(game.options.characters[color].start, game.options.mapY, 'muaythai');
 //            game[color] = game.phaser.add.sprite(game.options.characters[color].start, game.options.mapY, 'muaythai');
             game[color] = game.phaser.add.sprite(game.options.characters[color].start, game.options.mapY, 'muaythai'+color);
@@ -64,7 +64,7 @@ var game = {
             bmd.ctx.fillStyle = '#ff0000';
             bmd.ctx.fill();
             game[color].center = game.phaser.add.sprite(game[color].x-10, game[color].y-10, bmd);
-            if(!debug.debugModeOn)game[color].center.alpha = 0;
+            if(debug.debugModeOn)game[color].center.alpha = 0;
             
             //boundingbox of player
             var width = game[color].w;
@@ -75,7 +75,7 @@ var game = {
             bmd.ctx.strokeStyle = '#ff0000';
             bmd.ctx.stroke();
             game[color].box = game.phaser.add.sprite(game[color].x, game[color].y-10, bmd);
-            if(!debug.debugModeOn)game[color].box.alpha = 0;
+            if(debug.debugModeOn)game[color].box.alpha = 0;
             
             //boundingbox of attack
             var width = 40;
@@ -86,7 +86,7 @@ var game = {
             bmd.ctx.strokeStyle = '#0000ff';
             bmd.ctx.stroke();
             game[color].attackRange = game.phaser.add.sprite(game[color].x, game[color].y, bmd);
-            if(!debug.debugModeOn)game[color].attackRange.alpha = 0;
+            if(debug.debugModeOn)game[color].attackRange.alpha = 0;
             
             
             //stand consists of frames 0,1,2
@@ -106,6 +106,12 @@ var game = {
 //            game[color].animations.add('jab',[11]);
             //kick
             var isKicking = game[color].animations.add('kick',[4,4,6,6,4,4]);
+            //special1 
+            var isSpecial1 = game[color].animations.add('special1',[24,25,26,25]);
+            //special2  
+            var isSpecial2 = game[color].animations.add('special2',[28,28,29,30,30,29]);
+            //hyper 
+            var isHyper = game[color].animations.add('hyper',[21,21,22,23,22]);
 
             //add attributes
             var attributes = {
@@ -116,7 +122,11 @@ var game = {
                     isDefending:isDefending,
                     isAttacking:false,
                     isJabbing:isJabbing,
-                    isKicking:isKicking};
+                    isKicking:isKicking,
+                    isSpecial1:isSpecial1,
+                    isSpecial2:isSpecial2,
+                    isHyper:isHyper,
+                };
             game[color] = $.extend(game[color],attributes);
             
         }
@@ -130,7 +140,7 @@ var game = {
         //set anchors
         game.blue.anchor.y = game.red.anchor.y = 1;
         game.blue.anchor.x = 1;
-        game.red.anchor.x = 0;
+        game.red.anchor.x = 0.1;
         
         //Add Userinterface
         game.interface_background = game.phaser.add.image(2,0, 'interface_background');
@@ -164,11 +174,32 @@ var game = {
         
         timerCountdown.initTimer();
         
+        
+        //hit animations müssen weiter runter, damit sie oben auf liegen
+        game.hitAnimations = {};
+        game.hitAnimations.hit1 = game.phaser.add.sprite(0, 0, 'fx1');
+        game.hitAnimations.hit1.animations.add('fx1',[0,1,2,3]);
+        game.hitAnimations.hit1.alpha = 0;
+        
+        
+        //shadereffekte
+        game.hitAnimations.shader1 = new Phaser.Filter(game.phaser, null, fragmentSrc);
+//        game.hitAnimations.shader1.alpha = 0.0;
+        game.hitAnimations.shader1.setResolution(704, 396);
+
+//        game.hitAnimations.shaderEffect1 = game.phaser.add.sprite();
+        game.hitAnimations.shaderEffects = game.phaser.add.tileSprite(0, 0, game.options.mapX, game.options.mapY, 'bgtrans');
+
+
         //TEST - DEBUG
         hypermeter.changehypermeter_player();
+        
+        
+        
     },
     jumpTimer : 0,
     update : function() {
+        
         debug.run();
         
         //players
@@ -192,14 +223,99 @@ var game = {
             //if is attacking, then first make the move
 //            if(!game[color].isJabbing.isPlaying){
             
+//                    console.log(game[color].animations.currentAnim.frame);
+
+            //handling shader 21,22,23
+            var curFrame = game[color].animations.currentAnim.frame;
+            var posX = game[color].position.x-game.phaser.camera.x;
+            var posY = game[color].position.y-game.phaser.camera.y;
+            var w = game[color].w;
+//            var posX = game[color].realX;
+//            var posY = game[color].realY;
+//            console.log(posX,posY);
+            //hyper
+//            if(curFrame <= 23 && curFrame >= 21 ){
+//                if(curFrame == 21)
+//                    game.hitAnimations.shader1.update({x:posX-w-150,y:posY-170});
+//                else if (curFrame == 22)
+//                    game.hitAnimations.shader1.update({x:posX-w,y:posY-220});
+//                else{
+//                    game.hitAnimations.shader1.update({x:posX-w+50,y:posY-250});
+//                    var movement = 30;
+//                    console.log("end");
+//                    setInterval(function(){
+//                        game.hitAnimations.shader1.update({x:posX-w+50+movement,y:posY-250});
+//                        movement+=movement;
+////                        console.log("asd");
+//                    },50)
+//                }
+//            }
+            
+            
             if(game[color].jabTimer >= Date.now()){
 //                console.log("jab");
                 game[color].animations.play('jab', 20, false);
-            }else if(game[color].kickTimer >= Date.now()){
+            }
+            else if(game[color].kickTimer >= Date.now()){
 //                console.log("kick");
                 game[color].animations.play('kick', 20, false);
             }
+            else if(game[color].special1Timer >= Date.now()){
+                game[color].animations.play('special1', 10, false);
+            }
+            else if(game[color].special2Timer >= Date.now()){
+                game[color].animations.play('special2', 10, false);
+            }
+            else if(game[color].hyperTimer >= Date.now()){
+                game[color].animations.play('hyper', 10, false);
+                game.hitAnimations.shaderEffects.filters = [ game.hitAnimations.shader1 ];
+                var counter = 0;
+                
+                if(typeof isPlayingHyper == "undefined")
+                    isPlayingHyper = setInterval(function(posX){    
+                        var shaderPosX = posX-w;
+    //                    console.log(shaderPosX,posX-w,game[color].position.x,color,counter);
+//                       if(counter >= 0 && counter <= 4){
+//                           shaderPosX-=50;
+//                           game.hitAnimations.shader1.update({x:shaderPosX,y:posY-170});
+//                       } else if(counter > 4 && counter <= 10) {
+//                           game.hitAnimations.shader1.update({x:shaderPosX,y:posY-220});
+//                       } 
+//                       else if(counter > 10 && counter <= 15) {
+//                           shaderPosX+=100;
+//                           game.hitAnimations.shader1.update({x:shaderPosX,y:posY-250});
+//                       }
+//                       else {
+
+                           shaderPosX += counter*50 - 150;
+//                       }
+                       counter++;
+                       game.hitAnimations.shader1.update({x:shaderPosX,y:posY-200});
+
+                       if(counter >= 15){
+                           game.hitAnimations.shaderEffects.filters = undefined;
+                           clearInterval(isPlayingHyper);
+                           delete isPlayingHyper;
+                        }
+
+                    },50,posX)
+//                game.hitAnimations.shader1.update({x:50,y:60});
+//                game[color].isHyper.onComplete = function(){console.log("asd");};
+            }
             else {
+                
+                //animation finished?
+                if(game[color].isHyper.isPlaying){
+//                    game.hitAnimations.shaderEffects.filters = undefined;
+                    
+                } else {
+//                    console.log(game[color].isHyper._frameIndex);
+//                    console.log(game[color].isHyper._frameDiff);
+//                    console.log(game[color].isHyper._frameSkipp);
+                }
+                
+                
+//                game.hitAnimations.shaderEffects.filters = undefined;
                 if(game[color].crouch){
                     game[color].animations.play('crouch', 10, true);
                 } else {
