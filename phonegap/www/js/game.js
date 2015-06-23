@@ -161,9 +161,6 @@ var game = {
         game.interface_background.cameraOffset.setTo(2,0);
         
         timerCountdown.initTimer();
-        
-        //TEST - DEBUG
-        hypermeter.changehypermeter_player();
     },
     jumpTimer : 0,
     update : function() {
@@ -237,11 +234,11 @@ var game = {
         }
         
         timerCountdown.updateTimer();
+        healthgauge.updatehealthgauge();
     }
 };
 
-//TIMER
-//TODO MOVE INTERNAL TIMER TO SERVER SIDE
+//TIMER - CLIENTSIDE
 var timerCountdown = {
     timer:undefined,
     text:undefined,
@@ -257,57 +254,52 @@ var timerCountdown = {
         timerCountdown.text.bringToTop();
         timerCountdown.text.fixedToCamera = true;
         timerCountdown.text.cameraOffset.setTo(321,21);
-        //timerCountdown.startTimer();
     },
     
     updateTimer:function(){
+        if(!isNaN(timerCountdown.timer)){
             if(timerCountdown.timer >= 10){
                 timerCountdown.text.setText(timerCountdown.timer);
             } else {
                 timerCountdown.text.setText("0" + timerCountdown.timer);
             }
-            
-            if(timerCountdown.timer < 0){
-            //timerCountdown.resetTimer();
+        } else{
+            console.log("no time");
         }
-    },
+    }
+};
+
+var healthgauge = {
+    healthplayers:{blue:{hp:undefined}, red:{hp:undefined}},
     
-    stopTimer:function(){
-        clearInterval(timerCountdown.timerInterval);
-    },
-    
-    resetTimer:function(){
-        timerCountdown.stopTimer();
-        timerCountdown.timer = 99;
-        timerCountdown.text.setText(timerCountdown.timer);
-        timerCountdown.startTimer();
+    updatehealthgauge:function(){
+        console.log(healthgauge.healthplayers["blue"].hp);
+        var hpPlayerA = healthgauge.healthplayers["blue"].hp;
+        hpPlayerA = hpPlayerA*(4.3);
+        var cropRectA = new Phaser.Rectangle(430-hpPlayerA,0,hpPlayerA,40);
+        var initPosA = 102;
+        game.healthbar_p1.cameraOffset.setTo(initPosA + (430-hpPlayerA)/2,41); 
+        game.healthbar_p1.crop(cropRectA);
+        
+        console.log(healthgauge.healthplayers["red"].hp);
+        var hpPlayerB = healthgauge.healthplayers["red"].hp;
+        hpPlayerB = hpPlayerB*(4.3);
+        var cropRectB = new Phaser.Rectangle(0,0,hpPlayerB,40);
+        game.healthbar_p2.crop(cropRectB);      
     }
 };
 
 var hypermeter = {
-    hyper:0,
-    hypermax:100,
     
-    changehypermeter_player:function(){
+    updatehypermeter:function(){
 //        game.meterbar_p1.position.x = 300;
          game.meterbar_p1.anchor.x = 1;
-         var delt = 102+150
+         var delt = 102+150;
         game.meterbar_p1.cameraOffset.setTo(delt,63);
         var cropRect = new Phaser.Rectangle(0,0,100,28);
 //        cropRect.topLeft = new Phaser.Point(150,0);
         //cropRect.fixedToCamera = true;
         
         game.meterbar_p1.crop(cropRect);
-        
-        
-        
-        //HEALTHBAR
-        
-        var hp = 50;
-        
-        var cropRect = new Phaser.Rectangle(430-hp,0,hp,40);
-        var initPos = 102;
-        game.healthbar_p1.cameraOffset.setTo(initPos + (430-hp)/2,41); 
-        game.healthbar_p1.crop(cropRect);
     }
 };

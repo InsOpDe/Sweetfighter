@@ -272,7 +272,6 @@ function handleCollision(){
         var p1 = character[color[p]];
         var p2 = (color[p] == "red")? character["blue"] : character["red"];
         
-        var checkColor = color[p];
 //        console.log(p1.x,p2.x,p1.w,p2.w);
 
         //detect whether characters can hit each other
@@ -360,6 +359,8 @@ var timerOnServer = {
         if(timerOnServer.timerStart && curTime.getTime() - timerOnServer.prevTime.getTime() >= 1000){
             timerOnServer.timer--;
             timerOnServer.prevTime = curTime;
+        } else if(timerOnServer.timer === 0){
+            timerOnServer.timerStart = false;
         }
     }
 };
