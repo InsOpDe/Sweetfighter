@@ -68,6 +68,7 @@ var multiplayer = {
                     game[color].h = actions[color].h;
                     
                     healthgauge.healthplayers[color].hp = actions[color].hp;
+                    hypermeter.hyperplayer[color].hyper = actions[color].hypermeter;
                     
                     game[color].attackRange.x = actions[color].attack.x - (actions[color].attack.w / 2);
                     game[color].attackRange.y = actions[color].attack.y - (actions[color].attack.h / 2);
