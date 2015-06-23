@@ -252,6 +252,21 @@ function handleCommand(){
         } else {
             p1.attack.kick = false;
         }
+        if(c1.special1){
+            p1.attack.special1 = true;
+        } else {
+            p1.attack.special1 = false;
+        }
+        if(c1.special2){
+            p1.attack.special2 = true;
+        } else {
+            p1.attack.special2 = false;
+        }
+        if(c1.hyper){
+            p1.attack.hyper = true;
+        } else {
+            p1.attack.hyper = false;
+        }
 
         p1.velocityY += gravityAccelerationY ;
         p1.y += p1.velocityY ;
