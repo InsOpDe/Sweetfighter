@@ -63,6 +63,7 @@ function shakeHandler(e){
         if(curTime.getTime() - prevTime.getTime() > TIME_INTERVAL){
             comboBreak = true;
             prevTime = curTime;
+            //DEBUG
             setTimeout(function(){comboBreak = false;}, 3000);
         }
     }
