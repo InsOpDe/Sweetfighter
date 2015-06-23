@@ -48,7 +48,8 @@ var multiplayer = {
         
         
         multiplayer.socket.on('command', function (data) {
-            var actions = data.actions;
+            var actions = data.actions.players;
+            timerCountdown.timer = data.actions.meta.timer;
             
             //hier werden die positionen übertragen
             for(var color in actions){
@@ -65,12 +66,13 @@ var multiplayer = {
                     game[color].w = actions[color].w;
                     game[color].h = actions[color].h;
                     
+                    game[color].hp = actions[color].hp;
                     
                     game[color].attackRange.x = actions[color].attack.x - (actions[color].attack.w / 2);
                     game[color].attackRange.y = actions[color].attack.y - (actions[color].attack.h / 2);
                     
                     if(actions[color].gotHit.damage > 0){
-                        game[color].hp -= actions[color].gotHit.damage;
+                        //game[color].hp -= actions[color].gotHit.damage;
                         game.hitAnimations.hit1.x = actions[color].gotHit.x-10;
                         game.hitAnimations.hit1.y = actions[color].gotHit.y-20;
                         var animation = game.hitAnimations.hit1.animations.play('fx1', 20, false);

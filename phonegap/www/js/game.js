@@ -235,6 +235,8 @@ var game = {
             game.ebene3.tilePosition.y += vz*.5;
             game.oldY = game.red.y;
         }
+        
+        timerCountdown.updateTimer();
     }
 };
 
@@ -255,13 +257,10 @@ var timerCountdown = {
         timerCountdown.text.bringToTop();
         timerCountdown.text.fixedToCamera = true;
         timerCountdown.text.cameraOffset.setTo(321,21);
-        timerCountdown.startTimer();
+        //timerCountdown.startTimer();
     },
     
-    startTimer:function(){
-        timerCountdown.timerInterval = setInterval(function(){
-            timerCountdown.timer--;
-            
+    updateTimer:function(){
             if(timerCountdown.timer >= 10){
                 timerCountdown.text.setText(timerCountdown.timer);
             } else {
@@ -269,9 +268,8 @@ var timerCountdown = {
             }
             
             if(timerCountdown.timer < 0){
-            timerCountdown.resetTimer();
+            //timerCountdown.resetTimer();
         }
-        },1000);
     },
     
     stopTimer:function(){

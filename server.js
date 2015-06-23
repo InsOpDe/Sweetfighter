@@ -44,6 +44,10 @@ io.sockets.on('connection', function (socket) {
     if(team.length > 0){
         slot = team[team.length-1];
         team.pop();
+            
+        if(team.length <= 0 && timerOnServer.timerStart === false){
+            timerOnServer.init();
+        }
     }
     
 
@@ -133,11 +137,12 @@ var physicsloop = setInterval(function(){
     handleAttackTimings();
     handleCommand();
     handleCollision();
+    timerOnServer.checkTimer();
 },15)
 
 //updateloop
 var updateloop = setInterval(function(){
-    var update = {red: character["red"], blue: character["blue"]};
+    var update = {players:{red: character["red"], blue: character["blue"]}, meta:{timer: timerOnServer.timer}};
 //    update["red"] = {x : character["red"].x , y : character["red"].y }
 //    update["blue"] = {x : character["blue"].x , y : character["blue"].y }
     io.sockets.emit('command', { tick: new Date(), actions : update });
@@ -266,6 +271,8 @@ function handleCollision(){
         
         var p1 = character[color[p]];
         var p2 = (color[p] == "red")? character["blue"] : character["red"];
+        
+        var checkColor = color[p];
 //        console.log(p1.x,p2.x,p1.w,p2.w);
 
         //detect whether characters can hit each other
@@ -273,6 +280,8 @@ function handleCollision(){
             p2.gotHit.x = p1.attack.x - (p1.attack.w/2);
             p2.gotHit.y = p1.attack.y - (p1.attack.h/2);
             p2.gotHit.damage = 7;
+            p2.hp -= p2.gotHit.damage;
+            console.log(p2.hp);
         }
 
     }
@@ -333,3 +342,26 @@ function extend(){
                 arguments[0][key] = JSON.parse(JSON.stringify(arguments[i][key]));
     return arguments[0];
 }
+
+var timerOnServer = {
+    timer: undefined,
+    timerStart: false,
+    prevTime: undefined,
+
+    init:function(){
+        timerOnServer.timer = 99; 
+        timerOnServer.timerStart = true;
+        timerOnServer.prevTime = new Date();
+    },
+
+    checkTimer:function(){
+        var curTime = new Date();
+  
+        if(timerOnServer.timerStart && curTime.getTime() - timerOnServer.prevTime.getTime() >= 1000){
+            timerOnServer.timer--;
+            timerOnServer.prevTime = curTime;
+        }
+    }
+};
+
+
