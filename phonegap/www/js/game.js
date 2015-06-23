@@ -132,7 +132,7 @@ var game = {
         
         //Add Userinterface
         game.interface_background = game.phaser.add.image(2,0, 'interface_background');
-        game.healthbar_p1 = game.phaser.add.image(100,41, 'healthbar_p1');
+        game.healthbar_p1 = game.phaser.add.image(0,0, 'healthbar_p1');
         game.healthbar_p2 = game.phaser.add.image(387,41, 'healthbar_p2');
         game.meterbar_p1 = game.phaser.add.image(102,63, 'meterbar_p1');
         game.meterbar_p2 = game.phaser.add.image(452,63, 'meterbar_p2');
@@ -292,15 +292,24 @@ var hypermeter = {
     
     changehypermeter_player:function(){
 //        game.meterbar_p1.position.x = 300;
-//         game.meterbar_p1.anchor.x = 0;
-//        game.meterbar_p1.cameraOffset.setTo(102,63);
-//        var cropRect = new Phaser.Rectangle(100,0,100,28);
+         game.meterbar_p1.anchor.x = 1;
+         var delt = 102+150
+        game.meterbar_p1.cameraOffset.setTo(delt,63);
+        var cropRect = new Phaser.Rectangle(0,0,100,28);
 //        cropRect.topLeft = new Phaser.Point(150,0);
         //cropRect.fixedToCamera = true;
         
-//        game.meterbar_p1.crop(cropRect);
+        game.meterbar_p1.crop(cropRect);
         
-        game.meterbar_p1.cropEnabled = true;
-        game.meterbar_p1.crop.width = 75;
+        
+        
+        //HEALTHBAR
+        
+        var hp = 50;
+        
+        var cropRect = new Phaser.Rectangle(430-hp,0,hp,40);
+        var initPos = 102;
+        game.healthbar_p1.cameraOffset.setTo(initPos + (430-hp)/2,41); 
+        game.healthbar_p1.crop(cropRect);
     }
 };
