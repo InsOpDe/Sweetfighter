@@ -161,6 +161,9 @@ var game = {
         game.interface_background.cameraOffset.setTo(2,0);
         
         timerCountdown.initTimer();
+        
+        //TEST - DEBUG
+        hypermeter.changehypermeter_player();
     },
     jumpTimer : 0,
     update : function() {
@@ -235,6 +238,8 @@ var game = {
     }
 };
 
+//TIMER
+//TODO MOVE INTERNAL TIMER TO SERVER SIDE
 var timerCountdown = {
     timer:undefined,
     text:undefined,
@@ -278,5 +283,24 @@ var timerCountdown = {
         timerCountdown.timer = 99;
         timerCountdown.text.setText(timerCountdown.timer);
         timerCountdown.startTimer();
+    }
+};
+
+var hypermeter = {
+    hyper:0,
+    hypermax:100,
+    
+    changehypermeter_player:function(){
+//        game.meterbar_p1.position.x = 300;
+//         game.meterbar_p1.anchor.x = 0;
+//        game.meterbar_p1.cameraOffset.setTo(102,63);
+//        var cropRect = new Phaser.Rectangle(100,0,100,28);
+//        cropRect.topLeft = new Phaser.Point(150,0);
+        //cropRect.fixedToCamera = true;
+        
+//        game.meterbar_p1.crop(cropRect);
+        
+        game.meterbar_p1.cropEnabled = true;
+        game.meterbar_p1.crop.width = 75;
     }
 };

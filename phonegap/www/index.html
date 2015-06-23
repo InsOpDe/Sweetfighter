@@ -27,10 +27,10 @@
         <script type="text/javascript">
             var serverIP = '';
             if (screen.width < 1500) { //muss noch n besserer weg gefunden werden
-                window.onerror = function(message, url, lineNumber) {  
-                    alert(message + " " + url + " " + lineNumber);
-                    return true;
-                }; 
+                //window.onerror = function(message, url, lineNumber) {  
+                    //alert(message + " " + url + " " + lineNumber);
+                    //return true;
+                //}; 
                 //alert("mobile");
                 serverIP = 'http://134.60.71.134/';
                 document.write('\x3Cscript src="http://134.60.71.134/socket.io/socket.io.js">\x3C/script>');

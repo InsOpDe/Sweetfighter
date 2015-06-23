@@ -161,6 +161,9 @@ var game = {
         game.interface_background.cameraOffset.setTo(2,0);
         
         timerCountdown.initTimer();
+        
+        //TEST - DEBUG
+        hypermeter.changehypermeter_player();
     },
     jumpTimer : 0,
     update : function() {
@@ -235,13 +238,15 @@ var game = {
     }
 };
 
+//TIMER
+//TODO MOVE INTERNAL TIMER TO SERVER SIDE
 var timerCountdown = {
     timer:undefined,
     text:undefined,
     timerInterval:undefined,
     
     initTimer:function(){
-        timerCountdown.timer = 20;
+        timerCountdown.timer = 99;
         timerCountdown.text = game.phaser.add.text(321, 21, timerCountdown.timer,{
             font: "bold 54px Arial",
             fill: "555151",
@@ -278,5 +283,20 @@ var timerCountdown = {
         timerCountdown.timer = 99;
         timerCountdown.text.setText(timerCountdown.timer);
         timerCountdown.startTimer();
+    }
+};
+
+var hypermeter = {
+    hyper:0,
+    hypermax:100,
+    
+    changehypermeter_player:function(){
+        cropRect = new Phaser.Rectangle(180,0,100,28);
+        //cropRect.fixedToCamera = true;
+        
+        game.meterbar_p1.crop(cropRect);
+        
+        //game.meterbar_p1.cropEnabled = true;
+        //game.meterbar_p1.crop.width = 75;
     }
 };
