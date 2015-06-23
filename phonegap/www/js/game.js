@@ -190,11 +190,6 @@ var game = {
 //        game.hitAnimations.shaderEffect1 = game.phaser.add.sprite();
         game.hitAnimations.shaderEffects = game.phaser.add.tileSprite(0, 0, game.options.mapX, game.options.mapY, 'bgtrans');
 
-
-        //TEST - DEBUG
-        hypermeter.changehypermeter_player();
-        
-        
         
     },
     jumpTimer : 0,
