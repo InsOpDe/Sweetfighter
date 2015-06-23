@@ -50,7 +50,9 @@ var game = {
             
 //            game[color] = game.options.characters[color];
 //            game[color] = $.extend(game[color],);
-            game[color] = game.phaser.add.sprite(game.options.characters[color].start, game.options.mapY, 'muaythai');
+//            game[color] = game.phaser.add.sprite(game.options.characters[color].start, game.options.mapY, 'muaythai');
+//            game[color] = game.phaser.add.sprite(game.options.characters[color].start, game.options.mapY, 'muaythai');
+            game[color] = game.phaser.add.sprite(game.options.characters[color].start, game.options.mapY, 'muaythai'+color);
             game[color] = $.extend(game[color],game.options.characters[color]);
             console.log(game[color]);
             

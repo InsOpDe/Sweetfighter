@@ -27,6 +27,8 @@ var loader = {
     preload : function() {
 
         game.phaser.load.spritesheet('muaythai', 'muay_thai.png', 400, 300, 14);
+        game.phaser.load.spritesheet('muaythaiblue', 'img/mt.png', 400, 300, 42);
+        game.phaser.load.spritesheet('muaythaired', 'img/mt2.png', 400, 300, 42);
         game.phaser.load.spritesheet('fx1', 'img/fx1.png', 70, 70, 4);
         game.phaser.load.image('ebene1', 'Pyramiden/Ebene1.png');
         game.phaser.load.image('ebene2', 'Pyramiden/Ebene2.png');
