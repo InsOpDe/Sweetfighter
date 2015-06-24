@@ -113,7 +113,7 @@ io.sockets.on('connection', function (socket) {
         var time = Date.now();
         player[socket.id].heartbeat = time;
         data.server = time;
-//        console.log(JSON.stringify(data));
+        console.log(JSON.stringify(data));
         socket.emit('heartbeat', data );
     });
         

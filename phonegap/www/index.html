@@ -23,20 +23,22 @@
         <meta name="msapplication-tap-highlight" content="no" />
         <!-- WARNING: for iOS 7, remove the width=device-width and height=device-height attributes. See https://issues.apache.org/jira/browse/CB-4323 -->
         <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
-		
+        <script src="js/mobile.js"></script>
         <script type="text/javascript">
             var serverIP = '';
-            if (screen.width < 1300) { //muss noch n besserer weg gefunden werden
-                //window.onerror = function(message, url, lineNumber) {  
-                    //alert(message + " " + url + " " + lineNumber);
-                    //return true;
-                //}; 
-                //alert("mobile");
-                serverIP = 'http://134.60.71.134/';
-                document.write('\x3Cscript src="http://134.60.71.134/socket.io/socket.io.js">\x3C/script>');
+            if (screen.width < 1500) { //muss noch n besserer weg gefunden werden
+                
+//                serverIP = 'http://134.60.71.134/';   //server
+                serverIP = 'http://10.0.2.2:8887/'; //host
+                document.write('\x3Cscript src="'+serverIP+'socket.io/socket.io.js">\x3C/script>');
                 document.write('\x3Cscript type="text/javascript" src="cordova.js">\x3C/script>');
+                
+                initMobile();
+                
+                
             } else {
-                console.log("desktop");
+//                console.log("desktop");
+                alert("desktop");
                 document.write('\x3Cscript src="socket.io/socket.io.js">\x3C/script>');
             }
         </script>
@@ -54,6 +56,7 @@
         <script src="js/loader.js"></script>
         <script src="js/loadingscreen.js"></script>
         <script src="js/shaders.js"></script>
+        
         
         <script src="js/vector2D.js"></script>
         <script src="js/touchInterface.js"></script>
