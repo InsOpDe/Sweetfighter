@@ -26,14 +26,17 @@ app.get('/cordova.js', function (req, res) {
 	res.sendfile(__dirname + '/cordova.js');
 });
 
+//lobby
+var lc = 0;
+var lobby = [];
+
+
 var clients = {};    
 var intervalTimer = 50;
 var controls = {};
 var characterAttributes = {x:0,y:0,hp:100,hypermeter:0,jumping:false,w:120,h:380,crouch:false,velocityY:0,attack:{timer:0,jab:false, kick:false},moving:false,gotHit:{x:0,y:0,damage:0}};
-var character = [];
-    character["blue"] = extend({},characterAttributes)
-    character["red"] = extend({},characterAttributes)
-var options;
+
+
 
 // Websocket
 io.sockets.on('connection', function (socket) {
@@ -42,19 +45,56 @@ io.sockets.on('connection', function (socket) {
     socket.controls = [];
     var slot = "observer"
     if(team.length > 0){
+        
+        
+        //lobby
+        if(team.length > 1){
+            var character = [];
+            character["blue"] = extend({},characterAttributes)
+            character["red"] = extend({},characterAttributes)
+            lobby[lc] = {blue:character["blue"],red:character["red"]}
+        }
+        
         slot = team[team.length-1];
         team.pop();
-            
-        if(team.length <= 0 && timerHandler.timerStart === false){
-            timerHandler.init();
-            hypermeterHandler.init();
-            
-            //JUST FOR PRESENTATION PURPOSE
-            character["blue"].hp = 100;
-            character["blue"].hypermeter = 0;
-            character["red"].hp = 100;
-            character["red"].hypermeter = 0;
+        lobby[lc][slot].sid = socket.id;
+//        lobby[lc].sockets = {};
+//        lobby[lc].sockets[slot] = socket;
+        
+        if(team.length == 0){
+            var notifyPlayers = lc;
         }
+        
+            
+//        if(team.length <= 0 && timerHandler.timerStart === false){
+//            timerHandler.init();
+//            hypermeterHandler.init();
+//            
+//            //JUST FOR PRESENTATION PURPOSE
+//            character["blue"].hp = 100;
+//            character["blue"].hypermeter = 0;
+//            character["red"].hp = 100;
+//            character["red"].hypermeter = 0;
+//            
+//            
+//        }
+    } else {
+        
+        
+        //neue lobby
+        var character = [];
+            character["blue"] = extend({},characterAttributes)
+            character["red"] = extend({},characterAttributes)
+        lobby[++lc] = {blue:character["blue"],red:character["red"]}
+        
+        team = ['blue','red']
+        slot = team[team.length-1];
+        team.pop();
+        lobby[lc][slot].sid = socket.id;
+//        lobby[lc].sockets = {};
+//        lobby[lc].sockets[slot] = socket;
+        
+        
     }
     
 
@@ -62,35 +102,56 @@ io.sockets.on('connection', function (socket) {
     socket.emit('chat', { tick: new Date(), text: 'Du bist nun mit dem Server verbunden!' });
 
     socket.emit('chat', { tick: new Date(), text: 'Du bist Spieler: '+slot });
-    console.log("Player "+slot+" joined");
+    console.log("Player "+slot+"("+ socket.id +") joined Lobby " + lc);
     
-    // options an client schicken
-    options = {
-        mapX : 900, //1500
-        mapY : 400,
-        playerStartDelta : 100,
-        color : slot,
-        
-    }
-    
-    character["blue"].start = character["blue"].x = options.playerStartDelta;
-    character["red"].start = character["red"].x = options.mapX - options.playerStartDelta;
-    character["blue"].y=character["red"].y= options.mapY;
-//    console.log(JSON.stringify(character));
-    options.characters = {"red" : character["red"] , "blue" : character["blue"]};
-    socket.emit('gameOptions', options );
-    
-
-    //disconnect old Player if new Player (same Team) logs in elsewhere
-    for(var socketId in player){
-        if(player[socketId].color == slot){
-            clients[socketId].disconnect();
-            delete player[socketId]
+    if(!(typeof notifyPlayers == "undefined")){
+        var lC = notifyPlayers;
+        // options an client schicken
+        var options = {
+            mapX : 900, //1500
+            mapY : 400,
+            playerStartDelta : 100,
+            color : slot,
         }
+        
+        lobby[lC].options = {mapX : options.mapX, mapY:options.mapY};
+        
+
+        
+        var characterRed = lobby[lC].red;
+        var characterBlue = lobby[lC].blue;
+        
+        
+
+        characterBlue.start = characterBlue.x = options.playerStartDelta;
+        characterRed.start = characterRed.x = options.mapX - options.playerStartDelta;
+        characterBlue.y=characterRed.y= options.mapY;
+        characterBlue.lobby=characterRed.lobby= lC;
+        
+//      if(lobby[1])console.log(lobby[0].red.lobby,lobby[1].red.lobby,lC);
+//        else console.log(lobby[0].red.lobby,lC);
+        
+        options.characters = {"red" : characterBlue , "blue" : characterBlue};
+        for(var i in lobby[lC]){
+            if( i == 'options')
+                continue;
+            var sid = lobby[lC][i].sid;
+//            console.log("player " + i + " in Lobby " + lc + " has been sent the gameOptions");
+//            console.log(sid);
+            options.color = i;
+            clients[sid].emit('gameOptions', options );
+        }
+        console.log("Lobby " + lC + " starts Playing");
+        
+        
+        if(slot != "observer") controls[socket.id] = { left:false , right:false , moveup:false , movedown:false};
     }
+
+
     player[socket.id] = {};
     player[socket.id].color = slot;
-    if(slot != "observer") controls[player[socket.id].color] = { left:false , right:false , moveup:false , movedown:false};
+    player[socket.id].lobby = lc;
+    
     
 
 
@@ -113,7 +174,7 @@ io.sockets.on('connection', function (socket) {
         var time = Date.now();
         player[socket.id].heartbeat = time;
         data.server = time;
-        console.log(JSON.stringify(data));
+//        console.log(JSON.stringify(data));
         socket.emit('heartbeat', data );
     });
         
@@ -121,7 +182,7 @@ io.sockets.on('connection', function (socket) {
     socket.on('command', function (data) {
 //           var action = data.action;
         if(slot != "observer"){
-            controls[player[socket.id].color] = data.state ;
+            controls[socket.id] = data.state ;
         }
        
        
@@ -130,8 +191,12 @@ io.sockets.on('connection', function (socket) {
       
     //disconnect
     socket.on('disconnect', function(){
-        team.push(player[socket.id].color);
-        console.log("Player "+player[socket.id].color+" disconnected ("+socket.id+")");
+        
+        //function wird rausgenommen, weil wir jetzt lobbys haben        
+//        team.push(player[socket.id].color);
+
+
+        console.log("Player "+player[socket.id].color+" disconnected ("+socket.id+") from Lobby " + player[socket.id].lobby);
         delete player[socket.id]
 
         //JUST FOR PRESENTATION PURPOSE
@@ -152,12 +217,23 @@ var physicsloop = setInterval(function(){
 
 //updateloop
 var updateloop = setInterval(function(){
-    var update = {players:{red: character["red"], blue: character["blue"]}, meta:{timer: timerHandler.timer}};
-//    update["red"] = {x : character["red"].x , y : character["red"].y }
-//    update["blue"] = {x : character["blue"].x , y : character["blue"].y }
-    io.sockets.emit('command', { tick: new Date(), actions : update });
+    for(var i in lobby){
+//        if(typeof clients == 'undefined');
+//            break;
+        if(!lobby[i].options)
+            break;
+        var characterRed = lobby[i].red;
+        var characterBlue = lobby[i].blue;
     
-    resetVals();
+        var update = {players:{red: characterRed, blue: characterBlue}, meta:{timer: timerHandler.timer}};
+    //    update["red"] = {x : character["red"].x , y : character["red"].y }
+    //    update["blue"] = {x : character["blue"].x , y : character["blue"].y }
+//        io.sockets.emit('command', { tick: new Date(), actions : update });
+        clients[lobby[i].red.sid].emit('command', { tick: new Date(), actions : update });
+        clients[lobby[i].blue.sid].emit('command', { tick: new Date(), actions : update });
+
+        resetVals(lobby[i]);
+    }
 },45)
 
 
@@ -186,9 +262,20 @@ var jumpHeightSquared = -25;
 var minJumpHeight = ( jumpHeightSquared / 3 )
 function handleCommand(){
     for(var p in controls){
+
+        //if lobby isnt full yet
+        if(typeof player[p] == 'undefined')
+            continue;
+        var lob = player[p].lobby;
+        if(!lobby[lob].options)
+            continue;
+        
+        var col = player[p].color;
+        var options = lobby[lob].options
+//        console.log(lobby[lob]);
         var c1 = controls[p];
-        var p1 = character[p];
-        var p2 = (p == "red")? character["blue"] : character["red"];
+        var p1 = lobby[lob][col];
+        var p2 = (col == "red")? lobby[lob]["blue"] : lobby[lob]["red"];
         var vz = (p1.x > p2.x)? -1 : 1;
         
         if(c1.left){
@@ -292,35 +379,39 @@ function handleCommand(){
 }
 
 function handleCollision(){
-    for (var p in color){
+    for(var lob in lobby){
+        for (var p in color){
         
-        var p1 = character[color[p]];
-        var p2 = (color[p] == "red")? character["blue"] : character["red"];
-        
-//        console.log(p1.x,p2.x,p1.w,p2.w);
+            var p1 = lobby[lob][color[p]];
+            var p2 = (color[p] == "red")? lobby[lob]["blue"] : lobby[lob]["red"];
 
-        //detect whether characters can hit each other
-        if (p1.attack.attacking && p1.attack.x + (p1.attack.w/2) > p2.x - (p2.w/2) && p1.attack.x - (p1.attack.w/2) < p2.x + (p2.w/2)){
-            p2.gotHit.x = p1.attack.x - (p1.attack.w/2);
-            p2.gotHit.y = p1.attack.y - (p1.attack.h/2);
-            p2.gotHit.damage = 7;
-            p2.hp -= p2.gotHit.damage;
-            
-            if(p1.hypermeter <= 95){
-                p1.hypermeter = p1.hypermeter + 5;
-            } else{
-                p1.hypermeter = 100;
+    //        console.log(p1.x,p2.x,p1.w,p2.w);
+
+            //detect whether characters can hit each other
+            if (p1.attack.attacking && p1.attack.x + (p1.attack.w/2) > p2.x - (p2.w/2) && p1.attack.x - (p1.attack.w/2) < p2.x + (p2.w/2)){
+                p2.gotHit.x = p1.attack.x - (p1.attack.w/2);
+                p2.gotHit.y = p1.attack.y - (p1.attack.h/2);
+                p2.gotHit.damage = 7;
+                p2.hp -= p2.gotHit.damage;
+
+                if(p1.hypermeter <= 95){
+                    p1.hypermeter = p1.hypermeter + 5;
+                } else{
+                    p1.hypermeter = 100;
+                }
+                //console.log(p2.hp);
             }
-            //console.log(p2.hp);
-        }
 
+        }
     }
+
 }
 
 
-function resetVals(){
+function resetVals(lob){
     for (var p in color){
-        var p1 = character[color[p]];
+//        console.log(lob,lobby);
+        var p1 = lob[color[p]];
         p1.gotHit.damage = 0;
         p1.attack.jab = false;
         p1.attack.kick = false;
