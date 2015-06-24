@@ -8,6 +8,8 @@ var game = {
 //        game.phaser = new Phaser.Game(704, 396, Phaser.CANVAS, 'phaser-example', { preload: loader.preload, create: game.create, update: game.update });
         initTouchInterface();
         initShake();
+        
+        $('#waiting').remove();
     },
     sprite:undefined,
     cursors:undefined,

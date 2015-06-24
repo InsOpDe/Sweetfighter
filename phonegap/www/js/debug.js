@@ -45,8 +45,8 @@ var debug = {
 //		debugKeys2.innerHTML = "Controls: " + JSON.stringify(keyboard.player["blue"]);
                 pFrames.innerHTML = "FPS: " + debug.requestAnimFrame();
                 debugPing.innerHTML = "Ping: " + debug.pingCalc() + " (" + debug.pingCalc("toServer") + " + " + debug.pingCalc("fromServer") +")";
-                debugPlayerBlueHp.innerHTML = "blue: " + debug.hitpoints("blue");
-                //debugPlayerRedHp.innerHTML = "red: &nbsp;" + debug.hitpoints("red");
+                debugPlayerBlueHp.innerHTML = "Lobby: " + game.red.lobby;
+//                debugPlayerRedHp.innerHTML = "red: &nbsp;" + debug.hitpoints("red");
                 debugPlayerRedHp.innerHTML = timerCountdown.timer;
 		
 	},
