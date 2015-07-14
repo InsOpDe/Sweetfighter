@@ -1,0 +1,245 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 14.07.2015, 19:12:42
+    Author     : Marcel-Privat
+*/
+
+body {
+	margin : 0;
+        padding:0;
+	font-size : 20px;
+        font: 14px "Helvetica", Helvetica, Arial, sans-serif;
+        color:black;
+}
+
+html, body {
+  overflow-y:hidden;
+  height:100%;
+}
+
+a {
+	cursor:pointer;
+}
+
+#game {
+    position : absolute;
+    left : 0;
+    top : 0;
+    /*background-color : rgb(30,30,30);*/
+    right:0;
+    bottom:0;
+
+}
+
+
+
+#debugWindow {
+    font-size : 12px;
+    line-height: 10px;
+    font-family: "Courier New";
+    color:white;
+    font-weight:bold;
+    position: fixed;
+    right:0;
+    bottom:0;
+    width:360px;
+    height:210px;
+    background-color: rgba(30,30,30,0.5);
+    padding: 20px 30px;
+    margin:60px;
+    z-index:35;
+    word-wrap: break-word;
+    letter-spacing: -1px;
+}
+
+#chatWindow {
+    font-size : 12px;
+    line-height: 10px;
+    color:white;
+    position: fixed;
+    left:0;
+    bottom:0;
+    width:360px;
+    height:210px;
+    background-color: rgba(30,30,30,0.5);
+    margin:60px;
+    z-index:35;
+    padding: 20px 30px;
+    font: 14px "Helvetica", Helvetica, Arial, sans-serif;
+    line-height: 12px;
+
+
+}
+
+#chatWindow p{
+    margin:0;
+}
+
+
+#chatMessage {
+    background-color: rgba(30,30,30,0.2);
+    border:0;
+    position: absolute;
+    bottom:0;
+    width:100%;
+    height: 20px;
+    color:white;
+    line-height: 10px;
+}
+
+.debugOptions {
+}
+
+/*Touchinterface*/
+#touchInterface{
+    position:absolute;
+    z-index:1000;
+}
+
+@keyframes fight {
+    50% {background-image: url("../img/menu/boxring_hl.png");}
+}
+
+@keyframes fightZoom {
+    0% {
+        height: 30em;
+        width: round(30*1.8597662771285475792988313856427)+em;
+        left:-10em;
+        top:30%;
+        
+    }
+    
+    100% {
+        width: round(40*1.8597662771285475792988313856427)+em;
+        height: 40em;
+        top: 10%;
+        margin-left: auto;
+        margin-right: auto;
+        left: 0 !important;
+        right: 0 !important;
+    }
+          
+}
+
+#menu {
+    position:absolute;
+    left:0;
+    top:0;
+    right:0;
+    bottom:0;
+    background: url("../img/menu/menu_leer.png");
+    background-size:cover;
+    
+    #fight {
+        position:absolute;
+        left:-10em;
+        top:30%;
+        width: round(30*1.8597662771285475792988313856427)+em;
+        height: 30em;
+        background-image: url("../img/menu/boxring.png");
+        background-size:cover;
+        animation-name: fight;
+        cursor: pointer;
+    }
+    
+    #selectcharacter {
+        @extend .absolute;
+        background: url("../img/menu/selectcharacter.png") center 30% no-repeat;
+        
+        div {
+            @extend .select;
+        }
+    }
+    
+    #selectscene {
+        @extend .absolute;
+        background: url("../img/menu/selectscene.png") center 30% no-repeat;
+        
+        div {
+            @extend .select;
+        }
+    }
+    
+    #waiting {
+        @extend .absolute;
+        background: url("../img/menu/waiting.png") center 30% no-repeat;
+
+    }
+    
+    #shadow {
+        display:none;
+        position:absolute;
+        left:0;
+        top:0;
+        right:0;
+        bottom:0;
+        background: rgba(0,0,0,0.5);
+    }
+    
+    #gamescreen {
+        @extend .absolute;
+        
+        canvas {
+            @extend .zoom;
+            margin-top: 5%;
+        }
+        
+        
+    }
+}
+
+.animation {
+    animation-duration: 2s;
+    animation-delay: 2s;
+    animation-iteration-count: infinite;
+}
+
+.fightZoom {
+    width: round(40*1.8597662771285475792988313856427)+em !important;
+    height: 40em !important;
+    animation-name: fightZoom !important;
+    animation-duration: 2s;
+    animation-iteration-count: 1;
+    top: 10% !important;
+    margin-left: auto;
+    margin-right: auto;
+    left: 0 !important;
+    right: 0 !important;
+}
+
+.zoom {
+    margin-left: auto;
+    margin-right: auto;
+    left: 0 !important;
+    right: 0 !important;
+}
+
+.absolute {
+    position:absolute;
+    left:0;
+    top:0;
+    right:0;
+    bottom:0;
+}
+
+.select {
+    position:absolute;
+    top:35%;
+    width: 50%;
+    height: 30%;
+    /*background: #f00;*/
+    margin-left: auto;
+    margin-right: auto;
+    left: 0 !important;
+    right: 0 !important;
+
+    div {
+        float:left;
+        background-size:cover;
+        cursor:pointer;
+    }
+}

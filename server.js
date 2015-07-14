@@ -30,6 +30,7 @@ app.get('/cordova.js', function (req, res) {
 var lc = 0;
 var lobby = [];
 
+var assignQueue = [];
 
 var clients = {};    
 var intervalTimer = 50;
@@ -42,119 +43,23 @@ var characterAttributes = {x:0,y:0,hp:100,hypermeter:0,jumping:false,w:120,h:380
 io.sockets.on('connection', function (socket) {
     console.log(timeStamp() + " connection established");
     clients[socket.id] = socket;
-    socket.controls = [];
-    var slot = "observer"
-    if(team.length > 0){
-        
-        
-        //lobby
-        if(team.length > 1){
-            var character = [];
-            character["blue"] = extend({},characterAttributes)
-            character["red"] = extend({},characterAttributes)
-            lobby[lc] = {blue:character["blue"],red:character["red"]}
-        }
-        
-        slot = team[team.length-1];
-        team.pop();
-        lobby[lc][slot].sid = socket.id;
-//        lobby[lc].sockets = {};
-//        lobby[lc].sockets[slot] = socket;
-        
-        if(team.length == 0){
-            var notifyPlayers = lc;
-        }
-        
-            
-//        if(team.length <= 0 && timerHandler.timerStart === false){
-//            timerHandler.init();
-//            hypermeterHandler.init();
-//            
-//            //JUST FOR PRESENTATION PURPOSE
-//            character["blue"].hp = 100;
-//            character["blue"].hypermeter = 0;
-//            character["red"].hp = 100;
-//            character["red"].hypermeter = 0;
-//            
-//            
-//        }
-    } else {
-        
-        
-        //neue lobby
-        var character = [];
-            character["blue"] = extend({},characterAttributes)
-            character["red"] = extend({},characterAttributes)
-        lobby[++lc] = {blue:character["blue"],red:character["red"]}
-        
-        team = ['blue','red']
-        slot = team[team.length-1];
-        team.pop();
-        lobby[lc][slot].sid = socket.id;
-//        lobby[lc].sockets = {};
-//        lobby[lc].sockets[slot] = socket;
-        
-        
-    }
-    
-
-    // der Client ist verbunden
-    socket.emit('chat', { tick: new Date(), text: 'Du bist nun mit dem Server verbunden!' });
-
-    socket.emit('chat', { tick: new Date(), text: 'Du bist Spieler: '+slot });
-    console.log("Player "+slot+"("+ socket.id +") joined Lobby " + lc);
-    
-    if(!(typeof notifyPlayers == "undefined")){
-        var lC = notifyPlayers;
-        // options an client schicken
-        var options = {
-            mapX : 900, //1500
-            mapY : 400,
-            playerStartDelta : 100,
-            color : slot,
-        }
-        
-        lobby[lC].options = {mapX : options.mapX, mapY:options.mapY};
-        
-
-        
-        var characterRed = lobby[lC].red;
-        var characterBlue = lobby[lC].blue;
-        
-        
-
-        characterBlue.start = characterBlue.x = options.playerStartDelta;
-        characterRed.start = characterRed.x = options.mapX - options.playerStartDelta;
-        characterBlue.y=characterRed.y= options.mapY;
-        characterBlue.lobby=characterRed.lobby= lC;
-        
-//      if(lobby[1])console.log(lobby[0].red.lobby,lobby[1].red.lobby,lC);
-//        else console.log(lobby[0].red.lobby,lC);
-        
-        options.characters = {"red" : characterBlue , "blue" : characterBlue};
-        for(var i in lobby[lC]){
-            if( i == 'options')
-                continue;
-            var sid = lobby[lC][i].sid;
-//            console.log("player " + i + " in Lobby " + lc + " has been sent the gameOptions");
-//            console.log(sid);
-            options.color = i;
-            clients[sid].emit('gameOptions', options );
-        }
-        console.log("Lobby " + lC + " starts Playing");
-        
-        
-        if(slot != "observer") controls[socket.id] = { left:false , right:false , moveup:false , movedown:false};
-    }
-
-
     player[socket.id] = {};
-    player[socket.id].color = slot;
-    player[socket.id].lobby = lc;
     
+    //Init commands
+    socket.on('init', function (data) {
+        socket.controls = [];
+        player[socket.id].socketId = socket.id;
+        
+        
+        //assignQueue
+        //TODO: get Player name via db
+        player[socket.id].character = data.character ;
+        player[socket.id].map = data.map ;
+        assignQueue.push(player[socket.id]);
+
+       
+    });
     
-
-
 
     // wenn ein Benutzer einen Text senden
     socket.on('chat', function (data) {
@@ -175,20 +80,18 @@ io.sockets.on('connection', function (socket) {
         player[socket.id].heartbeat = time;
         data.server = time;
 //        console.log(JSON.stringify(data));
-        socket.emit('heartbeat', data );
+        socket.volatile.emit('heartbeat', data );
     });
         
     //Processing commands
     socket.on('command', function (data) {
 //           var action = data.action;
-        if(slot != "observer"){
-            controls[socket.id] = data.state ;
-        }
+        controls[socket.id] = data.state ;
        
        
     });
     
-      
+
     //disconnect
     socket.on('disconnect', function(){
         
@@ -204,6 +107,31 @@ io.sockets.on('connection', function (socket) {
     });
 
 });
+
+
+// assigns players together
+var assignloop = setInterval(function(){
+    if(assignQueue.length > 1){
+        
+        for(var i in assignQueue){
+            var playerA = assignQueue[i];
+            for(var j in assignQueue){
+                var playerB = assignQueue[j];
+                if(i != j){
+                    //TODO nur zuordnen wenn rankings etc stimmen
+                    assignToLobby(playerA.socketId);
+                    assignToLobby(playerB.socketId);
+                    assignQueue.splice(i,1)
+                    var index = assignQueue.indexOf(playerB);
+                    assignQueue.splice(index,1)
+
+                }
+            }
+        }
+    }
+},1000)
+
+
 
 // main physics loop on server
 var physicsloop = setInterval(function(){
@@ -229,8 +157,8 @@ var updateloop = setInterval(function(){
     //    update["red"] = {x : character["red"].x , y : character["red"].y }
     //    update["blue"] = {x : character["blue"].x , y : character["blue"].y }
 //        io.sockets.emit('command', { tick: new Date(), actions : update });
-        clients[lobby[i].red.sid].emit('command', { tick: new Date(), actions : update });
-        clients[lobby[i].blue.sid].emit('command', { tick: new Date(), actions : update });
+        clients[lobby[i].red.sid].volatile.emit('command', { tick: new Date(), actions : update });
+        clients[lobby[i].blue.sid].volatile.emit('command', { tick: new Date(), actions : update });
 
         resetVals(lobby[i]);
     }
@@ -267,7 +195,7 @@ function handleCommand(){
         if(typeof player[p] == 'undefined')
             continue;
         var lob = player[p].lobby;
-        if(!lobby[lob].options)
+        if(typeof lob == 'undefined' || !lobby[lob].options)
             continue;
         
         var col = player[p].color;
@@ -508,3 +436,114 @@ var hypermeterHandler = {
         }
     }
 };
+
+
+
+function assignToLobby(socketId) {
+    
+    var socket = clients[socketId];
+    
+    var slot = "observer"
+    
+    if(team.length > 0){
+        //lobby
+        if(team.length > 1){
+            var character = [];
+            character["blue"] = extend({},characterAttributes)
+            character["red"] = extend({},characterAttributes)
+            lobby[lc] = {blue:character["blue"],red:character["red"]}
+        }
+
+        slot = team[team.length-1];
+        team.pop();
+        lobby[lc][slot].sid = socket.id;
+//        lobby[lc].sockets = {};
+//        lobby[lc].sockets[slot] = socket;
+
+        if(team.length == 0){
+            var notifyPlayers = lc;
+        }
+
+
+//        if(team.length <= 0 && timerHandler.timerStart === false){
+//            timerHandler.init();
+//            hypermeterHandler.init();
+//            
+//            //JUST FOR PRESENTATION PURPOSE
+//            character["blue"].hp = 100;
+//            character["blue"].hypermeter = 0;
+//            character["red"].hp = 100;
+//            character["red"].hypermeter = 0;
+//            
+//            
+//        }
+    } else {
+
+
+        //neue lobby
+        var character = [];
+            character["blue"] = extend({},characterAttributes)
+            character["red"] = extend({},characterAttributes)
+        lobby[++lc] = {blue:character["blue"],red:character["red"]}
+
+        team = ['blue','red']
+        slot = team[team.length-1];
+        team.pop();
+        lobby[lc][slot].sid = socket.id;
+    }
+    
+    
+        // der Client ist verbunden
+        socket.emit('chat', { tick: new Date(), text: 'Du bist nun mit dem Server verbunden!' });
+
+        socket.emit('chat', { tick: new Date(), text: 'Du bist Spieler: '+slot });
+        console.log("Player "+slot+"("+ socket.id +") joined Lobby " + lc);
+
+        if(!(typeof notifyPlayers == "undefined")){
+            var lC = notifyPlayers;
+            // options an client schicken
+            var options = {
+                mapX : 900, //1500
+                mapY : 400,
+                playerStartDelta : 100,
+                color : slot,
+            }
+
+            lobby[lC].options = {mapX : options.mapX, mapY:options.mapY};
+
+
+
+            var characterRed = lobby[lC].red;
+            var characterBlue = lobby[lC].blue;
+
+
+
+            characterBlue.start = characterBlue.x = options.playerStartDelta;
+            characterRed.start = characterRed.x = options.mapX - options.playerStartDelta;
+            characterBlue.y=characterRed.y= options.mapY;
+            characterBlue.lobby=characterRed.lobby= lC;
+
+    //      if(lobby[1])console.log(lobby[0].red.lobby,lobby[1].red.lobby,lC);
+    //        else console.log(lobby[0].red.lobby,lC);
+
+            options.characters = {"red" : characterBlue , "blue" : characterBlue};
+            for(var i in lobby[lC]){
+                if( i == 'options')
+                    continue;
+                var sid = lobby[lC][i].sid;
+    //            console.log("player " + i + " in Lobby " + lc + " has been sent the gameOptions");
+    //            console.log(sid);
+                options.color = i;
+                clients[sid].emit('gameOptions', options );
+            }
+            console.log("Lobby " + lC + " starts Playing");
+
+
+            if(slot != "observer") controls[socket.id] = { left:false , right:false , moveup:false , movedown:false};
+        }
+
+
+        
+        player[socket.id].color = slot;
+        player[socket.id].lobby = lc;
+}

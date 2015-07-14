@@ -4,12 +4,12 @@ var game = {
     offset: 180,
     players : ['blue','red'],
     init: function() {
-        game.phaser = new Phaser.Game(704, 396, Phaser.AUTO, 'phaser-example', { preload: loader.preload, create: game.create, update: game.update });
+        game.phaser = new Phaser.Game(704, 396, Phaser.AUTO, 'gamescreen', { preload: loader.preload, create: game.create, update: game.update });
 //        game.phaser = new Phaser.Game(704, 396, Phaser.CANVAS, 'phaser-example', { preload: loader.preload, create: game.create, update: game.update });
         initTouchInterface();
         initShake();
         
-        $('#waiting').remove();
+        $('#waiting').hide();
     },
     sprite:undefined,
     cursors:undefined,

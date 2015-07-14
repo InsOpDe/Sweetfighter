@@ -1,7 +1,7 @@
 var multiplayer = {
     init:function(){
         multiplayer.socket = io.connect(serverIP);
-
+        multiplayer.socket.emit('init', menu.options );
         chat.run();
         multiplayer.run();  
         
