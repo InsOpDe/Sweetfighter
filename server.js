@@ -101,9 +101,6 @@ io.sockets.on('connection', function (socket) {
 
         console.log("Player "+player[socket.id].color+" disconnected ("+socket.id+") from Lobby " + player[socket.id].lobby);
         delete player[socket.id]
-
-        //JUST FOR PRESENTATION PURPOSE
-        timerHandler.timerStart = false;
     });
 
 });
@@ -139,8 +136,6 @@ var physicsloop = setInterval(function(){
     handleAttackTimings();
     handleCommand();
     handleCollision();
-    timerHandler.checkTimer();
-    hypermeterHandler.updateHypermeter();
 },15)
 
 //updateloop
@@ -152,8 +147,15 @@ var updateloop = setInterval(function(){
             break;
         var characterRed = lobby[i].red;
         var characterBlue = lobby[i].blue;
+        
+        var gameTimer = lobby[i].options.timerObj;
+        var hypermeter = lobby[i].options.hypermeterObj;
     
-        var update = {players:{red: characterRed, blue: characterBlue}, meta:{timer: timerHandler.timer}};
+        var update = {players:{red: characterRed, blue: characterBlue}, meta:{timer: gameTimer.timer}};
+        
+        gameTimer.update();
+        hypermeter.update(characterRed, characterBlue);
+        
     //    update["red"] = {x : character["red"].x , y : character["red"].y }
     //    update["blue"] = {x : character["blue"].x , y : character["blue"].y }
 //        io.sockets.emit('command', { tick: new Date(), actions : update });
@@ -162,7 +164,7 @@ var updateloop = setInterval(function(){
 
         resetVals(lobby[i]);
     }
-},45)
+},15)
 
 
 // Portnummer in die Konsole schreiben
@@ -321,13 +323,16 @@ function handleCollision(){
                 p2.gotHit.y = p1.attack.y - (p1.attack.h/2);
                 p2.gotHit.damage = 7;
                 p2.hp -= p2.gotHit.damage;
+                
+                if(p2.hp < 0){
+                    p2.hp = 0;
+                }
 
                 if(p1.hypermeter <= 95){
                     p1.hypermeter = p1.hypermeter + 5;
                 } else{
                     p1.hypermeter = 100;
                 }
-                //console.log(p2.hp);
             }
 
         }
@@ -392,66 +397,67 @@ function extend(){
     return arguments[0];
 }
 
-var timerHandler = {
-    timer: undefined,
-    timerStart: false,
-    prevTime: undefined,
+//Timer object to create countdowntimers in each lobby
+function timerHandler(){
+    var timer;
+    var prevTime;
+    var enabled;
 
-    init:function(){
-        timerHandler.timer = 99; 
-        timerHandler.timerStart = true;
-        timerHandler.prevTime = new Date();
-    },
+    this.timer = 99;
+    this.prevTime = new Date();
+    this.enabled = true;
 
-    checkTimer:function(){
-        var curTime = new Date();
-  
-        if(timerHandler.timerStart && curTime.getTime() - timerHandler.prevTime.getTime() >= 1000){
-            timerHandler.timer--;
-            timerHandler.prevTime = curTime;
-        } else if(timerHandler.timer === 0){
-            timerHandler.timerStart = false;
-        }
-    }
-};
-
-var hypermeterHandler = {
-    prevTime:undefined,
-    
-    init:function(){
-        hypermeterHandler.prevTime = new Date();
-    },
-    
-    updateHypermeter:function(){
-        var curTime = new Date();
-        
-        if(timerHandler.timerStart && curTime.getTime() - hypermeterHandler.prevTime.getTime() >= 3000){
-            for (var p in color){
-                if(character[color[p]].hypermeter < 100){
-                    character[color[p]].hypermeter++;
+    this.update = function(){
+        if(this.enabled && this.timer > 0){
+                var curTime = new Date();
+                if(curTime.getTime() - this.prevTime.getTime() >= 1000){
+                        this.timer--;
+                        this.prevTime = curTime;
                 }
-            }
-            hypermeterHandler.prevTime = curTime;
-            //console.log(character["blue"].hypermeter);
+        } else{
+                this.enabled = false;
         }
-    }
-};
+    };
+}
 
-
+//Hypermeter object which handles the basic hypermeter intervals for each player in each lobby
+function hypermeterHandler(){
+    var prevTime;
+    var enabled;
+    
+    this.prevTime = new Date();
+    this.enabled = true;
+    
+    this.update = function(characterRed, characterBlue){
+        if(this.enabled){
+            var curTime = new Date();
+            if(curTime.getTime() - this.prevTime.getTime() >= 1000){   
+                if(characterRed.hypermeter < 100){
+                    characterRed.hypermeter++;
+                }
+                if(characterBlue.hypermeter < 100){
+                    characterBlue.hypermeter++;
+                }
+                    
+                this.prevTime = curTime;
+            }
+        }
+    };
+}
 
 function assignToLobby(socketId) {
     
     var socket = clients[socketId];
     
-    var slot = "observer"
+    var slot = "observer";
     
     if(team.length > 0){
         //lobby
         if(team.length > 1){
             var character = [];
-            character["blue"] = extend({},characterAttributes)
-            character["red"] = extend({},characterAttributes)
-            lobby[lc] = {blue:character["blue"],red:character["red"]}
+            character["blue"] = extend({},characterAttributes);
+            character["red"] = extend({},characterAttributes);
+            lobby[lc] = {blue:character["blue"],red:character["red"]};
         }
 
         slot = team[team.length-1];
@@ -463,20 +469,6 @@ function assignToLobby(socketId) {
         if(team.length == 0){
             var notifyPlayers = lc;
         }
-
-
-//        if(team.length <= 0 && timerHandler.timerStart === false){
-//            timerHandler.init();
-//            hypermeterHandler.init();
-//            
-//            //JUST FOR PRESENTATION PURPOSE
-//            character["blue"].hp = 100;
-//            character["blue"].hypermeter = 0;
-//            character["red"].hp = 100;
-//            character["red"].hypermeter = 0;
-//            
-//            
-//        }
     } else {
 
 
@@ -506,18 +498,19 @@ function assignToLobby(socketId) {
                 mapX : 900, //1500
                 mapY : 400,
                 playerStartDelta : 100,
-                color : slot,
-            }
+                color : slot
+            };
+            
+            var gameTimer = new timerHandler();
+            var hypermeter = new hypermeterHandler();
 
             lobby[lC].options = {mapX : options.mapX, mapY:options.mapY};
-
-
+            lobby[lC].options.timerObj = gameTimer;
+            lobby[lC].options.hypermeterObj = hypermeter;
 
             var characterRed = lobby[lC].red;
             var characterBlue = lobby[lC].blue;
-
-
-
+           
             characterBlue.start = characterBlue.x = options.playerStartDelta;
             characterRed.start = characterRed.x = options.mapX - options.playerStartDelta;
             characterBlue.y=characterRed.y= options.mapY;
@@ -534,10 +527,10 @@ function assignToLobby(socketId) {
     //            console.log("player " + i + " in Lobby " + lc + " has been sent the gameOptions");
     //            console.log(sid);
                 options.color = i;
+                
                 clients[sid].emit('gameOptions', options );
             }
             console.log("Lobby " + lC + " starts Playing");
-
 
             if(slot != "observer") controls[socket.id] = { left:false , right:false , moveup:false , movedown:false};
         }

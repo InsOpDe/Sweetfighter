@@ -191,8 +191,6 @@ var game = {
 
 //        game.hitAnimations.shaderEffect1 = game.phaser.add.sprite();
         game.hitAnimations.shaderEffects = game.phaser.add.tileSprite(0, 0, game.options.mapX, game.options.mapY, 'bgtrans');
-
-        
     },
     jumpTimer : 0,
     update : function() {
@@ -361,7 +359,6 @@ var game = {
 var timerCountdown = {
     timer:undefined,
     text:undefined,
-    timerInterval:undefined,
     
     initTimer:function(){
         timerCountdown.timer = 99;

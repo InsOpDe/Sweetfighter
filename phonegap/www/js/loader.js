@@ -26,6 +26,5 @@ var loader = {
         game.phaser.load.image('healthbar_p2', 'img/Healthbar_P2.png');
         game.phaser.load.image('meterbar_p1', 'img/Meterbar_P1.png');
         game.phaser.load.image('meterbar_p2', 'img/Meterbar_P2.png');
-
     },
 }
