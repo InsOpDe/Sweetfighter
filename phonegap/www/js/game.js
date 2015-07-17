@@ -150,6 +150,21 @@ var game = {
         game.healthbar_p2 = game.phaser.add.image(387,41, 'healthbar_p2');
         game.meterbar_p1 = game.phaser.add.image(102,63, 'meterbar_p1');
         game.meterbar_p2 = game.phaser.add.image(452,63, 'meterbar_p2');
+        
+        //TODO animation
+        var avataranimationAPlayerA = game.phaser.add.sprite(11,5,'avataranimationAPlayerA');
+        avataranimationAPlayerA.scale.setTo(0.5, 0.5);
+        avataranimationAPlayerA.fixedToCamera = true;
+        avataranimationAPlayerA.animations.add('rotateA');
+        avataranimationAPlayerA.animations.play('rotateA',7,true);
+        
+        var avataranimationAPlayerB = game.phaser.add.sprite(693,5,'avataranimationAPlayerB');
+        avataranimationAPlayerB.scale.setTo(0.5, 0.5);
+        avataranimationAPlayerB.scale.x *= -1;
+        avataranimationAPlayerB.fixedToCamera = true;
+        avataranimationAPlayerB.animations.add('rotateA');
+        avataranimationAPlayerB.animations.play('rotateA',7,true);
+        
         game.interface = game.phaser.add.image(2, 0, 'interface');
         
         game.interface.scale.setTo(0.5, 0.5);

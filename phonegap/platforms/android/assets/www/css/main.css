@@ -1,158 +1,181 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 14.07.2015, 19:12:42
+    Author     : Marcel-Privat
+*/
 body {
-	margin : 0;
-        padding:0;
-	font-size : 20px;
-        font: 14px "Helvetica", Helvetica, Arial, sans-serif;
-        color:black;
-}
+  margin: 0;
+  padding: 0;
+  font-size: 20px;
+  font: 14px "Helvetica", Helvetica, Arial, sans-serif;
+  color: black; }
+
+html, body {
+  overflow-y: hidden;
+  height: 100%; }
 
 a {
-	cursor:pointer;
-}
+  cursor: pointer; }
 
 #game {
-    position : absolute;
-    left : 0;
-    top : 0;
-    /*background-color : rgb(30,30,30);*/
-    right:0;
-    bottom:0;
-
-}
-
-
+  position: absolute;
+  left: 0;
+  top: 0;
+  /*background-color : rgb(30,30,30);*/
+  right: 0;
+  bottom: 0; }
 
 #debugWindow {
-    font-size : 12px;
-    line-height: 10px;
-    font-family: "Courier New";
-    color:white;
-    font-weight:bold;
-    position: fixed;
-    right:0;
-    bottom:0;
-    width:360px;
-    height:210px;
-    background-color: rgba(30,30,30,0.5);
-    padding: 20px 30px;
-    margin:60px;
-    z-index:35;
-    word-wrap: break-word;
-    letter-spacing: -1px;
-}
+  font-size: 12px;
+  line-height: 10px;
+  font-family: "Courier New";
+  color: white;
+  font-weight: bold;
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  width: 360px;
+  height: 210px;
+  background-color: rgba(30, 30, 30, 0.5);
+  padding: 20px 30px;
+  margin: 60px;
+  z-index: 35;
+  word-wrap: break-word;
+  letter-spacing: -1px; }
 
 #chatWindow {
-    font-size : 12px;
-    line-height: 10px;
-    color:white;
-    position: fixed;
-    left:0;
-    bottom:0;
-    width:360px;
-    height:210px;
-    background-color: rgba(30,30,30,0.5);
-    margin:60px;
-    z-index:35;
-    padding: 20px 30px;
-    font: 14px "Helvetica", Helvetica, Arial, sans-serif;
-    line-height: 12px;
+  font-size: 12px;
+  line-height: 10px;
+  color: white;
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 360px;
+  height: 210px;
+  background-color: rgba(30, 30, 30, 0.5);
+  margin: 60px;
+  z-index: 35;
+  padding: 20px 30px;
+  font: 14px "Helvetica", Helvetica, Arial, sans-serif;
+  line-height: 12px; }
 
-
-}
-
-#chatWindow p{
-    margin:0;
-}
-
+#chatWindow p {
+  margin: 0; }
 
 #chatMessage {
-    background-color: rgba(30,30,30,0.2);
-    border:0;
-    position: absolute;
-    bottom:0;
-    width:100%;
-    height: 20px;
-    color:white;
-    line-height: 10px;
-}
-
-.debugOptions {
-}
-
-.gamelayer {
-    width:100%;
-    height:100%;
-	position:absolute;
-	/*top:0;
-	left:0;
-	right:0;
-	bottom:0;*/
-}
-
-#game-screen {
-    position:absolute;
-/*    top:44px;
-    left:212px;
-    right:12px;
-    bottom:32px;*/
-}
-
-/*Loading Screen*/
-#loadingscreen {
-    display:none;
-	background: rgba(0,0,0,1);
-}
-
-#loadingcontainer {
-    width: 400px;
-    text-align:center;
-    height:20px; 
-    border:1px solid white;
-    color:white;
-    margin: 400px auto 0;
-}
-
-#progressbar{
-    width:0%;
-    background-color:lightgreen;
-    height:100%;
-}
-
-#loadingmessage {
-    text-align:center;
-    color:white;
-    margin-top: 20px;
-    height:48px;
-}
-
-
-/* Progress bar */
-.progress {
-	margin : 0 auto;
-	width : 6em;
-	height : 0.5em;
-	border-radius : 0.5em;
-	overflow : hidden;
-	border : 1px solid rgb(200,200,100);
-}
-
-.progress .indicator {
-	background-color : rgb(200,200,100);
-	height : 100%;
-	width : 0%;
-}
-
-
-#gameforegroundcanvas{
-	z-index:30;
-}
-
-#gamebackgroundcanvas{
-	z-index:20;
-}
+  background-color: rgba(30, 30, 30, 0.2);
+  border: 0;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 20px;
+  color: white;
+  line-height: 10px; }
 
 /*Touchinterface*/
-#touchInterface{
-    position:absolute;
-    z-index:1000;
-}
+#touchInterface {
+  position: absolute;
+  z-index: 1000; }
+
+@keyframes fight {
+  50% {
+    background-image: url("../img/menu/boxring_hl.png"); } }
+@keyframes fightZoom {
+  0% {
+    height: 30em;
+    width: 56em;
+    left: -10em;
+    top: 30%; }
+  100% {
+    width: 74em;
+    height: 40em;
+    top: 10%;
+    margin-left: auto;
+    margin-right: auto;
+    left: 0 !important;
+    right: 0 !important; } }
+#menu {
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  background: url("../img/menu/menu_leer.png");
+  background-size: cover; }
+  #menu #fight {
+    position: absolute;
+    left: -10em;
+    top: 30%;
+    width: 56em;
+    height: 30em;
+    background-image: url("../img/menu/boxring.png");
+    background-size: cover;
+    animation-name: fight;
+    cursor: pointer; }
+  #menu #selectcharacter {
+    background: url("../img/menu/selectcharacter.png") center 30% no-repeat; }
+  #menu #selectscene {
+    background: url("../img/menu/selectscene.png") center 30% no-repeat; }
+  #menu #waiting {
+    background: url("../img/menu/waiting.png") center 30% no-repeat; }
+  #menu #shadow {
+    display: none;
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5); }
+  #menu #gamescreen canvas {
+    margin-top: 5%; }
+
+.animation {
+  animation-duration: 2s;
+  animation-delay: 2s;
+  animation-iteration-count: infinite; }
+
+.fightZoom {
+  width: 74em !important;
+  height: 40em !important;
+  animation-name: fightZoom !important;
+  animation-duration: 2s;
+  animation-iteration-count: 1;
+  top: 10% !important;
+  margin-left: auto;
+  margin-right: auto;
+  left: 0 !important;
+  right: 0 !important; }
+
+.zoom, #menu #gamescreen canvas {
+  margin-left: auto;
+  margin-right: auto;
+  left: 0 !important;
+  right: 0 !important; }
+
+.absolute, #menu #selectcharacter, #menu #selectscene, #menu #waiting, #menu #gamescreen {
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0; }
+
+.select, #menu #selectcharacter div, #menu #selectscene div {
+  position: absolute;
+  top: 35%;
+  width: 50%;
+  height: 30%;
+  /*background: #f00;*/
+  margin-left: auto;
+  margin-right: auto;
+  left: 0 !important;
+  right: 0 !important; }
+  .select div, #menu #selectcharacter div div, #menu #selectscene div div {
+    float: left;
+    background-size: cover;
+    cursor: pointer; }
+
+/*# sourceMappingURL=main.css.map */

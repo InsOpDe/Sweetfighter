@@ -540,3 +540,8 @@ function assignToLobby(socketId) {
         player[socket.id].color = slot;
         player[socket.id].lobby = lc;
 }
+
+//TODO FINISHHANDLER
+function gameFinishedHandler(){
+    
+}

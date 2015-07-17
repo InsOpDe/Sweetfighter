@@ -35,6 +35,18 @@ var keyboard = {
             if (ev.which == 13) {
                 keyboard.state["kick"] = true;
             }
+            //q special1
+            if (ev.which == 81) {
+                keyboard.state["special1"] = true;
+            }
+            //w special2
+            if (ev.which == 87) {
+                keyboard.state["special2"] = true;
+            }
+            //e hyper
+            if (ev.which == 69) {
+                keyboard.state["hyper"] = true;
+            }
             multiplayer.sendCommand({ state: keyboard.state });
 
         });
@@ -69,6 +81,17 @@ var keyboard = {
                 
             }
             
+            if (ev.which == 81) {
+                keyboard.state["special1"] = false;
+            }
+             //w special2
+            if (ev.which == 87) {
+                keyboard.state["special2"] = false;
+            }
+            //e hyper
+            if (ev.which == 69) {
+                keyboard.state["hyper"] = false;
+            }
             multiplayer.sendCommand({ state: keyboard.state });
 
         });

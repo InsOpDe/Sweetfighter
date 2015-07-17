@@ -39,7 +39,7 @@ function initTouchInterface(){
     ctx = canvas.getContext("2d");
     
     canvas.id = "touchInterface";
-    div = document.getElementById("game-screen");
+    div = document.getElementById("gamescreen");
     
     div.appendChild(canvas);
     

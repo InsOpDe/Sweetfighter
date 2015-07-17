@@ -1,21 +1,4 @@
 <!DOCTYPE html>
-<!--
-    Copyright (c) 2012-2014 Adobe Systems Incorporated. All rights reserved.
-    Licensed to the Apache Software Foundation (ASF) under one
-    or more contributor license agreements.  See the NOTICE file
-    distributed with this work for additional information
-    regarding copyright ownership.  The ASF licenses this file
-    to you under the Apache License, Version 2.0 (the
-    "License"); you may not use this file except in compliance
-    with the License.  You may obtain a copy of the License at
-    http://www.apache.org/licenses/LICENSE-2.0
-    Unless required by applicable law or agreed to in writing,
-    software distributed under the License is distributed on an
-    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-     KIND, either express or implied.  See the License for the
-    specific language governing permissions and limitations
-    under the License.
--->
 <html>
     <head>
         <meta charset="utf-8" />
@@ -23,20 +6,22 @@
         <meta name="msapplication-tap-highlight" content="no" />
         <!-- WARNING: for iOS 7, remove the width=device-width and height=device-height attributes. See https://issues.apache.org/jira/browse/CB-4323 -->
         <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
-		
+        <script src="js/mobile.js"></script>
         <script type="text/javascript">
             var serverIP = '';
-            if (screen.width < 1500) { //muss noch n besserer weg gefunden werden
-                window.onerror = function(message, url, lineNumber) {  
-                    alert(message + " " + url + " " + lineNumber);
-                    return true;
-                }; 
-                //alert("mobile");
-                serverIP = 'http://134.60.71.134/';
-                document.write('\x3Cscript src="http://134.60.71.134/socket.io/socket.io.js">\x3C/script>');
+            if (screen.width < 960) { //muss noch n besserer weg gefunden werden
+                
+                serverIP = 'http://134.60.71.134/';   //server
+//                serverIP = 'http://10.0.2.2:8887/'; //host
+                document.write('\x3Cscript src="'+serverIP+'socket.io/socket.io.js">\x3C/script>');
                 document.write('\x3Cscript type="text/javascript" src="cordova.js">\x3C/script>');
+                
+                initMobile();
+                
+                
             } else {
-                console.log("desktop");
+//                console.log("desktop");
+//                alert("desktop");
                 document.write('\x3Cscript src="socket.io/socket.io.js">\x3C/script>');
             }
         </script>
@@ -52,7 +37,9 @@
         <script src="js/multiplayer.js"></script>
         <script src="js/chat.js"></script>
         <script src="js/loader.js"></script>
-        <script src="js/loadingscreen.js"></script>
+        <script src="js/shaders.js"></script>
+        <script src="js/menu.js"></script>
+        
         
         <script src="js/vector2D.js"></script>
         <script src="js/touchInterface.js"></script>
@@ -67,27 +54,37 @@
     </head>
     <body>
         <div>
+            
+            <div id="menu">
+                <div id="fight"></div>
+                
+                
+                <div id="options"></div>
+                <div id="ranking"></div>
+                <div id="profile"></div>
+                <div id="training"></div>
+                
+                <div id="shadow"></div>
+                
+                <div id="selectcharacter" style="display:none;"><div></div></div>
+                <div id="selectscene" style="display:none;"><div></div></div>
+                
+                <div id="waiting" style="display:none;"></div>
+                
+                <div id="gamescreen"  style="display:none;">
+                    
+
+                </div>
+            </div>
         
 	
-            <div id="game-screen">
-                    <canvas id="gameforegroundcanvas" class="gamelayer" ></canvas>
-                    <canvas id="gamebackgroundcanvas" class="gamelayer" ></canvas>
+            
 
-            </div>
-
-             <div id="debugWindow" style="display:none;">
+             <div id="debugWindow"  style="display:none;">
 
             </div>
             <div id="chatWindow" style="display:none;">
 
-            </div>
-
-            <div id="loadingscreen" class="gamelayer">
-                    <div id="loadingcontainer">
-                        <div id="progressbar">
-                        </div>
-                    </div>
-                    <div id="loadingmessage"></div>
             </div>
         </div>
     </body>
