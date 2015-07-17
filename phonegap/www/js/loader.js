@@ -27,7 +27,9 @@ var loader = {
         game.phaser.load.image('meterbar_p1', 'img/Meterbar_P1.png');
         game.phaser.load.image('meterbar_p2', 'img/Meterbar_P2.png');
         
-        game.phaser.load.spritesheet('avataranimationAPlayerA', 'img/Avatar_AnimationAPlayerA_Spritesheet.png', 180, 180, 18);
-        game.phaser.load.spritesheet('avataranimationAPlayerB', 'img/Avatar_AnimationAPlayerB_Spritesheet.png', 180, 180, 18);
+        game.phaser.load.spritesheet('avataranimationAPlayerA', 'img/Avatar_AnimationAPlayerA_Spritesheet.png', 180, 180, 36);
+        game.phaser.load.spritesheet('avataranimationAPlayerB', 'img/Avatar_AnimationAPlayerB_Spritesheet.png', 180, 180, 36);
+        game.phaser.load.spritesheet('avataranimationBPlayerA', 'img/Avatar_AnimationBPlayerA_Spritesheet.png', 160, 160, 18);
+        game.phaser.load.spritesheet('avataranimationBPlayerB', 'img/Avatar_AnimationBPlayerB_Spritesheet.png', 160, 160, 18);
     },
 }

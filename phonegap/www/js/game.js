@@ -151,19 +151,31 @@ var game = {
         game.meterbar_p1 = game.phaser.add.image(102,63, 'meterbar_p1');
         game.meterbar_p2 = game.phaser.add.image(452,63, 'meterbar_p2');
         
-        //TODO animation
+        //Avatar animation player A
         var avataranimationAPlayerA = game.phaser.add.sprite(11,5,'avataranimationAPlayerA');
         avataranimationAPlayerA.scale.setTo(0.5, 0.5);
         avataranimationAPlayerA.fixedToCamera = true;
         avataranimationAPlayerA.animations.add('rotateA');
-        avataranimationAPlayerA.animations.play('rotateA',7,true);
+        avataranimationAPlayerA.animations.play('rotateA',10,true);
+        var avataranimationBPlayerA = game.phaser.add.sprite(16,10,'avataranimationBPlayerA');
+        avataranimationBPlayerA.scale.setTo(0.5, 0.5);
+        avataranimationBPlayerA.fixedToCamera = true;
+        avataranimationBPlayerA.animations.add('rotateB');
+        avataranimationBPlayerA.animations.play('rotateB',10,true);
         
+        //Avatar animation player B
         var avataranimationAPlayerB = game.phaser.add.sprite(693,5,'avataranimationAPlayerB');
         avataranimationAPlayerB.scale.setTo(0.5, 0.5);
         avataranimationAPlayerB.scale.x *= -1;
         avataranimationAPlayerB.fixedToCamera = true;
         avataranimationAPlayerB.animations.add('rotateA');
-        avataranimationAPlayerB.animations.play('rotateA',7,true);
+        avataranimationAPlayerB.animations.play('rotateA',10,true);
+        var avataranimationBPlayerB = game.phaser.add.sprite(688,10,'avataranimationBPlayerB');
+        avataranimationBPlayerB.scale.setTo(0.5, 0.5);
+        avataranimationBPlayerB.scale.x *= -1;
+        avataranimationBPlayerB.fixedToCamera = true;
+        avataranimationBPlayerB.animations.add('rotateB');
+        avataranimationBPlayerB.animations.play('rotateB',10,true);
         
         game.interface = game.phaser.add.image(2, 0, 'interface');
         
