@@ -134,6 +134,24 @@ a {
     background: url("../img/menu/menu_leer.png");
     background-size:cover;
     
+    #login {
+        @extend .center;
+        @extend .bg;
+        
+        div {
+            padding: 20px;
+        }
+        
+        #loginbutton {
+            padding: 5px;
+            background: #99f;
+            border-radius: 2px;
+            width: 50%;
+            margin: 20px auto 0px;
+            text-align: center;
+        }
+    }
+    
     #fight {
         position:absolute;
         left:-10em;
@@ -141,6 +159,18 @@ a {
         width: round(30*1.8597662771285475792988313856427)+em;
         height: 30em;
         background-image: url("../img/menu/boxring.png");
+        background-size:cover;
+        animation-name: fight;
+        cursor: pointer;
+    }
+    
+    #ranking {
+        position:absolute;
+        right:5em;
+        top:10%;
+        width: 20em;
+        height: 20em;
+        background-image: url("../img/menu/bild.png");
         background-size:cover;
         animation-name: fight;
         cursor: pointer;
@@ -170,8 +200,21 @@ a {
 
     }
     
+    #rankingtable {
+        @extend .center;
+        @extend .bg;
+        width:80%;
+            
+        table {
+            width:100%;
+            tr td {
+                text-align:center;
+            }
+        }
+    }
+    
     #shadow {
-        display:none;
+        /*display:none;*/
         position:absolute;
         left:0;
         top:0;
@@ -218,6 +261,14 @@ a {
     right: 0 !important;
 }
 
+.center {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+}
+
 .absolute {
     position:absolute;
     left:0;
@@ -242,4 +293,11 @@ a {
         background-size:cover;
         cursor:pointer;
     }
+}
+
+.bg {
+    color:white;
+    background: rgba(0,0,0,0.5);
+    border: 2px #00f solid;
+    border-radius: 5px;
 }

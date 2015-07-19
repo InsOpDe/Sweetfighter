@@ -1,11 +1,11 @@
 var multiplayer = {
     init:function(){
         multiplayer.socket = io.connect(serverIP);
+    },
+    startGame:function(){
         multiplayer.socket.emit('init', menu.options );
         chat.run();
         multiplayer.run();  
-        
-
     },
     socket:null,
     lastHeartbeat: [],

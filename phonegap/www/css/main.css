@@ -106,6 +106,15 @@ a {
   bottom: 0;
   background: url("../img/menu/menu_leer.png");
   background-size: cover; }
+  #menu #login div {
+    padding: 20px; }
+  #menu #login #loginbutton {
+    padding: 5px;
+    background: #99f;
+    border-radius: 2px;
+    width: 50%;
+    margin: 20px auto 0px;
+    text-align: center; }
   #menu #fight {
     position: absolute;
     left: -10em;
@@ -116,14 +125,30 @@ a {
     background-size: cover;
     animation-name: fight;
     cursor: pointer; }
+  #menu #ranking {
+    position: absolute;
+    right: 5em;
+    top: 10%;
+    width: 20em;
+    height: 20em;
+    background-image: url("../img/menu/bild.png");
+    background-size: cover;
+    animation-name: fight;
+    cursor: pointer; }
   #menu #selectcharacter {
     background: url("../img/menu/selectcharacter.png") center 30% no-repeat; }
   #menu #selectscene {
     background: url("../img/menu/selectscene.png") center 30% no-repeat; }
   #menu #waiting {
     background: url("../img/menu/waiting.png") center 30% no-repeat; }
+  #menu #rankingtable {
+    width: 80%; }
+    #menu #rankingtable table {
+      width: 100%; }
+      #menu #rankingtable table tr td {
+        text-align: center; }
   #menu #shadow {
-    display: none;
+    /*display:none;*/
     position: absolute;
     left: 0;
     top: 0;
@@ -156,6 +181,13 @@ a {
   left: 0 !important;
   right: 0 !important; }
 
+.center, #menu #login, #menu #rankingtable {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  -webkit-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%); }
+
 .absolute, #menu #selectcharacter, #menu #selectscene, #menu #waiting, #menu #gamescreen {
   position: absolute;
   left: 0;
@@ -177,5 +209,11 @@ a {
     float: left;
     background-size: cover;
     cursor: pointer; }
+
+.bg, #menu #login, #menu #rankingtable {
+  color: white;
+  background: rgba(0, 0, 0, 0.5);
+  border: 2px #00f solid;
+  border-radius: 5px; }
 
 /*# sourceMappingURL=main.css.map */

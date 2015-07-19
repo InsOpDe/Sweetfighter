@@ -50,21 +50,44 @@
         <!--<script src="js/pixi.dev.js"></script>-->
         <script src="js/jquery.min.js"></script>
 		
-        <title>Hello World</title>
+        <title>Streetfighter Online</title>
     </head>
     <body>
         <div>
             
             <div id="menu">
+                
+                
+<!--                Menubuttons-->
                 <div id="fight"></div>
-                
-                
                 <div id="options"></div>
                 <div id="ranking"></div>
                 <div id="profile"></div>
                 <div id="training"></div>
                 
+                
                 <div id="shadow"></div>
+                
+                <!--ui-->
+                <div id="login">
+                    <div>
+                        <table>
+                            <tr><td>Username:</td><td><input id="name" /></td></tr>
+                            <tr><td>Passwort:</td><td><input id="pass" /></td></tr>
+                            <tr id="loginerror" style="display:none"><td colspan="2" style="color:red;">Falsche Zugangsdaten!</td></tr>
+                            <tr><td colspan="2"><div id="loginbutton">Login</div></td></tr>
+                        </table>
+                    </div>
+                </div>
+                
+                <div id="rankingtable" style="display:none">
+                    <table>
+                        <tr><th>Platz</th><th>Name</th><th>Punkte</th><th>Charakter</th><th></th></tr>
+                    </table>
+                </div>
+                
+                
+                
                 
                 <div id="selectcharacter" style="display:none;"><div></div></div>
                 <div id="selectscene" style="display:none;"><div></div></div>

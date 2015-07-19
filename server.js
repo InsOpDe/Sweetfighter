@@ -5,6 +5,9 @@ var express = require('express')
 ,   app = express()
 ,   server = require('http').createServer(app)
 ,   io = require('socket.io').listen(server)
+,   couchbase = require('couchbase')
+,   cluster = new couchbase.Cluster()
+,   model = cluster.openBucket('streetfighter')
 ,   conf = require('./config.json')
 ,   team = ['blue','red']
 ,   color = ['blue','red']
@@ -26,6 +29,29 @@ app.get('/cordova.js', function (req, res) {
 	res.sendfile(__dirname + '/cordova.js');
 });
 
+
+/**
+ * gets from db
+ */
+var getDb = function (name, fnct) {
+    model.get(name, function(err, result) {
+        if(err) console.error(err)
+        else if(fnct) fnct(result.value);
+    });   
+}
+
+
+
+/**
+ * sets data in db
+ */
+var setDb = function (name,data,fnct) {
+    model.upsert(name,data, function(err, result) {
+        if(err) console.error(err)
+        else if(fnct) fnct(result);
+    });
+}
+
 //lobby
 var lc = 0;
 var lobby = [];
@@ -45,8 +71,50 @@ io.sockets.on('connection', function (socket) {
     clients[socket.id] = socket;
     player[socket.id] = {};
     
+    socket.on('login', function (data) {
+        var name = data.name;
+        var pass = data.pass;
+        getDb('user',function(dbdata){
+            var error = false;
+            if (dbdata.hasOwnProperty(name)){
+                if (dbdata[name].pass === pass){
+                    player[socket.id].user = {name:dbdata[name].user, elo:dbdata[name].elo}
+                } else {
+                    error = true;
+                }
+            } else {
+                error = true;
+            }
+            
+            socket.emit('login', error );
+        });
+    });
+    
+    socket.on('ranking', function () {
+        getDb('user',function(users){
+            var user = [];
+            for(var i in users){
+                var userObj = users[i];
+                user.push({
+                           name: userObj.user,
+                           elo: userObj.elo,
+                           favChar: userObj.favChar,
+                        });
+            }
+            user.sort(function(a,b){ return a.elo<b.elo})
+                
+            socket.emit('ranking', user );
+        });
+    });
+    
     //Init commands
     socket.on('init', function (data) {
+
+        if(!player[socket.id].hasOwnProperty('user')){
+            console.log("da wollte wer n spiel starten ohne anmeldung!");
+            return;
+        }
+            
         socket.controls = [];
         player[socket.id].socketId = socket.id;
         
@@ -166,6 +234,38 @@ var updateloop = setInterval(function(){
     }
 },15)
 
+
+function reCalculateElo(p1,p2) {
+    var elo1 = p1.user.elo;
+    var elo2 = p2.user.elo;
+    var k = 20;
+    console.log(p1.user,p2.user);
+    var EA = 1 / (1+Math.pow(10,(elo2-elo1)/400))
+    
+    if  (p1.user.won === true){
+        elo1 = elo1 + k*(1-(1-EA));
+        elo2 = elo2 + k*(0-EA);
+    } else {
+        elo2 = elo2 + k*(1-(1-EA));
+        elo1 = elo1 + k*(0-EA);
+    }
+    
+    p1.user.elo = Math.round(elo1);
+    p2.user.elo = Math.round(elo2);
+    console.log(p1.user,p2.user);
+    
+    getDb('user',function(users){
+        for(var i in users){
+            var user = users[i];
+            if(user.user == p1.user.name){
+                user.elo = p1.user.elo;
+            } else if (user.user == p2.user.name){
+                user.elo = p2.user.elo;
+            }
+        }
+        setDb('user',users)
+    })
+}
 
 // Portnummer in die Konsole schreiben
 console.log('Der Server läuft nun auf dem Port ' + conf.port);
@@ -314,7 +414,6 @@ function handleCollision(){
         
             var p1 = lobby[lob][color[p]];
             var p2 = (color[p] == "red")? lobby[lob]["blue"] : lobby[lob]["red"];
-
     //        console.log(p1.x,p2.x,p1.w,p2.w);
 
             //detect whether characters can hit each other
@@ -326,6 +425,10 @@ function handleCollision(){
                 
                 if(p2.hp < 0){
                     p2.hp = 0;
+                    player[p1.sid].user.won = true;
+                    player[p2.sid].user.won = false;
+                    reCalculateElo(player[p1.sid],player[p2.sid]);
+                    //cancel game - selbes machen wenn die zeit abgelaufen ist
                 }
 
                 if(p1.hypermeter <= 95){

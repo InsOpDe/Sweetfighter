@@ -3,6 +3,38 @@ var menu = {
     init : function() {
         menu.fight = $('#fight');
         menu.fight.bind('click tap',menu.clicked)
+        
+        
+        multiplayer.init();
+        $('#loginbutton').click(function(){
+            var name = $('#name').val();
+            var pass = $('#pass').val();
+            multiplayer.socket.emit('login', {name:name,pass:pass} );
+        });
+        
+        multiplayer.socket.on('login', function (data) {
+           if (data === false){
+               $('#shadow').hide();
+               $('#login').hide();
+           } else {
+               $('#loginerror').show();
+           }
+        });
+        
+        
+        $('#ranking').click(function(){
+            $('#shadow').show();
+            $('#rankingtable').show();
+            multiplayer.socket.emit('ranking');
+        });
+        
+        multiplayer.socket.on('ranking', function (data) {
+            var counter = 1;
+            console.log(data);
+            for(var i in data){
+                $('#rankingtable tr:last').after('<tr><td>' + (counter++) +'</td><td>' + data[i].name +'</td><td>' + data[i].elo +'</td><td>' + data[i].favChar +'</td></tr>');
+            }
+        });
     },
     clicked : function(e){
         $('#shadow').show();
@@ -52,8 +84,8 @@ var menu = {
         
         loader.init();
         keyboard.init();
-        debug.init();
-        multiplayer.init();	
+        multiplayer.startGame();
+        debug.init();	
         chat.init();
 
         //warten bis der server gameOptions schickt
