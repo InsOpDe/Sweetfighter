@@ -5,7 +5,8 @@ var multiplayer = {
     startGame:function(){
         multiplayer.socket.emit('init', menu.options );
         chat.run();
-        multiplayer.run();  
+        multiplayer.run();
+        keyboard.block = false;
     },
     socket:null,
     lastHeartbeat: [],
@@ -45,7 +46,11 @@ var multiplayer = {
                 }
             }
         });
-        
+
+
+        multiplayer.socket.on('gameover', function (data) {
+            menu.gameover(data);
+        });
         
         multiplayer.socket.on('command', function (data) {
             var actions = data.actions.players;

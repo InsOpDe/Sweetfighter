@@ -8,6 +8,7 @@ var menu = {
         $('#back').bind('click tap',function(){
             $('#rankingtable').hide();
             $('#shadow').hide();
+            $('#gameover').hide();
         });
 
 
@@ -38,8 +39,9 @@ var menu = {
 
         multiplayer.socket.on('ranking', function (data) {
             var counter = 1;
+            $('#rankingtable tbody > tr').remove();
             for(var i in data){
-                $('#rankingtable tr:last').after('<tr><td>' + (counter++) +'</td><td>' + data[i].name +'</td><td>' + data[i].elo +'</td><td>' + data[i].favChar +'</td></tr>');
+                $('#rankingtable tbody').append('<tr><td>' + (counter++) +'</td><td>' + data[i].name +'</td><td>' + data[i].elo +'</td><td>' + data[i].favChar +'</td></tr>');
             }
         });
     },
@@ -65,6 +67,25 @@ var menu = {
 
         }
 
+    },
+    gameover : function(data){
+        keyboard.block = true;
+        game.phaser.destroy();
+        console.log(data);
+        var text = "";
+        if(data.won){
+            $('#gameover').addClass('youwin');
+            text = "Elo dazugewonnen: " ;
+        } else {
+            $('#gameover').addClass('youlose');
+            text = "Elo verloren: " ;
+        }
+        text += data.diff + "<br> Jetztiges Elo: " + data.elo + "<br> Aktueller Platz: " + data.rank;
+        $('#gameover div').html(text);
+        $('#gamescreen').hide();
+        $('#gameover').show();
+        $('#back').show();
+        $('#touchInterface').remove();
     },
     selectMap : function(e){
         menu.options.character = $(e.currentTarget).attr('id')

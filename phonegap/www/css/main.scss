@@ -193,6 +193,20 @@ a {
             @extend .select;
         }
     }
+
+    #gameover {
+        @extend .absolute;
+
+        div {
+            @extend .select;
+            @extend .bg;
+            margin-top: 2em;
+            height: auto !important;
+            padding: 20px;
+            text-align: center;
+            font-size: large;
+        }
+    }
     
     #waiting {
         @extend .absolute;
@@ -282,7 +296,6 @@ a {
     top:35%;
     width: 50%;
     height: 30%;
-    /*background: #f00;*/
     margin-left: auto;
     margin-right: auto;
     left: 0 !important;
@@ -311,4 +324,12 @@ a {
     background: url("../img/menu/back.png") center 30% no-repeat;
     background-size: contain;
 
+}
+
+.youwin {
+    background: url("../img/menu/youwin.png") center 30% no-repeat !important;
+}
+
+.youlose {
+    background: url("../img/menu/youlose.png") center 30% no-repeat !important;
 }

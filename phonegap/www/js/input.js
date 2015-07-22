@@ -1,11 +1,14 @@
 var keyboard = {
     state : { left:false , right:false , moveup:false , movedown:false, hit:false, kick:false},
     player : { blue:{} , red:{} },
+    block : false,
     init: function() {
         
         var keyboardInput = $(window);
         
         keyboardInput.keydown(function(ev) {
+            if(keyboard.block)
+                return;
 //            console.log("key pressed: ", ev.which);
 //            multiplayer.socket.emit('command', { action : ev.which } );
             

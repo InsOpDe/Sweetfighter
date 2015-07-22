@@ -239,6 +239,13 @@ var updateloop = setInterval(function(){
 },15);
 
 
+function endGame(p1,p2) {
+
+    reCalculateElo(p1,p2);
+
+}
+
+
 function reCalculateElo(p1,p2) {
     var elo1 = p1.user.elo;
     var elo2 = p2.user.elo;
@@ -253,12 +260,14 @@ function reCalculateElo(p1,p2) {
         elo2 = elo2 + k*(1-(1-EA));
         elo1 = elo1 + k*(0-EA);
     }
-    
+    p1.user.diff = Math.round(elo1) - p1.user.elo;
+    p2.user.diff = Math.round(elo2) - p2.user.elo;
     p1.user.elo = Math.round(elo1);
     p2.user.elo = Math.round(elo2);
     console.log(p1.user,p2.user);
     
     getDb('user',function(users){
+        var usersArr = [];
         for(var i in users){
             var user = users[i];
             if(user.user == p1.user.name){
@@ -266,9 +275,40 @@ function reCalculateElo(p1,p2) {
             } else if (user.user == p2.user.name){
                 user.elo = p2.user.elo;
             }
+
+            usersArr.push({name: user.user,
+                elo: user.elo})
         }
+
+
+
         setDb('user',users)
+
+        usersArr.sort(function(a,b){ return a.elo<b.elo});
+        for(var i in usersArr){
+            if(usersArr[i].name == p1.user.name){
+                p1.user.rank = (i*1)+1;
+            } else if (usersArr[i].name == p2.user.name){
+                p2.user.rank = (i*1)+1;
+            }
+        }
+
+
+        clients[p1.socketId].emit('gameover', {won:p1.user.won,diff:p1.user.diff,elo:p1.user.elo, rank:p1.user.rank});
+        clients[p2.socketId].emit('gameover', {won:p2.user.won,diff:p2.user.diff,elo:p2.user.elo, rank:p2.user.rank});
+
+        lobby.splice(lobby.indexOf(p1.lobby),1);
+        delete clients[p1.socketId];
+        delete clients[p2.socketId];
+        //delete player[p1.socketId];
+        //delete player[p2.socketId];
+        delete controls[p1.socketId];
+        delete controls[p2.socketId];
+        player.splice(player.indexOf(p1.socketId),1);
+        player.splice(player.indexOf(p2.socketId),1);
+
     })
+
 }
 
 // Portnummer in die Konsole schreiben
@@ -287,7 +327,7 @@ function handleCommand(){
         if(typeof player[p] === 'undefined')
             continue;
         var lob = player[p].lobby;
-        if(typeof lob === 'undefined' || !lobby[lob].options)
+        if(typeof lob === 'undefined' || !lobby[lob]  || !lobby[lob].hasOwnProperty("options"))
             continue;
         
         var col = player[p].color;
@@ -548,6 +588,10 @@ function handleHitbox(action,p1,p2,vz){
                                 p2.hp -= 20;
                                 if(p2.hp < 0){
                                     p2.hp = 0;
+                                    console.log("preendgame");
+                                    player[p1.sid].user.won = true;
+                                    player[p2.sid].user.won = false;
+                                    endGame(player[p1.sid],player[p2.sid]);
                                 }
                                 
                                 p2.hitstun.gotHit = true;
@@ -583,6 +627,10 @@ function handleHitbox(action,p1,p2,vz){
                                 p2.hp -= 20;
                                 if(p2.hp < 0){
                                     p2.hp = 0;
+                                    console.log("preendgame");
+                                    player[p1.sid].user.won = true;
+                                    player[p2.sid].user.won = false;
+                                    endGame(player[p1.sid],player[p2.sid]);
                                 }
                                 
                                 p2.hitstun.gotHit = true;
