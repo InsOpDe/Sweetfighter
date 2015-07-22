@@ -27,7 +27,7 @@ var CONTROL_TOLERANCE = 15,
     MAX_SAVED_VECTORS = 200;
 
 //INPUT CONTROL
-var state = {left:false,right:false,moveup:false,movedown:false,hit:false};
+var state = {left:false,right:false,moveup:false,movedown:false,hit:false,special1:false,special2:false,hyper:false};
 
 //DEBUG
 var debugLine;
