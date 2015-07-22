@@ -61,7 +61,18 @@ var assignQueue = [];
 var clients = {};    
 var intervalTimer = 50;
 var controls = {};
-var characterAttributes = {x:0,y:0,hp:100,hypermeter:0,jumping:false,w:120,h:380,crouch:false,velocityY:0,attack:{timer:0,jab:false, kick:false},moving:false,gotHit:{x:0,y:0,damage:0}};
+var characterAttributes = {x:0,y:0,w:100,h:300,hp:100,hypermeter:0,
+                           moving:false,jump:false,velocityY:0,crouch:false,
+                           hitstun:{gotHit:false,timer:undefined},
+                           attack:{fowardhit:false,airhit:false,special1:false,special2:false,hyper:false,block:false,
+                                   jabcommand:{jab:false,kick:false,
+                                               jab1:false,jab1Time:undefined,
+                                               jab2:false,jab2Time:undefined,
+                                               jabcomboend:false,jabcomboendTime:undefined}
+                           },
+                                       //TODO deprecated
+                           //gotHit:{x:0,y:0,damage:0}
+                           };
 
 
 
@@ -186,31 +197,27 @@ var assignloop = setInterval(function(){
                     //TODO nur zuordnen wenn rankings etc stimmen
                     assignToLobby(playerA.socketId);
                     assignToLobby(playerB.socketId);
-                    assignQueue.splice(i,1)
+                    assignQueue.splice(i,1);
                     var index = assignQueue.indexOf(playerB);
-                    assignQueue.splice(index,1)
+                    assignQueue.splice(index,1);
 
                 }
             }
         }
     }
-},1000)
+},1000);
 
 
 
 // main physics loop on server
 var physicsloop = setInterval(function(){
-    //check which buttons are pressed
-    handleAttackTimings();
     handleCommand();
-    handleCollision();
-},15)
+    handleHitstun();
+},15);
 
 //updateloop
 var updateloop = setInterval(function(){
     for(var i in lobby){
-//        if(typeof clients == 'undefined');
-//            break;
         if(!lobby[i].options)
             break;
         var characterRed = lobby[i].red;
@@ -224,15 +231,12 @@ var updateloop = setInterval(function(){
         gameTimer.update();
         hypermeter.update(characterRed, characterBlue);
         
-    //    update["red"] = {x : character["red"].x , y : character["red"].y }
-    //    update["blue"] = {x : character["blue"].x , y : character["blue"].y }
-//        io.sockets.emit('command', { tick: new Date(), actions : update });
         clients[lobby[i].red.sid].volatile.emit('command', { tick: new Date(), actions : update });
         clients[lobby[i].blue.sid].volatile.emit('command', { tick: new Date(), actions : update });
 
-        resetVals(lobby[i]);
+        //resetVals(lobby[i]);
     }
-},15)
+},15);
 
 
 function reCalculateElo(p1,p2) {
@@ -270,180 +274,539 @@ function reCalculateElo(p1,p2) {
 // Portnummer in die Konsole schreiben
 console.log('Der Server läuft nun auf dem Port ' + conf.port);
 
-
-
-function handleAttackTimings(){
-//    for (var p in color){
-//        var p1 = character[color[p]];
-//        var c1 = controls[p];
-//        if(p1.attack.jab){
-//            p1.attack.timer = Date.now()+300;
-//            
-//            console.log("jab");
-//        }
-//    }
-}
-
+//FOLLOWING ARE INPUT- AND HITBOXHANDLER
 
 var movementSpeed = 5;
 var hitSpeed = 1;
 var gravityAccelerationY = 1;
 var jumpHeightSquared = -25;
-var minJumpHeight = ( jumpHeightSquared / 3 )
+var minJumpHeight = ( jumpHeightSquared / 3 );
 function handleCommand(){
     for(var p in controls){
-
         //if lobby isnt full yet
-        if(typeof player[p] == 'undefined')
+        if(typeof player[p] === 'undefined')
             continue;
         var lob = player[p].lobby;
-        if(typeof lob == 'undefined' || !lobby[lob].options)
+        if(typeof lob === 'undefined' || !lobby[lob].options)
             continue;
         
         var col = player[p].color;
-        var options = lobby[lob].options
-//        console.log(lobby[lob]);
+        var options = lobby[lob].options;
+
         var c1 = controls[p];
         var p1 = lobby[lob][col];
-        var p2 = (col == "red")? lobby[lob]["blue"] : lobby[lob]["red"];
-        var vz = (p1.x > p2.x)? -1 : 1;
+        var p2 = (col === "red")? lobby[lob]["blue"] : lobby[lob]["red"];
+        var c2 = controls[p2.sid];
         
-        if(c1.left){
-            if(p1.x - movementSpeed >= (p1.w / 2)){
-                if (p1.x - movementSpeed + (p1.w/2) > p2.x - (p2.w/2) && p1.x - movementSpeed - (p1.w/2) < p2.x + (p2.w/2)){
-                    var slowerMovementSpeed = movementSpeed * .5;
-                    if(p2.x - slowerMovementSpeed >= (p1.w / 2)){
-                        p1.x -= slowerMovementSpeed;
-                        p2.x -= slowerMovementSpeed;
-                    }
-                } else {
-                    p1.x -= movementSpeed;
-                    p1.moving = true;
-                }
-            }
-        } else if (c1.right){
-            if(p1.x + movementSpeed <= (options.mapX) - (p1.w / 2)){
-                 if (p1.x + movementSpeed + (p1.w/2) > p2.x - (p2.w/2) && p1.x + movementSpeed - (p1.w/2) < p2.x + (p2.w/2)){
-                    var slowerMovementSpeed = movementSpeed * .5;
-                    if(p2.x + slowerMovementSpeed <= (options.mapX) - (p1.w / 2)){
-                        p1.x += slowerMovementSpeed;
-                        p2.x += slowerMovementSpeed;
-                    }
-                } else {
-                    p1.x += movementSpeed;
-                    p1.moving = true;
-                }
-            }
-        } else {
-            p1.moving = false;
-        }
+        if(!p1.hitstun.gotHit){
         
-        if(c1.moveup){
-            if(!p1.jump) {
-                p1.velocityY = jumpHeightSquared;
-                p1.jump = true;
-            }
-        } else {
-            if(p1.velocityY < minJumpHeight){
-                p1.velocityY = minJumpHeight;
+            if(c1.left){
+                if(!p1.jump){
+                    if(!c1.movedown){
+                        if(!c1.hit){
+                            if(!p1.attack.block){
+                                if(p1.x - movementSpeed >= p1.w/2 + 20){
+                                    if(p1.x < p2.x){
+                                        p1.x -= movementSpeed;
+                                        p1.moving = true;
+                                    } 
+                                    else if(p1.x - p1.w/2 > p2.x + p2.w/2 - 20){
+                                        p1.x -= movementSpeed;
+                                        p1.moving = true;
+                                    } else if(p1.x - p1.w/2 === p2.x + p2.w/2 - 20){
+                                        //console.log("Collide");
+                                        if(!c2.movedown){
+                                            handlePush(p1,p2,"left",movementSpeed,"collide");
+                                        }
+                                    }
+                                } else if(p1.x - movementSpeed < p1.w/2 + 20){
+                                    p1.x = p1.w/2 + 20;
+                                    p1.moving = true;
+                                }
+                            }
+                        }
+                    }
+                } else if(p1.jump){
+                    if(p1.x - movementSpeed >= p1.w/2 + 20){
+                        if(p1.x < p2.x){
+                            p1.x -= movementSpeed;
+                            p1.moving = true;
+                        } 
+                        else if(p1.x - p1.w/2 > p2.x + p2.w/2 - 20){
+                            p1.x -= movementSpeed;
+                            p1.moving = true;
+                        }
+                    }
+                }
+            } else if(c1.right){
+                if(!p1.jump){
+                    if(!c1.movedown){
+                        if(!c1.hit){
+                            if(!p1.attack.block){
+                                if(p1.x + movementSpeed <= (options.mapX) - (p1.w / 2) - 20){
+                                    if(p1.x > p2.x){
+                                        p1.x += movementSpeed;
+                                        p1.moving = true;
+                                    } 
+                                    else if(p1.x + p1.w/2 < p2.x - p2.w/2 + 20){
+                                        p1.x += movementSpeed;
+                                        p1.moving = true;
+                                    } else if(p1.x + p1.w/2 === p2.x - p2.w/2 + 20){
+                                        //console.log("Collide");
+                                        if(!c2.movedown){
+                                            handlePush(p1,p2,"right",movementSpeed,"collide");
+                                        }
+                                    }                    
+                                } else if(p1.x + movementSpeed > (options.mapX) - (p1.w / 2) - 20){
+                                    p1.x = (options.mapX) - (p1.w / 2) - 20;
+                                }
+                            }
+                        }
+                    }
+                } else if(p1.jump){
+                    if(p1.x + movementSpeed <= (options.mapX) - (p1.w / 2) - 20){
+                        if(p1.x > p2.x){
+                            p1.x += movementSpeed;
+                            p1.moving = true;
+                        } 
+                        else if(p1.x + p1.w/2 < p2.x - p2.w/2 + 20){
+                            p1.x += movementSpeed;
+                            p1.moving = true;
+                        }
+                    }
+                }
             } else {
-                if (c1.movedown) {
-                    p1.crouch=true;
+                p1.moving = false;
+            }
+
+            if(c1.moveup && !c1.movedown){
+                if(!p1.jump) {
+                    p1.velocityY = jumpHeightSquared;
+                    p1.jump = true;
+                }
+            } else {
+                if(p1.velocityY < minJumpHeight){
+                    p1.velocityY = minJumpHeight;
                 } else {
-                    p1.crouch=false;
+                    if (c1.movedown && !p1.jump) {
+                        p1.crouch=true;
+                        p1.h = 170;
+                    } else {
+                        p1.crouch=false;
+                        p1.h = 300;
+                    }
                 }
             }
-        }
-        
-        
-        
-        if(c1.hit){
-           if(Date.now() > p1.attack.timer){
-                p1.attack.timer = Date.now()+400;
-                p1.attack.jab = true;
-                p1.attack.attacking = true;
-                p1.attack.x = p1.x+vz*(p1.w/1)
-                p1.attack.y = p1.y-(p1.h/1.3)
-                p1.attack.w = 40;
-                p1.attack.h = 40;
-//                console.log("jab");
-           }
-            
-        } else {
-            p1.attack.attacking = false;
-            p1.attack.jab = false;
-        }
-        
-        if(c1.kick){
-            p1.attack.kick = true;
-        } else {
-            p1.attack.kick = false;
-        }
-        if(c1.special1){
-            p1.attack.special1 = true;
-        } else {
-            p1.attack.special1 = false;
-        }
-        if(c1.special2){
-            p1.attack.special2 = true;
-        } else {
-            p1.attack.special2 = false;
-        }
-        if(c1.hyper){
-            p1.attack.hyper = true;
-        } else {
-            p1.attack.hyper = false;
-        }
 
-        p1.velocityY += gravityAccelerationY ;
-        p1.y += p1.velocityY ;
-        if (p1.y > options.mapY) {
-            p1.y = options.mapY;
-            p1.jump = false;
-            p1.velocityY = 0;
+            p1.velocityY += gravityAccelerationY ;
+            p1.y += p1.velocityY ;
+            if (p1.y > options.mapY) {
+                p1.y = options.mapY;
+                p1.jump = false;
+                p1.velocityY = 0;
+            } 
+
+            //1 = blue, -1 = red
+            var vz = (p1.x > p2.x)? -1 : 1;
+            
+            //JAB COMBO - TRANSITION FROM JAB, JAB, KICK
+            if(c1.hit && !c1.right && !c1.left && !c1.moveup && !c1.movedown && !p1.jump){
+                p1.attack.jabcommand.jab = false;
+                p1.attack.jabcommand.kick = false;
+
+                //JAB1
+                if(!p1.attack.jabcommand.jab1){
+                    if(!p1.attack.jabcommand.jabcomboend){
+                        p1.attack.jabcommand.jab = true;
+                        handleHitbox("jab",p1,p2,vz);
+                        p1.attack.jabcommand.jab1 = true;
+                        p1.attack.jabcommand.jab1Time = new Date();
+                    } else if(p1.attack.jabcommand.jabcomboend){
+                        var curTime = new Date;
+                        if(curTime.getTime() - p1.attack.jabcommand.jabcomboendTime.getTime() >= 1000){
+                            p1.attack.jabcommand.jab = true;
+                            handleHitbox("jab",p1,p2,vz);
+                            p1.attack.jabcommand.jab1 = true;
+                            p1.attack.jabcommand.jab1Time = new Date();
+                            p1.attack.jabcommand.jabcomboend = false;
+                        }
+                    } 
+                } else if(p1.attack.jabcommand.jab1){
+                    //JAB2
+                    if(!p1.attack.jabcommand.jab2){
+                        p1.attack.jabcommand.jab = false;
+                        var curTime = new Date();
+                        if(curTime.getTime() - p1.attack.jabcommand.jab1Time.getTime() >= 300){
+                            if(curTime.getTime() - p1.attack.jabcommand.jab1Time.getTime() <= 700){
+                                p1.attack.jabcommand.jab = true;
+                                handleHitbox("jab",p1,p2,vz);
+                                p1.attack.jabcommand.jab2 = true;
+                                p1.attack.jabcommand.jab2Time = new Date();
+                            } else{     
+                                p1.attack.jabcommand.jab1 = false;
+                            }
+                        }
+                    } else if(p1.attack.jabcommand.jab2){
+                        //JAB3
+                        if(!p1.attack.jabcommand.jab3){
+                            p1.attack.jabcommand.jab = false;
+                            var curTime = new Date();
+                            if(curTime.getTime() - p1.attack.jabcommand.jab2Time.getTime() >= 300){
+                                if(curTime.getTime() - p1.attack.jabcommand.jab2Time.getTime() <= 700){
+                                    p1.attack.jabcommand.kick = true;
+                                    handleHitbox("kick",p1,p2,vz);
+                                    p1.attack.jabcommand.jabcomboend = true;
+                                    p1.attack.jabcommand.jabcomboendTime = new Date();
+                                    p1.attack.jabcommand.jab1 = false;
+                                    p1.attack.jabcommand.jab2 = false;
+                                } else{
+                                    p1.attack.jabcommand.jab1 = false;
+                                    p1.attack.jabcommand.jab2 = false;
+                                }
+                            }
+                        }
+                    }
+                }
+            } else {
+                p1.attack.jabcommand.jab = false;
+                p1.attack.jabcommand.kick = false;
+            }
+
+            //TODO
+            if(c1.hit && p1.jump){
+                p1.attack.airhit = true;
+            } else{
+                p1.attack.airhit = false;
+            }
+            if(c1.special1){
+                p1.attack.special1 = true;
+            } else {
+                p1.attack.special1 = false;
+            }
+            if(c1.special2){
+                p1.attack.special2 = true;
+            } else {
+                p1.attack.special2 = false;
+            }
+            if(c1.hyper){
+                p1.attack.hyper = true;
+            } else {
+                p1.attack.hyper = false;
+            }
+
+            if(vz === 1){
+                if(c1.hit && c1.right && !p1.jump){
+                    p1.attack.fowardhit = true;
+                } else {
+                    p1.attack.fowardhit = false;
+                }
+            } else if(vz === -1){
+                if(c1.hit && c1.left && !p1.jump){
+                    p1.attack.fowardhit = true;
+                } else {
+                    p1.attack.fowardhit = false;
+                }
+            }
             
         }
-        
         
     }
 }
 
-function handleCollision(){
-    for(var lob in lobby){
-        for (var p in color){
+//TODO - CHANGE VALUES TO VARIABLE CUZ DATABASE/JSON
+//CAN'T DIE ON BLOCK
+function handleHitbox(action,p1,p2,vz){
+    switch(action){
+        case "jab":
+            var p1hitboxX = p1.x + vz*100;
+            var p1hitboxYBelow = p1.y - p1.h + 62;
+            var p1hitboxYAbove = p1.y - p1.h + 46;
         
-            var p1 = lobby[lob][color[p]];
-            var p2 = (color[p] == "red")? lobby[lob]["blue"] : lobby[lob]["red"];
-    //        console.log(p1.x,p2.x,p1.w,p2.w);
+            var p2hitboxX = p2.x - vz*p2.w/2;
+            var p2hitboxYBelow = p2.y;
+            var p2hitboxYAbove = p2.y - p2.h;
 
-            //detect whether characters can hit each other
-            if (p1.attack.attacking && p1.attack.x + (p1.attack.w/2) > p2.x - (p2.w/2) && p1.attack.x - (p1.attack.w/2) < p2.x + (p2.w/2)){
-                p2.gotHit.x = p1.attack.x - (p1.attack.w/2);
-                p2.gotHit.y = p1.attack.y - (p1.attack.h/2);
-                p2.gotHit.damage = 7;
-                p2.hp -= p2.gotHit.damage;
+            if(p1hitboxYAbove > p2hitboxYAbove && p1hitboxYBelow < p2hitboxYBelow){
+                switch(vz){
+                    case 1:
+                        var block = controls[p2.sid].right;
+                        if(p1hitboxX > p2hitboxX){
+                            if(block && !p2.hitstun.gotHit && !p2.jump){
+                                p2.attack.block = true;
+                                if(p2.hp > 1){
+                                    p2.hp -= 1;
+                                }
+                                p2.hitstun.timer = new hitstunTimer(100);
+                                handlePush(p1,p2,"right",5,"hit");
+
+                                if(p1.hypermeter <= 100 - 1){
+                                    p1.hypermeter += 1;
+                                } else{
+                                    p1.hypermeter = 100;
+                                } 
+                            } else if(!block || p2.jump){
+                                p2.hp -= 20;
+                                if(p2.hp < 0){
+                                    p2.hp = 0;
+                                }
+                                
+                                p2.hitstun.gotHit = true;
+                                p2.hitstun.timer = new hitstunTimer(300);
+                                handlePush(p1,p2,"right",20,"hit");
+                            
+                                if(p1.hypermeter <= 100 - 2){
+                                    p1.hypermeter += 2;
+                                } else{
+                                    p1.hypermeter = 100;
+                                } 
+                            }
+                        }
+                        break;
+                    case -1:
+                        var block = controls[p2.sid].left;
+                        if(p1hitboxX < p2hitboxX){
+                            if(block && !p2.hitstun.gotHit && !p2.jump){
+                                p2.attack.block = true;
+                                if(p2.hp > 1){
+                                    p2.hp -= 1;
+                                }
+                                
+                                p2.hitstun.timer = new hitstunTimer(100);
+                                handlePush(p1,p2,"left",5,"hit");
+
+                                if(p1.hypermeter <= 100 - 1){
+                                    p1.hypermeter += 1;
+                                } else{
+                                    p1.hypermeter = 100;
+                                } 
+                            } else if(!block || p2.jump){
+                                p2.hp -= 20;
+                                if(p2.hp < 0){
+                                    p2.hp = 0;
+                                }
+                                
+                                p2.hitstun.gotHit = true;
+                                p2.hitstun.timer = new hitstunTimer(300);
+                                handlePush(p1,p2,"left",20,"hit");
+                            
+                                if(p1.hypermeter <= 100 - 2){
+                                    p1.hypermeter += 2;
+                                } else{
+                                    p1.hypermeter = 100;
+                                } 
+                            }
+                        }
+                        break;
+                }
+            }
+            break;
+        case "kick":
+            var p1hitboxX = p1.x + vz*100;
+            var p1hitboxYBelow = p1.y - p1.h + 122;
+            var p1hitboxYAbove = p1.y - p1.h + 86;
+        
+            var p2hitboxX = p2.x - vz*p2.w/2;
+            var p2hitboxYBelow = p2.y;
+            var p2hitboxYAbove = p2.y - p2.h;
+
+            if(p1hitboxYAbove > p2hitboxYAbove && p1hitboxYBelow < p2hitboxYBelow){
+                switch(vz){
+                    case 1:
+                        var block = controls[p2.sid].right;
+                        if(p1hitboxX > p2hitboxX){
+                            if(block && !p2.hitstun.gotHit && !p2.jump){
+                                p2.attack.block = true;
+                                if(p2.hp > 1){
+                                    p2.hp -= 1;
+                                }
+                                
+                                p2.hitstun.timer = new hitstunTimer(100);
+                                handlePush(p1,p2,"right",5,"hit");
+
+                                if(p1.hypermeter <= 100 - 1){
+                                    p1.hypermeter += 1;
+                                } else{
+                                    p1.hypermeter = 100;
+                                } 
+                            } else if(!block || p2.jump){
+                                p2.hp -= 30;
+                                if(p2.hp < 0){
+                                    p2.hp = 0;
+                                }
+                                
+                                p2.hitstun.gotHit = true;
+                                p2.hitstun.timer = new hitstunTimer(500);
+                                handlePush(p1,p2,"right",100,"hit");
+                            
+                                if(p1.hypermeter <= 100 - 3){
+                                    p1.hypermeter += 3;
+                                } else{
+                                    p1.hypermeter = 100;
+                                } 
+                            }
+                        }
+                        break;
+                    case -1:
+                        var block = controls[p2.sid].left;
+                        if(p1hitboxX < p2hitboxX){
+                            if(block && !p2.hitstun.gotHit && !p2.jump){
+                                p2.attack.block = true;
+                                if(p2.hp > 1){
+                                    p2.hp -= 1;
+                                }
+                                
+                                p2.hitstun.timer = new hitstunTimer(100);
+                                handlePush(p1,p2,"left",5,"hit");
+
+                                if(p1.hypermeter <= 100 - 1){
+                                    p1.hypermeter += 1;
+                                } else{
+                                    p1.hypermeter = 100;
+                                } 
+                            } else if(!block || p2.jump){
+                                p2.hp -= 30;
+                                if(p2.hp < 0){
+                                    p2.hp = 0;
+                                }
+                                
+                                p2.hitstun.gotHit = true;
+                                p2.hitstun.timer = new hitstunTimer(500);
+                                handlePush(p1,p2,"left",100,"hit");
+                            
+                                if(p1.hypermeter <= 100 - 3){
+                                    p1.hypermeter += 3;
+                                } else{
+                                    p1.hypermeter = 100;
+                                } 
+                            }
+                        }
+                        break;
+                }
+            }
+            break;
+    }
+}
+
+//TODO
+var mapX = 1000;
+function handlePush(p1,p2,direction,distance,action){
+    var boundaryL = p1.w/2 + 20;
+    var boundaryR  = mapX - (p1.w / 2) - 20;
+    
+    switch(action){
+        case "collide":
+            switch(direction){
+                case "left":
+                    var push = p2.x - distance;
+                    if(push >= boundaryL){
+                        p2.x = push;
+                    } else if(push < boundaryL){
+                        p2.x = boundaryL;
+                    }
+
+                    break;
+                case "right":
+                    var push = p2.x + distance;
+                    if(push <= boundaryR){
+                        p2.x = push;
+                    } else if(push > boundaryR){
+                        p2.x = boundaryR;
+                    }
+                    p2.x += distance;
+                    break;
+            }
+            break;
+            
+        case "hit":
+            switch(direction){
+                case "left":
+                    if(p2.x !== boundaryL){
+                        var push = p2.x - distance;
+                        if(push >= boundaryL){
+                            p2.x = push;
+                        } else if(push < boundaryL){
+                            p2.x = boundaryL;
+                        }
+                    } else if(p2.x === boundaryL){
+                        var push = p1.x + distance;
+                        if(push <= boundaryR){
+                            p1.x = push;
+                        } else if(push > boundaryR){
+                            p1.x = boundaryR;
+                        }
+                    }
+                    break;
                 
-                if(p2.hp < 0){
-                    p2.hp = 0;
-                    player[p1.sid].user.won = true;
-                    player[p2.sid].user.won = false;
-                    reCalculateElo(player[p1.sid],player[p2.sid]);
-                    //cancel game - selbes machen wenn die zeit abgelaufen ist
-                }
-
-                if(p1.hypermeter <= 95){
-                    p1.hypermeter = p1.hypermeter + 5;
-                } else{
-                    p1.hypermeter = 100;
-                }
+                case "right":
+                    if(p2.x !== boundaryR){
+                        var push = p2.x + distance;
+                        if(push <= boundaryR){
+                            p2.x = push;
+                        } else if(push > boundaryR){
+                            p2.x = boundaryR;
+                        }
+                    } else if(p2.x === boundaryR){
+                        var push = p1.x - distance;
+                        if(push >= boundaryL){
+                            p1.x = push;
+                        } else if(push < boundaryL){
+                            p1.x = boundaryL;
+                        }
+                    }
+                    break;
             }
-
-        }
+            
+            break;
     }
-
 }
 
+//TODO
+function handleLaunch(player, endX, maxY){
+    
+}
 
+function handleHitstun(){
+    for(var i in lobby){
+        if(!lobby[i].options)
+            break;
+        var characterRed = lobby[i].red;
+        var characterBlue = lobby[i].blue;
+        
+        if(characterRed.hitstun.gotHit || characterRed.attack.block){
+            var hitstunRed = characterRed.hitstun.timer;
+            hitstunRed.check(characterRed);
+        }
+        
+        if(characterBlue.hitstun.gotHit || characterBlue.attack.block){
+            var hitstunBlue = characterBlue.hitstun.timer;
+            hitstunBlue.check(characterBlue);
+        }
+    }
+}
+
+function hitstunTimer(duration){
+    var start;
+    var duration;
+    
+    this.start = new Date();
+    this.duration = duration;
+    
+    this.check = function(defender){
+        if(defender.hitstun.gotHit){
+            var curTime = new Date();
+            if(curTime.getTime() - this.start.getTime() > this.duration){
+                defender.hitstun.gotHit = false;
+            }
+        } else if(!defender.hitstun.gotHit){
+            var curTime = new Date();
+            if(curTime.getTime() - this.start.getTime() > this.duration){
+                defender.attack.block = false;
+            }
+        }
+    };
+}
+
+//Deprecated atm, dunno if needed
 function resetVals(lob){
     for (var p in color){
 //        console.log(lob,lobby);
@@ -598,9 +961,9 @@ function assignToLobby(socketId) {
             var lC = notifyPlayers;
             // options an client schicken
             var options = {
-                mapX : 900, //1500
+                mapX : 1000,
                 mapY : 400,
-                playerStartDelta : 100,
+                playerStartDelta : 120,
                 color : slot
             };
             
@@ -614,8 +977,8 @@ function assignToLobby(socketId) {
             var characterRed = lobby[lC].red;
             var characterBlue = lobby[lC].blue;
            
-            characterBlue.start = characterBlue.x = options.playerStartDelta;
-            characterRed.start = characterRed.x = options.mapX - options.playerStartDelta;
+            characterBlue.start = characterBlue.x = 150 + options.playerStartDelta;
+            characterRed.start = characterRed.x = 850 - options.playerStartDelta;
             characterBlue.y=characterRed.y= options.mapY;
             characterBlue.lobby=characterRed.lobby= lC;
 
@@ -627,19 +990,15 @@ function assignToLobby(socketId) {
                 if( i == 'options')
                     continue;
                 var sid = lobby[lC][i].sid;
-    //            console.log("player " + i + " in Lobby " + lc + " has been sent the gameOptions");
-    //            console.log(sid);
+                console.log("player " + i + " in Lobby " + lc + " has been sent the gameOptions");
+                console.log(sid);
                 options.color = i;
                 
                 clients[sid].emit('gameOptions', options );
+                if(slot != "observer") controls[sid] = {left:false,right:false,moveup:false,movedown:false,hit:false,special1:false,special2:false,hyper:false};
             }
             console.log("Lobby " + lC + " starts Playing");
-
-            if(slot != "observer") controls[socket.id] = { left:false , right:false , moveup:false , movedown:false};
         }
-
-
-        
         player[socket.id].color = slot;
         player[socket.id].lobby = lc;
 }

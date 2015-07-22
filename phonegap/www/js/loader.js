@@ -24,12 +24,18 @@ var loader = {
         game.phaser.load.image('interface_background', 'img/Interface_Background.png');
         game.phaser.load.image('healthbar_p1', 'img/Healthbar_P1.png');
         game.phaser.load.image('healthbar_p2', 'img/Healthbar_P2.png');
-        game.phaser.load.image('meterbar_p1', 'img/Meterbar_P1.png');
-        game.phaser.load.image('meterbar_p2', 'img/Meterbar_P2.png');
+        game.phaser.load.image('dmgbar', 'img/Damagebar.png');
+        game.phaser.load.image('meterbar', 'img/Meterbar.png');
+        
+        //Have to be a spritesheet later on, with all avatar icons
+        game.phaser.load.spritesheet('avatar', 'img/avatar.png', 180, 180 , 1);
         
         game.phaser.load.spritesheet('avataranimationAPlayerA', 'img/Avatar_AnimationAPlayerA_Spritesheet.png', 180, 180, 36);
         game.phaser.load.spritesheet('avataranimationAPlayerB', 'img/Avatar_AnimationAPlayerB_Spritesheet.png', 180, 180, 36);
         game.phaser.load.spritesheet('avataranimationBPlayerA', 'img/Avatar_AnimationBPlayerA_Spritesheet.png', 160, 160, 18);
         game.phaser.load.spritesheet('avataranimationBPlayerB', 'img/Avatar_AnimationBPlayerB_Spritesheet.png', 160, 160, 18);
+
+        //TEST ENERGYBALL
+        game.phaser.load.spritesheet('energyball', 'img/test.png',100,150,2);
     },
 }
