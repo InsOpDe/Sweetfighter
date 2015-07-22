@@ -3,15 +3,22 @@ var menu = {
     init : function() {
         menu.fight = $('#fight');
         menu.fight.bind('click tap',menu.clicked)
-        
-        
+
+
+        $('#back').bind('click tap',function(){
+            $('#rankingtable').hide();
+            $('#shadow').hide();
+        });
+
+
+
         multiplayer.init();
         $('#loginbutton').click(function(){
             var name = $('#name').val();
             var pass = $('#pass').val();
             multiplayer.socket.emit('login', {name:name,pass:pass} );
         });
-        
+
         multiplayer.socket.on('login', function (data) {
            if (data === false){
                $('#shadow').hide();
@@ -20,17 +27,17 @@ var menu = {
                $('#loginerror').show();
            }
         });
-        
-        
+
+
         $('#ranking').click(function(){
             $('#shadow').show();
             $('#rankingtable').show();
+            $('#back').show();
             multiplayer.socket.emit('ranking');
         });
-        
+
         multiplayer.socket.on('ranking', function (data) {
             var counter = 1;
-            console.log(data);
             for(var i in data){
                 $('#rankingtable tr:last').after('<tr><td>' + (counter++) +'</td><td>' + data[i].name +'</td><td>' + data[i].elo +'</td><td>' + data[i].favChar +'</td></tr>');
             }
@@ -39,7 +46,7 @@ var menu = {
     clicked : function(e){
         $('#shadow').show();
 //        var element = $(e.currentTarget);
-        
+
         var id = $(e.currentTarget).attr('id')
 
         console.log(id);
@@ -54,25 +61,25 @@ var menu = {
                             '"></div>')
                 $('#muaythai').bind('click tap',menu.selectMap);
                 break;
-            
-            
+
+
         }
-        
+
     },
     selectMap : function(e){
         menu.options.character = $(e.currentTarget).attr('id')
         $('#selectcharacter').hide();
         $('#selectscene').show();
-        
+
         $('#selectscene div')
                 .append('<div id="desert" style="background-image: url(\'../img/menu/desert.png\');' +
                     'height:' + $('#selectscene div').height() + 'px;'+
                     'width:' + $('#selectscene div').height() + 'px;'+
                     '"></div>')
         $('#desert').bind('click tap',menu.startGame);
-        
+
     },
-    
+
     startGame : function(e){
         menu.options.map = $(e.currentTarget).attr('id')
         $('#selectscene').hide()
@@ -80,12 +87,12 @@ var menu = {
 //        $('#menu').hide()
         $('#waiting').show()
         $('#gamescreen').show()
-        
-        
+
+
         loader.init();
         keyboard.init();
         multiplayer.startGame();
-        debug.init();	
+        debug.init();
         chat.init();
 
         //warten bis der server gameOptions schickt
@@ -97,5 +104,5 @@ var menu = {
             }
         });
     }
-    
+
 }

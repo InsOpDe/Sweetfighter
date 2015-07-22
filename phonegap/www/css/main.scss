@@ -301,3 +301,14 @@ a {
     border: 2px #00f solid;
     border-radius: 5px;
 }
+
+#back {
+    position:fixed;
+    top:1em;
+    right:1em;
+    width: 5em;
+    height: 5em;
+    background: url("../img/menu/back.png") center 30% no-repeat;
+    background-size: contain;
+
+}
