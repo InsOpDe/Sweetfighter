@@ -11,6 +11,16 @@ var menu = {
             $('#gameover').hide();
         });
 
+        $('#menumusicbutton').bind('click tap',function(){
+
+            if($('#menumusic')[0].paused){
+                $('#menumusic').trigger("play");
+            } else {
+                $('#menumusic').trigger("pause");
+            }
+
+        });
+
 
 
         multiplayer.init();
