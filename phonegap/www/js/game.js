@@ -70,7 +70,7 @@ var game = {
             bmd.ctx.fillStyle = '#ff0000';
             bmd.ctx.fill();
             game[color].center = game.phaser.add.sprite(game[color].x-10, game[color].y-10, bmd);
-            if(!debug.debugModeOn)game[color].center.alpha = 0;
+            if(debug.debugModeOn)game[color].center.alpha = 0;
             
             //boundingbox of player
             var width = game[color].w;
@@ -81,7 +81,7 @@ var game = {
             bmd.ctx.strokeStyle = '#ff0000';
             bmd.ctx.stroke();
             game[color].box = game.phaser.add.sprite(game[color].x, game[color].y-10, bmd);
-            if(!debug.debugModeOn)game[color].box.alpha = 0;
+            if(debug.debugModeOn)game[color].box.alpha = 0;
             
             //boundingbox of attack
 //            var width = 40;
@@ -208,6 +208,27 @@ var game = {
         
         game.interface = game.phaser.add.image(2, 0, 'interface');
         
+        var nameBlue = game.phaser.add.text(92, 78, game.options.nameBlue,{
+            font: "bold 12px Arial",
+            fill: "555151",
+            align: "center"
+        });
+        var eloBlue = game.phaser.add.text(92, 92, game.options.eloBlue + "BP",{
+            font: "bold 12px Arial",
+            fill: "555151",
+            align: "center"
+        });
+        var nameRed = game.phaser.add.text(612, 78, game.options.nameRed,{
+            font: "bold 12px Arial",
+            fill: "555151",
+            align: "center"
+        });
+        var eloRed = game.phaser.add.text(612, 92, game.options.eloRed + "BP",{
+            font: "bold 12px Arial",
+            fill: "555151",
+            align: "center"
+        }); 
+        
         game.interfaceGroup.add(game.interface_background);
         game.interfaceGroup.add(game.healthbar_p1);
         game.interfaceGroup.add(game.dmgbar_p1);
@@ -222,6 +243,10 @@ var game = {
         game.interfaceGroup.add(avataranimationAPlayerB);
         game.interfaceGroup.add(avataranimationBPlayerB);
         game.interfaceGroup.add(game.interface);
+        game.interfaceGroup.add(nameBlue);
+        game.interfaceGroup.add(eloBlue);
+        game.interfaceGroup.add(nameRed);
+        game.interfaceGroup.add(eloRed);
         
         game.interface.scale.setTo(0.5, 0.5);
         game.interface.fixedToCamera = true;
@@ -253,6 +278,17 @@ var game = {
         game.interface_background.scale.setTo(0.5, 0.5);
         game.interface_background.fixedToCamera = true;
         game.interface_background.cameraOffset.setTo(2,0);
+        
+        nameBlue.fixedToCamera = true;
+        nameBlue.cameraOffset.setTo(92,78);
+        eloBlue.fixedToCamera = true;
+        eloBlue.cameraOffset.setTo(90,92);
+        nameRed.anchor.x = 1;
+        nameRed.fixedToCamera = true;
+        nameRed.cameraOffset.setTo(612,78);
+        eloRed.anchor.x = 1;
+        eloRed.fixedToCamera = true;
+        eloRed.cameraOffset.setTo(612,92);
         
         timerCountdown.initTimer();
         

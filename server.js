@@ -1008,11 +1008,21 @@ function assignToLobby(socketId) {
         if(!(typeof notifyPlayers == "undefined")){
             var lC = notifyPlayers;
             // options an client schicken
+            
+            var nameRed = player[lobby[lC].red.sid].user.name;
+            var eloRed = player[lobby[lC].red.sid].user.elo;
+            var nameBlue = player[lobby[lC].blue.sid].user.name;
+            var eloBlue = player[lobby[lC].blue.sid].user.elo;
+            
             var options = {
                 mapX : 1000,
                 mapY : 400,
                 playerStartDelta : 120,
-                color : slot
+                color : slot,
+                nameRed:nameRed,
+                eloRed:eloRed,
+                nameBlue:nameBlue,
+                eloBlue: eloBlue
             };
             
             var gameTimer = new timerHandler();
@@ -1038,9 +1048,9 @@ function assignToLobby(socketId) {
                 if( i == 'options')
                     continue;
                 var sid = lobby[lC][i].sid;
-                console.log("player " + i + " in Lobby " + lc + " has been sent the gameOptions");
-                console.log(sid);
-                options.color = i;
+//                console.log("player " + i + " in Lobby " + lc + " has been sent the gameOptions");
+//                console.log(sid);
+                options.color = i; 
                 
                 clients[sid].emit('gameOptions', options );
                 if(slot != "observer") controls[sid] = {left:false,right:false,moveup:false,movedown:false,hit:false,special1:false,special2:false,hyper:false};
