@@ -67,7 +67,7 @@ var menu = {
             case 'fight':
                 $('#selectcharacter').show();
                 $('#selectcharacter div')
-                        .append('<div id="muaythai" style="background-image: url(\'../img/menu/muaythai.png\');' +
+                        .append('<div id="muaythai" ' +
                             'height:' + $('#selectcharacter div').height() + 'px;'+
                             'width:' + $('#selectcharacter div').height() + 'px;'+
                             '"></div>')
