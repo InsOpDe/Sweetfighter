@@ -65,6 +65,7 @@ var menu = {
 
         switch (id) {
             case 'fight':
+                $('#selectcharacter div').empty();
                 $('#selectcharacter').show();
                 $('#selectcharacter div')
                         .append('<div id="muaythai" style="' +
@@ -99,9 +100,9 @@ var menu = {
     },
     selectMap : function(e){
         menu.options.character = $(e.currentTarget).attr('id')
+        $('#selectscene div').empty();
         $('#selectcharacter').hide();
         $('#selectscene').show();
-
         $('#selectscene div')
                 .append('<div id="desert" style="' +
                     'height:' + $('#selectscene div').height() + 'px;'+
