@@ -67,7 +67,7 @@ var menu = {
             case 'fight':
                 $('#selectcharacter').show();
                 $('#selectcharacter div')
-                        .append('<div id="muaythai" ' +
+                        .append('<div id="muaythai" style="' +
                             'height:' + $('#selectcharacter div').height() + 'px;'+
                             'width:' + $('#selectcharacter div').height() + 'px;'+
                             '"></div>')
@@ -103,7 +103,7 @@ var menu = {
         $('#selectscene').show();
 
         $('#selectscene div')
-                .append('<div id="desert" style="background-image: url(\'../img/menu/desert.png\');' +
+                .append('<div id="desert" style="' +
                     'height:' + $('#selectscene div').height() + 'px;'+
                     'width:' + $('#selectscene div').height() + 'px;'+
                     '"></div>')
