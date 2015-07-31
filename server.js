@@ -980,7 +980,7 @@ function assignToLobby(socketId) {
     var cA = characterAttributes[charChoice];
     //console.log("cA: ", cA.name);
     cA.w = cA.characterinfo.w;
-    cA.h = cA.characterinfo.h;
+    cA.h = cA.socketId.h;
     cA.hp = cA.characterinfo.hp;
 
     if(team.length > 0){
