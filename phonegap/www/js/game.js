@@ -152,7 +152,7 @@ var game = {
         game.red.scale.x *= -1;
         
 //        game.phaser.camera.x = 150;
-        game.phaser.camera.follow(game[game.options.color]);
+//        game.phaser.camera.follow(game[game.options.color]);
         
         //set anchors
         game.blue.anchor.y = game.red.anchor.y = 1;
@@ -302,6 +302,10 @@ var game = {
     jumpTimer : 0,
     direction : false,
     update : function() {
+        var char = game[game.options.color];
+        var fi = game.options.characters[game.options.color].framesinfo;
+
+        game.phaser.camera.focusOnXY(char.realX, char.realY - fi.h/2);
         
         debug.run();
         
@@ -375,22 +379,22 @@ var game = {
         
         //Parallax
         if(game.oldX==undefined && game.oldY==undefined){
-            game.oldX=game.red.x;
-            game.oldY=game.red.y;
+            game.oldX=game[game.options.color].x;
+            game.oldY=game[game.options.color].y;
         }else{
-            var diffX=(game.red.x-game.oldX)* (-1);
+            var diffX=(game[game.options.color].x-game.oldX)* (-1);
             //var vz = Math.sign(diffX);
 			var vz = (diffX >= 0) ? ((diffX == 0) ? 0 : 1) : -1;
             game.ebene3.tilePosition.x += vz*.5;
 //            game.ebene4.tilePosition.x += vz*3;
-            game.oldX = game.red.x;
+            game.oldX = game[game.options.color].x;
             
-            var diffY=(game.red.y-game.oldY)* (-1);
+            var diffY=(game[game.options.color].y-game.oldY)* (-1);
             //vz = Math.sign(diffY);
 			var vz = (diffY >= 0) ? ((diffY == 0) ? 0 : 1) : -1;
             game.ebene2.tilePosition.y += vz*.25;
             game.ebene3.tilePosition.y += vz*.5;
-            game.oldY = game.red.y;
+            game.oldY = game[game.options.color].y;
         }
         
         timerCountdown.updateTimer();
