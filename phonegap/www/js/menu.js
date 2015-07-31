@@ -67,12 +67,18 @@ var menu = {
             case 'fight':
                 $('#selectcharacter div').empty();
                 $('#selectcharacter').show();
-                $('#selectcharacter div')
+                $('#selectcharacter>div')
                         .append('<div id="muaythai" style="' +
                             'height:' + $('#selectcharacter div').height() + 'px;'+
                             'width:' + $('#selectcharacter div').height() + 'px;'+
-                            '"></div>')
+                            '"></div>');
+                $('#selectcharacter>div')
+                        .append('<div id="frau" style="' +
+                            'height:' + $('#selectcharacter div').height() + 'px;'+
+                            'width:' + $('#selectcharacter div').height() + 'px;'+
+                            '"></div>');
                 $('#muaythai').bind('click tap',menu.selectMap);
+                $('#frau').bind('click tap',menu.selectMap);
                 break;
 
 
@@ -84,6 +90,8 @@ var menu = {
         game.phaser.destroy();
         console.log(data);
         var text = "";
+        $('#gameover').removeClass('youwin');
+        $('#gameover').removeClass('youlose');
         if(data.won){
             $('#gameover').addClass('youwin');
             text = "Elo dazugewonnen: " ;
@@ -92,6 +100,7 @@ var menu = {
             text = "Elo verloren: " ;
         }
         text += data.diff + "<br> Jetztiges Elo: " + data.elo + "<br> Aktueller Platz: " + data.rank;
+        game.options = undefined;
         $('#gameover div').html(text);
         $('#gamescreen').hide();
         $('#gameover').show();
@@ -99,7 +108,8 @@ var menu = {
         $('#touchInterface').remove();
     },
     selectMap : function(e){
-        menu.options.character = $(e.currentTarget).attr('id')
+        menu.options.character = $(e.currentTarget).attr('id');
+
         $('#selectscene div').empty();
         $('#selectcharacter').hide();
         $('#selectscene').show();
@@ -113,12 +123,12 @@ var menu = {
     },
 
     startGame : function(e){
-        menu.options.map = $(e.currentTarget).attr('id')
-        $('#selectscene').hide()
+        menu.options.map = $(e.currentTarget).attr('id');
+        $('#selectscene').hide();
 //        $('#shadow').hide()
 //        $('#menu').hide()
-        $('#waiting').show()
-        $('#gamescreen').show()
+        $('#waiting').show();
+        $('#gamescreen').show();
 
 
         loader.init();
@@ -131,6 +141,7 @@ var menu = {
         multiplayer.socket.on('gameOptions', function (data) {
             //nur einmal initialisieren (bei serverrestart oderso)
             if( typeof game.options == "undefined"){
+                console.log("init");
                 game.options = data;
                 game.init();
             }

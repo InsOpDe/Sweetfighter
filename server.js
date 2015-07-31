@@ -61,20 +61,6 @@ var assignQueue = [];
 var clients = {};    
 var intervalTimer = 50;
 var controls = {};
-var characterAttributes = {x:0,y:0,w:100,h:300,hp:100,hypermeter:0,
-                           moving:false,jump:false,velocityY:0,crouch:false,
-                           hitstun:{gotHit:false,timer:undefined},
-                           attack:{fowardhit:false,airhit:false,special1:false,special2:false,hyper:false,block:false,
-                                   jabcommand:{jab:false,kick:false,
-                                               jab1:false,jab1Time:undefined,
-                                               jab2:false,jab2Time:undefined,
-                                               jabcomboend:false,jabcomboendTime:undefined}
-                           },
-                                       //TODO deprecated
-                           //gotHit:{x:0,y:0,damage:0}
-                           };
-
-
 
 // Websocket
 io.sockets.on('connection', function (socket) {
@@ -132,6 +118,7 @@ io.sockets.on('connection', function (socket) {
         
         //assignQueue
         //TODO: get Player name via db
+        console.log("init: " + data.character);
         player[socket.id].character = data.character ;
         player[socket.id].map = data.map ;
         assignQueue.push(player[socket.id]);
@@ -251,19 +238,36 @@ function reCalculateElo(p1,p2) {
     var elo2 = p2.user.elo;
     var k = 20;
     console.log(p1.user,p2.user);
-    var EA = 1 / (1+Math.pow(10,(elo2-elo1)/400))
+
     
     if  (p1.user.won === true){
+        console.log("p1");
+        if(elo1>=elo2){
+            console.log(">");
+            var EA = 1 / (1+Math.pow(10,(elo1-elo2)/400));
+
+            elo1 = elo1 + k*(1-(1-EA));
+            elo2 = elo2 + k*(0-EA);
+        } else {
+            console.log("<");
+            var EA = 1 / (1+Math.pow(10,(elo1-elo2)/400));
+            EA *= -1;
+            //console.log(EA,1 / (1+Math.pow(10,(elo1-elo2)/400)));
+            elo2 = elo2 + k*(1-(1-EA));
+            elo1 = elo1 + k*(0-EA);
+        }
+
+    } else {
+        //hier springt der nie rein
+        console.log("p2");
+        var EA = 1 / (1+Math.pow(10,(elo1-elo2)/400));
         elo1 = elo1 + k*(1-(1-EA));
         elo2 = elo2 + k*(0-EA);
-    } else {
-        elo2 = elo2 + k*(1-(1-EA));
-        elo1 = elo1 + k*(0-EA);
     }
-    p1.user.diff = Math.round(elo1) - p1.user.elo;
-    p2.user.diff = Math.round(elo2) - p2.user.elo;
-    p1.user.elo = Math.round(elo1);
-    p2.user.elo = Math.round(elo2);
+    p1.user.diff = Math.ceil(elo1) - p1.user.elo;
+    p2.user.diff = Math.ceil(elo2) - p2.user.elo;
+    p1.user.elo = Math.ceil(elo1);
+    p2.user.elo = Math.ceil(elo2);
     console.log(p1.user,p2.user);
     
     getDb('user',function(users){
@@ -298,18 +302,25 @@ function reCalculateElo(p1,p2) {
         clients[p2.socketId].emit('gameover', {won:p2.user.won,diff:p2.user.diff,elo:p2.user.elo, rank:p2.user.rank});
 
         lobby.splice(lobby.indexOf(p1.lobby),1);
-        delete clients[p1.socketId];
-        delete clients[p2.socketId];
+        //delete clients[p1.socketId];
+        //delete clients[p2.socketId];
         //delete player[p1.socketId];
         //delete player[p2.socketId];
         delete controls[p1.socketId];
         delete controls[p2.socketId];
-        player.splice(player.indexOf(p1.socketId),1);
-        player.splice(player.indexOf(p2.socketId),1);
+        //player.splice(player.indexOf(p1.socketId),1);
+        //player.splice(player.indexOf(p2.socketId),1);
 
     })
 
 }
+
+
+//get character Attributes from server
+var characterAttributes;
+getDb('character',function(characters){
+    characterAttributes = characters;
+});
 
 // Portnummer in die Konsole schreiben
 console.log('Der Server läuft nun auf dem Port ' + conf.port);
@@ -964,17 +975,33 @@ function assignToLobby(socketId) {
     var socket = clients[socketId];
     
     var slot = "observer";
-    
+    var charChoice = player[socket.id].character;
+    //console.log("assignToLobby: " + charChoice);
+    var cA = characterAttributes[charChoice];
+    //console.log("cA: ", cA.name);
+    cA.w = cA.characterinfo.w;
+    cA.h = cA.characterinfo.h;
+    cA.hp = cA.characterinfo.hp;
+
     if(team.length > 0){
-        //lobby
-        if(team.length > 1){
-            var character = [];
-            character["blue"] = extend({},characterAttributes);
-            character["red"] = extend({},characterAttributes);
-            lobby[lc] = {blue:character["blue"],red:character["red"]};
-        }
 
         slot = team[team.length-1];
+
+        //lobby
+        if(team.length > 1){
+            lobby[lc] = {};
+        }
+            var character = [];
+            character[slot] = extend({},cA);
+            console.log(lobby[lc],lc);
+
+            lobby[lc][slot] = character[slot];
+            //lobby[lc] = {blue:character["blue"],red:character["red"]};
+        //} else {
+        //
+        //}
+
+        console.log(lobby[lc],slot);
         team.pop();
         lobby[lc][slot].sid = socket.id;
 //        lobby[lc].sockets = {};
@@ -984,16 +1011,17 @@ function assignToLobby(socketId) {
             var notifyPlayers = lc;
         }
     } else {
-
+        team = ['blue','red'];
+        slot = team[team.length-1];
 
         //neue lobby
         var character = [];
-            character["blue"] = extend({},characterAttributes)
-            character["red"] = extend({},characterAttributes)
-        lobby[++lc] = {blue:character["blue"],red:character["red"]}
-
-        team = ['blue','red']
-        slot = team[team.length-1];
+            character[slot] = extend({},cA);
+            //character["red"] = extend({},cA);
+        lobby[++lc] = {};
+        lobby[lc][slot] = character[slot];
+        //lobby[++lc] = {blue:character["blue"],red:character["red"]};
+        console.log(lc);
         team.pop();
         lobby[lc][slot].sid = socket.id;
     }
@@ -1034,7 +1062,9 @@ function assignToLobby(socketId) {
 
             var characterRed = lobby[lC].red;
             var characterBlue = lobby[lC].blue;
-           
+            console.log("characterRed: ", characterRed.name);
+            console.log("characterBlue: ", characterBlue.name);
+
             characterBlue.start = characterBlue.x = 150 + options.playerStartDelta;
             characterRed.start = characterRed.x = 850 - options.playerStartDelta;
             characterBlue.y=characterRed.y= options.mapY;
@@ -1043,7 +1073,7 @@ function assignToLobby(socketId) {
     //      if(lobby[1])console.log(lobby[0].red.lobby,lobby[1].red.lobby,lC);
     //        else console.log(lobby[0].red.lobby,lC);
 
-            options.characters = {"red" : characterBlue , "blue" : characterBlue};
+            options.characters = {"red" : characterRed , "blue" : characterBlue};
             for(var i in lobby[lC]){
                 if( i == 'options')
                     continue;
@@ -1051,7 +1081,7 @@ function assignToLobby(socketId) {
 //                console.log("player " + i + " in Lobby " + lc + " has been sent the gameOptions");
 //                console.log(sid);
                 options.color = i; 
-                
+                //console.log(i);
                 clients[sid].emit('gameOptions', options );
                 if(slot != "observer") controls[sid] = {left:false,right:false,moveup:false,movedown:false,hit:false,special1:false,special2:false,hyper:false};
             }

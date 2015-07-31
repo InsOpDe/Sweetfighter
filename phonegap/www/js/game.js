@@ -56,7 +56,7 @@ var game = {
             var color = game.players[key]
             console.log(game.options.characters);
             
-            game[color] = game.phaser.add.sprite(game.options.characters[color].start, game.options.mapY, 'muaythai'+color);
+            game[color] = game.phaser.add.sprite(game.options.characters[color].start, game.options.mapY, color);
             game.characterGroup.add(game[color]);
             
             game[color] = $.extend(game[color],game.options.characters[color]);

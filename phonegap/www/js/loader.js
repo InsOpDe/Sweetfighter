@@ -9,11 +9,27 @@ var loader = {
         
     },
     preload : function() {
-        game.phaser.load.script('filter', 'https://cdn.rawgit.com/photonstorm/phaser/master/filters/Fire.js');
 
-        game.phaser.load.spritesheet('muaythai', 'muay_thai.png', 400, 300, 14);
-        game.phaser.load.spritesheet('muaythaiblue', 'img/mt.png', 400, 300, 42);
-        game.phaser.load.spritesheet('muaythaired', 'img/mt2.png', 400, 300, 42);
+        var color1 = game.options.color;
+        var color2 = '';
+        if(color1 == 'red'){
+            color2 = 'blue';
+        } else {
+            color2 = 'red';
+        }
+        var charname1 = game.options.characters[color1].name;
+        var charname2 = game.options.characters[color2].name;
+        console.log(charname1,color1);
+        console.log(charname2,color2);
+
+        var framesinfo1 = game.options.characters[color1].framesinfo;
+        var framesinfo2 = game.options.characters[color2].framesinfo;
+
+        //game.phaser.load.script('filter', 'https://cdn.rawgit.com/photonstorm/phaser/master/filters/Fire.js');
+
+        //game.phaser.load.spritesheet('muaythai', 'muay_thai.png', 400, 300, 14);
+        game.phaser.load.spritesheet(color1, 'img/' + charname1 + 'blue.png', framesinfo1.w, framesinfo1.h, framesinfo1.count);
+        game.phaser.load.spritesheet(color2, 'img/' + charname2 + 'red.png', framesinfo2.w, framesinfo2.h, framesinfo2.count);
         game.phaser.load.spritesheet('fx1', 'img/fx1.png', 70, 70, 4);
         game.phaser.load.image('bgtrans', 'img/bgtrans.png');
         game.phaser.load.image('ebene1', 'Pyramiden/Ebene1.png');

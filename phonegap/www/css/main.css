@@ -201,16 +201,18 @@ a {
   right: 0;
   bottom: 0; }
 
-.select, #menu #selectcharacter div, #menu #selectscene div, #menu #gameover div {
+.select, #menu #selectcharacter > div, #menu #selectscene > div, #menu #gameover div {
   position: absolute;
   top: 35%;
   width: 50%;
+  margin-top: 10px;
   height: 30%;
   margin-left: auto;
   margin-right: auto;
   left: 0 !important;
   right: 0 !important; }
-  .select div, #menu #selectcharacter div div, #menu #selectscene div div, #menu #gameover div div {
+  .select div, #menu #selectcharacter > div div, #menu #selectscene > div div, #menu #gameover div div {
+    margin: 0 10px 0;
     float: left;
     background-size: cover;
     cursor: pointer; }
@@ -247,6 +249,9 @@ a {
 
 #muaythai {
   background-image: url("../img/menu/muaythai.png"); }
+
+#frau {
+  background-image: url("../img/menu/frau.png"); }
 
 #desert {
   background-image: url("../img/menu/desert.png"); }

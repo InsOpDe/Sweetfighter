@@ -13,7 +13,7 @@ var multiplayer = {
     heartbeats: [],
     timestamp:new Date().valueOf(),
     sendCommand:function(details){
-        var time = Date.now();
+        //var time = Date.now();
         multiplayer.socket.emit('command', details );
 //        multiplayer.lastHeartbeat = time;
 //        multiplayer.heartbeats.push({send:time,received:0,server:0});
