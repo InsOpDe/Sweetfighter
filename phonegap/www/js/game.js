@@ -24,6 +24,11 @@ var game = {
     dmgbar_p2:undefined,
     meterbar_p1:undefined,
     meterbar_p2:undefined,
+    
+    projectile_p1:undefined,
+    projectileCount_p1:0,
+    projectile_p2:undefined,
+    projectileCount_p2:0,
 
     create : function() {
         // spiel ist aktiv auch wenn das fenster nicht fokussiert ist
@@ -50,11 +55,11 @@ var game = {
         game.backgroundGroup.add(game.ebene2);
         game.backgroundGroup.add(game.ebene3);
         game.backgroundGroup.add(game.ebene4);
-
+        
         //player animations etc
         for(var key in game.players){
-            var color = game.players[key]
-            console.log(game.options.characters);
+            var color = game.players[key];
+            console.log(color);
             
             game[color] = game.phaser.add.sprite(game.options.characters[color].start, game.options.mapY, color);
             game.characterGroup.add(game[color]);
@@ -117,6 +122,8 @@ var game = {
             var isAirhit = game[color].animations.add('airhit',[3,20,20,20,3]);
             //foward hit
             var isFowardhit = game[color].animations.add('fowardhit',[14,15,16,15]);
+            //backward hit
+            var isBackwardhit = game[color].animations.add('backwardhit',[21,21,22,23,22]);
             //kick
             var isKicking = game[color].animations.add('kick',[4,6,6,6,6,4,4,4,4]);
             //special1 
@@ -139,6 +146,7 @@ var game = {
                     isJabbing:isJabbing,
                     isAirhit:isAirhit,
                     isFowardhit:isFowardhit,
+                    isBackwardhit:isBackwardhit,
                     isKicking:isKicking,
                     isSpecial1:isSpecial1,
                     isSpecial2:isSpecial2,
@@ -170,12 +178,28 @@ var game = {
                 
         //Avatar player A - Last parameter is sprite no. on spritesheet
         //TODO - Get sprite no. from game.options
-        var avaPA = game.phaser.add.sprite(20,15, 'avatar',0);
+        var avatarA;
+        var avatarB;
+        if(game.options.characters['blue'].name.indexOf("muaythai") > -1){
+            avatarA = 0;
+        } else if(game.options.characters['blue'].name.indexOf("frau") > -1){
+            avatarA = 1;
+        }
+        if(game.options.characters['red'].name.indexOf("muaythai") > -1){
+            avatarB = 0;
+        } else if(game.options.characters['red'].name.indexOf("frau") > -1){
+            avatarB = 1;
+        }
+
+        
+        
+        
+        var avaPA = game.phaser.add.sprite(20,15, 'avatar',avatarA);
         avaPA.scale.setTo(0.4, 0.4);
         avaPA.fixedToCamera = true;
         
         //Avatar player B
-        var avaPB = game.phaser.add.sprite(684,15, 'avatar',0);
+        var avaPB = game.phaser.add.sprite(684,15, 'avatar',avatarB);
         avaPB.scale.setTo(0.4, 0.4);
         avaPB.fixedToCamera = true;
         avaPB.scale.x *= -1;
@@ -346,6 +370,10 @@ var game = {
             else if(game[color].fowardhitTimer >= Date.now()){
                 game[color].animations.play('fowardhit', 7, false);
             }
+            else if(game[color].backwardhitTimer >= Date.now()){
+                game[color].animations.play('backwardhit', 7, false);
+                projectile.create(color);
+            }
             else if(game[color].airhitTimer >= Date.now()){
                 game[color].animations.play('airhit', 20, false);
             }
@@ -373,6 +401,7 @@ var game = {
                     }
                 }
             }
+            projectile.update(color);
         }
         
         game.ebene2.tilePosition.x += .25;
@@ -432,7 +461,6 @@ var timerCountdown = {
     }
 };
 
-//TODO
 var healthgauge = {
     healthplayers:{blue:{hp:undefined}, red:{hp:undefined}},
     gotHit:{blue:false, red:false},
@@ -486,20 +514,8 @@ var healthgauge = {
         if(healthgauge.dmgTimer.blue.active){
             var curTime = new Date();
             if(curTime.getTime() - healthgauge.dmgTimer.blue.timer.getTime() > 300){
-//                healthgauge.dmgTimer.blue.timer = new Date();
-//                
-//                healthgauge.dmgTimer.blue.prevHealth +=1;
-//                game.dmgbar_p1.cameraOffset.setTo(healthgauge.dmgTimer.blue.prevHealth,81);
-//
-//                healthgauge.dmgTimer.blue.value -= 4.3;
-//                console.log(healthgauge.dmgTimer.blue.value);
-//                var cropDmgA = new Phaser.Rectangle(0,0,healthgauge.dmgTimer.blue.value,40);
-//                game.dmgbar_p1.crop(cropDmgA);
-//                
-//                if(healthgauge.dmgTimer.blue.prevHealth === healthgauge.prevHealth.blue.coord){
                     game.dmgbar_p1.kill();
                     healthgauge.dmgTimer.blue.active = false;
-//                }
             }
         }
         if(healthgauge.dmgTimer.red.active){
@@ -529,5 +545,50 @@ var hypermeter = {
         game.meterbar_p2.cameraOffset.setTo(initPosB,63);
         var cropRectB = new Phaser.Rectangle(0,0,hyperPlayerB, 28);
         game.meterbar_p2.crop(cropRectB);
+    }
+};
+
+var projectile = {
+    create:function(color){
+        switch(color){  
+            case 'red':
+                if(game[color].projectileExist && game.projectileCount_p1 < 1){
+                    game.projectileCount_p1++;
+                    game.projectile_p1 = game.phaser.add.sprite(game[color].projectileX, game[color].projectileY,'projectile');
+                    game.effectGroup.add(game.projectile_p1);
+                    game.projectile_p1.animations.add('move',[0,1]);
+                    game.projectile_p1.animations.play('move', 3, true);
+                }
+                break;
+            case 'blue':
+                if(game[color].projectileExist && game.projectileCount_p2 < 1){
+                    game.projectileCount_p2++;
+                    game.projectile_p2 = game.phaser.add.sprite(game[color].projectileX, game[color].projectileY,'projectile');
+                    game.effectGroup.add(game.projectile_p2);
+                    game.projectile_p2.animations.add('move',[0,1]);
+                    game.projectile_p2.animations.play('move', 3, true);
+                }
+                break;
+        }
+    },
+    update:function(color){
+        switch(color){  
+            case 'red':
+                if(game[color].projectileExist && game.projectileCount_p1 >= 1){
+                    game.projectile_p1.x = game[color].projectileX;
+                } else if(!game[color].projectileExist && game.projectileCount_p1 >= 1){
+                    game.projectile_p1.destroy();
+                    game.projectileCount_p1--;
+                }
+                break;
+            case 'blue':
+                if(game[color].projectileExist && game.projectileCount_p2 >= 1){
+                    game.projectile_p2.x = game[color].projectileX;
+                } else if(!game[color].projectileExist && game.projectileCount_p2 >= 1){
+                    game.projectile_p2.destroy();
+                    game.projectileCount_p2--;
+                }
+                break;
+        }
     }
 };

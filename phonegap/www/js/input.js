@@ -50,6 +50,9 @@ var keyboard = {
             if (ev.which == 69) {
                 keyboard.state["hyper"] = true;
             }
+            if(ev.which == 89){
+                keyboard.state["mode"] = true;
+            }
             multiplayer.sendCommand({ state: keyboard.state });
 
         });
@@ -94,6 +97,9 @@ var keyboard = {
             //e hyper
             if (ev.which == 69) {
                 keyboard.state["hyper"] = false;
+            }
+            if(ev.which == 89){
+                keyboard.state["mode"] = false;
             }
             multiplayer.sendCommand({ state: keyboard.state });
 

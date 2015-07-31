@@ -101,9 +101,14 @@ var multiplayer = {
                     game[color].kick = actions[color].attack.jabcommand.kick;
                     game[color].airhit = actions[color].attack.airhit;
                     game[color].fowardhit = actions[color].attack.fowardhit;
+                    game[color].backwardhit = actions[color].attack.backwardhit;
                     game[color].special1 = actions[color].attack.special1;
                     game[color].special2 = actions[color].attack.special2;
                     game[color].hyper = actions[color].attack.hyper;
+                    
+                    game[color].projectileExist = actions[color].attack.projectile.exist;
+                    game[color].projectileX = actions[color].attack.projectile.posX;
+                    game[color].projectileY = actions[color].attack.projectile.posY;
                     
                     if(game[color].gotHit){
                         game[color].gotHitTimer = Date.now() + 300;
@@ -113,6 +118,9 @@ var multiplayer = {
                     }
                     if(game[color].fowardhit){
                         game[color].fowardhitTimer = Date.now() + 500; //genaue zeit wielange ein jab dauert!
+                    }
+                    if(game[color].backwardhit){
+                        game[color].backwardhitTimer = Date.now() + 500;
                     }
                     if(game[color].airhit){
                         game[color].airhitTimer = Date.now() + 300; //genaue zeit wielange ein jab dauert!
@@ -127,7 +135,7 @@ var multiplayer = {
                         game[color].special2Timer = Date.now() + 500; //genaue zeit wielange ein special dauert!
                     }
                     if(game[color].hyper){
-                        game[color].hyperTimer = Date.now() + 500; //genaue zeit wielange ein special dauert!
+                        game[color].hyperTimer = Date.now() + 600; //genaue zeit wielange ein special dauert!
                     }
                 }
             }

@@ -61,6 +61,17 @@ var assignQueue = [];
 var clients = {};    
 var intervalTimer = 50;
 var controls = {};
+//var characterAttributes = {x:0,y:0,w:100,h:300,hp:100,hypermeter:0,
+//                           moving:false,jump:false,velocityY:0,crouch:false,
+//                           hitstun:{gotHit:false,timer:undefined},
+//                           attack:{fowardhit:false, backwardhit:false,airhit:false,crouchhit:false,special1:false,special2:false,hyper:false,block:false,
+//                                    jabcommand:{jab:false,kick:false,
+//                                               jab1:false,jab1Time:undefined,
+//                                               jab2:false,jab2Time:undefined,
+//                                               jabcomboend:false,jabcomboendTime:undefined},
+//                                    projectile:{exist:false,timer:undefined,posX:undefined,posY:undefined,distance:undefined},       
+//                                    mode:{active:false, dmgMultiplicator:1}
+//                           }};
 
 // Websocket
 io.sockets.on('connection', function (socket) {
@@ -217,11 +228,11 @@ var updateloop = setInterval(function(){
         
         gameTimer.update();
         hypermeter.update(characterRed, characterBlue);
+        handleProjectile.update(characterRed, characterBlue);
+        handleProjectile.handleHitbox(characterRed,characterBlue);
         
         clients[lobby[i].red.sid].volatile.emit('command', { tick: new Date(), actions : update });
         clients[lobby[i].blue.sid].volatile.emit('command', { tick: new Date(), actions : update });
-
-        //resetVals(lobby[i]);
     }
 },15);
 
@@ -328,7 +339,6 @@ console.log('Der Server läuft nun auf dem Port ' + conf.port);
 //FOLLOWING ARE INPUT- AND HITBOXHANDLER
 
 var movementSpeed = 5;
-var hitSpeed = 1;
 var gravityAccelerationY = 1;
 var jumpHeightSquared = -25;
 var minJumpHeight = ( jumpHeightSquared / 3 );
@@ -551,18 +561,105 @@ function handleCommand(){
                 } else {
                     p1.attack.fowardhit = false;
                 }
+                if(c1.hit && c1.left && !p1.jump){
+                    p1.attack.backwardhit = true;
+                    handleProjectile.create(p1,vz,500);
+                } else {
+                    p1.attack.backwardhit = false;
+                }
+                
             } else if(vz === -1){
                 if(c1.hit && c1.left && !p1.jump){
                     p1.attack.fowardhit = true;
                 } else {
                     p1.attack.fowardhit = false;
                 }
+                if(c1.hit && c1.right && !p1.jump){
+                    p1.attack.backwardhit = true;
+                    handleProjectile.create(p1,vz,500);
+                } else {
+                    p1.attack.backwardhit = false;
+                }
+            }
+            
+            if(c1.mode && p1.hypermeter === 100){
+                p1.attack.mode.active = true;
+                p1.attack.mode.dmgMultiplicator = 2;
             }
             
         }
         
     }
 }
+//TODO PROJECTILE
+//projectile:{exist:false,timer:undefined,posX:undefined,posY:undefined,distance:undefined},
+var handleProjectile = {
+    create:function(player,vz,distance){
+        if(player.attack.projectile.exist === false){
+            player.attack.projectile.exist = true;
+            player.attack.projectile.timer = new Date();
+            player.attack.projectile.posX = player.x - vz*(50);
+            player.attack.projectile.posY = player.y - (220);
+            console.log(player.y);
+            player.attack.projectile.distance = player.x + vz*distance;
+        }
+    },
+    update:function(characterRed,characterBlue){
+        if(characterRed.attack.projectile.exist === true){
+            var curDate = new Date();
+            if(characterRed.attack.projectile.posX >= characterRed.attack.projectile.distance && curDate.getTime() - characterRed.attack.projectile.timer.getTime() >= 50){
+                characterRed.attack.projectile.posX -= 10;
+                //console.log(characterRed.attack.projectile.posX);
+                characterRed.attack.projectile.timer = curDate;
+            } else if(characterRed.attack.projectile.posX < characterRed.attack.projectile.distance){
+                characterRed.attack.projectile.exist = false;
+            }
+        }
+        
+        if(characterBlue.attack.projectile.exist === true){
+            var curDate = new Date();
+            if(characterBlue.attack.projectile.posX <= characterBlue.attack.projectile.distance && curDate.getTime() - characterBlue.attack.projectile.timer.getTime() >= 50){
+                characterBlue.attack.projectile.posX += 10;
+                //console.log(characterBlue.attack.projectile.posX);
+                characterBlue.attack.projectile.timer = curDate;
+            } else if(characterBlue.attack.projectile.posX > characterBlue.attack.projectile.distance){
+                characterBlue.attack.projectile.exist = false;
+            }
+        }
+    },
+    
+    handleHitbox:function(characterRed, characterBlue){
+        if(characterBlue.attack.projectile.exist){
+            var p1hitbox = characterBlue.attack.projectile.posX + 40;
+            var p2hitbox = characterRed.x - characterRed.w/2;
+            if(p1hitbox > p2hitbox){
+                characterBlue.attack.projectile.exist = false;
+                characterRed.hp -= 20;
+                if(characterRed.hp < 0){
+                    characterRed.hp = 0;
+                }
+                characterRed.hitstun.gotHit = true;
+                characterRed.hitstun.timer = new hitstunTimer(100);
+                handlePush(characterBlue,characterRed,"right",5,"projectile");
+            }
+        }
+        
+        if(characterRed.attack.projectile.exist){
+            var p1hitbox = characterRed.attack.projectile.posX + 40;
+            var p2hitbox = characterBlue.x + characterBlue.w/2;
+            if(p1hitbox < p2hitbox){
+                characterRed.attack.projectile.exist = false;
+                characterBlue.hp -= 20;
+                if(characterBlue.hp < 0){
+                    characterBlue.hp = 0;
+                }
+                characterBlue.hitstun.gotHit = true;
+                characterBlue.hitstun.timer = new hitstunTimer(100);
+                handlePush(characterRed,characterBlue,"left",5,"projectile");
+            }
+        }
+    }
+};
 
 //TODO - CHANGE VALUES TO VARIABLE CUZ DATABASE/JSON
 //CAN'T DIE ON BLOCK
@@ -589,31 +686,36 @@ function handleHitbox(action,p1,p2,vz){
                                 }
                                 p2.hitstun.timer = new hitstunTimer(100);
                                 handlePush(p1,p2,"right",5,"hit");
-
-                                if(p1.hypermeter <= 100 - 1){
-                                    p1.hypermeter += 1;
-                                } else{
-                                    p1.hypermeter = 100;
-                                } 
+                                
+                                if(!p1.attack.mode.active){
+                                    if(p1.hypermeter <= 100 - 1){
+                                        p1.hypermeter += 1;
+                                    } else{
+                                        p1.hypermeter = 100;
+                                    }
+                                }
                             } else if(!block || p2.jump){
-                                p2.hp -= 20;
+                                p2.hp -= 20*p1.attack.mode.dmgMultiplicator;
                                 if(p2.hp < 0){
-                                    p2.hp = 0;
-                                    console.log("preendgame");
-                                    player[p1.sid].user.won = true;
-                                    player[p2.sid].user.won = false;
-                                    endGame(player[p1.sid],player[p2.sid]);
+                                    p2.hp = 100;
+//                                    p2.hp = 0;
+//                                    console.log("preendgame");
+//                                    player[p1.sid].user.won = true;
+//                                    player[p2.sid].user.won = false;
+//                                    endGame(player[p1.sid],player[p2.sid]);
                                 }
                                 
                                 p2.hitstun.gotHit = true;
                                 p2.hitstun.timer = new hitstunTimer(300);
                                 handlePush(p1,p2,"right",20,"hit");
-                            
-                                if(p1.hypermeter <= 100 - 2){
-                                    p1.hypermeter += 2;
-                                } else{
-                                    p1.hypermeter = 100;
-                                } 
+                                
+                                if(!p1.attack.mode.active){
+                                    if(p1.hypermeter <= 100 - 2){
+                                        p1.hypermeter += 2;
+                                    } else{
+                                        p1.hypermeter = 100;
+                                    }
+                                }
                             }
                         }
                         break;
@@ -629,30 +731,35 @@ function handleHitbox(action,p1,p2,vz){
                                 p2.hitstun.timer = new hitstunTimer(100);
                                 handlePush(p1,p2,"left",5,"hit");
 
-                                if(p1.hypermeter <= 100 - 1){
-                                    p1.hypermeter += 1;
-                                } else{
-                                    p1.hypermeter = 100;
-                                } 
+                                if(!p1.attack.mode.active){
+                                    if(p1.hypermeter <= 100 - 1){
+                                        p1.hypermeter += 1;
+                                    } else{
+                                        p1.hypermeter = 100;
+                                    }
+                                }
                             } else if(!block || p2.jump){
-                                p2.hp -= 20;
+                                p2.hp -= 20*p1.attack.mode.dmgMultiplicator;
                                 if(p2.hp < 0){
-                                    p2.hp = 0;
-                                    console.log("preendgame");
-                                    player[p1.sid].user.won = true;
-                                    player[p2.sid].user.won = false;
-                                    endGame(player[p1.sid],player[p2.sid]);
+                                    p2.hp = 100;
+//                                    p2.hp = 0;
+//                                    console.log("preendgame");
+//                                    player[p1.sid].user.won = true;
+//                                    player[p2.sid].user.won = false;
+//                                    endGame(player[p1.sid],player[p2.sid]);
                                 }
                                 
                                 p2.hitstun.gotHit = true;
                                 p2.hitstun.timer = new hitstunTimer(300);
                                 handlePush(p1,p2,"left",20,"hit");
                             
-                                if(p1.hypermeter <= 100 - 2){
-                                    p1.hypermeter += 2;
-                                } else{
-                                    p1.hypermeter = 100;
-                                } 
+                                if(!p1.attack.mode.active){
+                                    if(p1.hypermeter <= 100 - 2){
+                                        p1.hypermeter += 2;
+                                    } else{
+                                        p1.hypermeter = 100;
+                                    }
+                                }
                             }
                         }
                         break;
@@ -682,26 +789,35 @@ function handleHitbox(action,p1,p2,vz){
                                 p2.hitstun.timer = new hitstunTimer(100);
                                 handlePush(p1,p2,"right",5,"hit");
 
-                                if(p1.hypermeter <= 100 - 1){
-                                    p1.hypermeter += 1;
-                                } else{
-                                    p1.hypermeter = 100;
-                                } 
+                                if(!p1.attack.mode.active){
+                                    if(p1.hypermeter <= 100 - 1){
+                                        p1.hypermeter += 1;
+                                    } else{
+                                        p1.hypermeter = 100;
+                                    }
+                                }
                             } else if(!block || p2.jump){
-                                p2.hp -= 30;
+                                p2.hp -= 30*p1.attack.mode.dmgMultiplicator;
                                 if(p2.hp < 0){
-                                    p2.hp = 0;
+                                    p2.hp = 100;
+//                                    p2.hp = 0;
+//                                    console.log("preendgame");
+//                                    player[p1.sid].user.won = true;
+//                                    player[p2.sid].user.won = false;
+//                                    endGame(player[p1.sid],player[p2.sid]);
                                 }
                                 
                                 p2.hitstun.gotHit = true;
                                 p2.hitstun.timer = new hitstunTimer(500);
                                 handlePush(p1,p2,"right",100,"hit");
                             
-                                if(p1.hypermeter <= 100 - 3){
-                                    p1.hypermeter += 3;
-                                } else{
-                                    p1.hypermeter = 100;
-                                } 
+                                if(!p1.attack.mode.active){
+                                    if(p1.hypermeter <= 100 - 3){
+                                        p1.hypermeter += 3;
+                                    } else{
+                                        p1.hypermeter = 100;
+                                    }
+                                }
                             }
                         }
                         break;
@@ -717,26 +833,35 @@ function handleHitbox(action,p1,p2,vz){
                                 p2.hitstun.timer = new hitstunTimer(100);
                                 handlePush(p1,p2,"left",5,"hit");
 
-                                if(p1.hypermeter <= 100 - 1){
-                                    p1.hypermeter += 1;
-                                } else{
-                                    p1.hypermeter = 100;
-                                } 
+                                if(!p1.attack.mode.active){
+                                    if(p1.hypermeter <= 100 - 1){
+                                        p1.hypermeter += 1;
+                                    } else{
+                                        p1.hypermeter = 100;
+                                    }
+                                }
                             } else if(!block || p2.jump){
-                                p2.hp -= 30;
+                                p2.hp -= 30*p1.attack.mode.dmgMultiplicator;
                                 if(p2.hp < 0){
-                                    p2.hp = 0;
+                                    p2.hp = 100;
+//                                    p2.hp = 0;
+//                                    console.log("preendgame");
+//                                    player[p1.sid].user.won = true;
+//                                    player[p2.sid].user.won = false;
+//                                    endGame(player[p1.sid],player[p2.sid]);
                                 }
                                 
                                 p2.hitstun.gotHit = true;
                                 p2.hitstun.timer = new hitstunTimer(500);
                                 handlePush(p1,p2,"left",100,"hit");
                             
-                                if(p1.hypermeter <= 100 - 3){
-                                    p1.hypermeter += 3;
-                                } else{
-                                    p1.hypermeter = 100;
-                                } 
+                                if(!p1.attack.mode.active){
+                                    if(p1.hypermeter <= 100 - 3){
+                                        p1.hypermeter += 3;
+                                    } else{
+                                        p1.hypermeter = 100;
+                                    }
+                                }
                             }
                         }
                         break;
@@ -816,12 +941,32 @@ function handlePush(p1,p2,direction,distance,action){
             }
             
             break;
+        case "projectile":
+            switch(direction){
+                case "left":
+                    if(p2.x !== boundaryL){
+                        var push = p2.x - distance;
+                        if(push >= boundaryL){
+                            p2.x = push;
+                        } else if(push < boundaryL){
+                            p2.x = boundaryL;
+                        }
+                    }
+                    break;
+                
+                case "right":
+                    if(p2.x !== boundaryR){
+                        var push = p2.x + distance;
+                        if(push <= boundaryR){
+                            p2.x = push;
+                        } else if(push > boundaryR){
+                            p2.x = boundaryR;
+                        }
+                    }
+                    break;
+            }
+            break;
     }
-}
-
-//TODO
-function handleLaunch(player, endX, maxY){
-    
 }
 
 function handleHitstun(){
@@ -864,19 +1009,6 @@ function hitstunTimer(duration){
         }
     };
 }
-
-//Deprecated atm, dunno if needed
-function resetVals(lob){
-    for (var p in color){
-//        console.log(lob,lobby);
-        var p1 = lob[color[p]];
-        p1.gotHit.damage = 0;
-        p1.attack.jab = false;
-        p1.attack.kick = false;
-        p1.attack.attacking = false;
-    }
-}
-
 
 /**
  * Return a timestamp with the format "m/d/yy h:MM:ss TT"
@@ -923,14 +1055,18 @@ function extend(){
 }
 
 //Timer object to create countdowntimers in each lobby
-function timerHandler(){
+function timerHandler(characterRed, characterBlue){
     var timer;
     var prevTime;
     var enabled;
+    var characterRed;
+    var characterBlue;
 
     this.timer = 99;
     this.prevTime = new Date();
     this.enabled = true;
+    this.characterRed = characterRed;
+    this.characterBlue = characterBlue;
 
     this.update = function(){
         if(this.enabled && this.timer > 0){
@@ -940,7 +1076,21 @@ function timerHandler(){
                         this.prevTime = curTime;
                 }
         } else{
+                console.log(this.characterBlue.hp + " " + this.characterRed.hp);
                 this.enabled = false;
+                if(this.characterRed.hp > this.characterBlue.hp){
+                    player[this.characterRed.sid].user.won = true;
+                    player[this.characterBlue.sid].user.won = false;
+                    endGame(player[characterRed.sid],player[characterBlue.sid]);
+                } else if(this.characterRed.hp < this.characterBlue.hp){
+                    player[this.characterRed.sid].user.won = false;
+                    player[this.characterBlue.sid].user.won = true;
+                    endGame(player[characterRed.sid],player[characterBlue.sid]);
+                } else if(this.characterRed.hp === this.characterBlue.hp){
+                    player[this.characterRed.sid].user.won = false;
+                    player[this.characterBlue.sid].user.won = false;
+                    endGame(player[characterRed.sid],player[characterBlue.sid]);
+                }
         }
     };
 }
@@ -957,11 +1107,30 @@ function hypermeterHandler(){
         if(this.enabled){
             var curTime = new Date();
             if(curTime.getTime() - this.prevTime.getTime() >= 1000){   
-                if(characterRed.hypermeter < 100){
-                    characterRed.hypermeter++;
+                if(characterRed.attack.mode.active){
+                    characterRed.hypermeter -= 5;
+                    if(characterRed.hypermeter <= 0){
+                        characterRed.hypermeter = 0;
+                        characterRed.attack.mode.active = false;
+                        characterRed.attack.mode.dmgMultiplicator = 1;
+                    }
+                } else{
+                    if(characterRed.hypermeter < 100){
+                        characterRed.hypermeter++;
+                    }
                 }
-                if(characterBlue.hypermeter < 100){
-                    characterBlue.hypermeter++;
+                
+                if(characterBlue.attack.mode.active){
+                    characterBlue.hypermeter -= 5;
+                    if(characterBlue.hypermeter <= 0){
+                        characterBlue.hypermeter = 0;
+                        characterBlue.attack.mode.active = false;
+                        characterBlue.attack.mode.dmgMultiplicator = 1;
+                    }
+                } else{
+                    if(characterBlue.hypermeter < 100){
+                        characterBlue.hypermeter++;
+                    }   
                 }
                     
                 this.prevTime = curTime;
@@ -1053,17 +1222,17 @@ function assignToLobby(socketId) {
                 eloBlue: eloBlue
             };
             
-            var gameTimer = new timerHandler();
+            var characterRed = lobby[lC].red;
+            var characterBlue = lobby[lC].blue;
+            console.log("characterRed: ", characterRed.name);
+            console.log("characterBlue: ", characterBlue.name);
+            
+            var gameTimer = new timerHandler(characterRed, characterBlue);
             var hypermeter = new hypermeterHandler();
 
             lobby[lC].options = {mapX : options.mapX, mapY:options.mapY};
             lobby[lC].options.timerObj = gameTimer;
             lobby[lC].options.hypermeterObj = hypermeter;
-
-            var characterRed = lobby[lC].red;
-            var characterBlue = lobby[lC].blue;
-            console.log("characterRed: ", characterRed.name);
-            console.log("characterBlue: ", characterBlue.name);
 
             characterBlue.start = characterBlue.x = 150 + options.playerStartDelta;
             characterRed.start = characterRed.x = 850 - options.playerStartDelta;
@@ -1083,15 +1252,10 @@ function assignToLobby(socketId) {
                 options.color = i; 
                 //console.log(i);
                 clients[sid].emit('gameOptions', options );
-                if(slot != "observer") controls[sid] = {left:false,right:false,moveup:false,movedown:false,hit:false,special1:false,special2:false,hyper:false};
+                if(slot != "observer") controls[sid] = {left:false,right:false,moveup:false,movedown:false,hit:false,special1:false,special2:false,hyper:false,mode:false,dashL:false,dashR:false};
             }
             console.log("Lobby " + lC + " starts Playing");
         }
         player[socket.id].color = slot;
         player[socket.id].lobby = lc;
-}
-
-//TODO FINISHHANDLER
-function gameFinishedHandler(){
-    
 }

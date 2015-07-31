@@ -1,5 +1,5 @@
 //CONSTANTS - DO NOT CHANGE
-var LINE_TOLERANCE = 20,
+var LINE_TOLERANCE = 30,
     SWIPE_TOLERANCE = 100,
     SPIKE_CHECK_TOLERANCE = 20,
     SPIKE_X_DIFF = 50,
@@ -10,23 +10,23 @@ var LINE_TOLERANCE = 20,
     CIRCLE_ANGLE = 340;
     
 //INPUT GESTURES
-var swipeR = false;
-    swipeL = false,
-    specialA = false,
-    specialB = false,
-    hyper = false;
+//var swipeR = false,
+//    swipeL = false,
+//    upGesture = false,
+//    downGesture = false,
+//    circleGesture = false;
 
 function gestureHandler(){
     swipeHandler();
     spikeHandler();
     circleHandler();
-    
-    debugLine.innerHTML = "SLEFT:" + swipeL + " SRIGHT:" + swipeR + " ^:" + specialB + " V:" + specialA + " Circle:" + hyper;
 }
 
 function swipeHandler(){
-    swipeR = false;
-    swipeL = false;
+//    swipeR = false;
+//    swipeL = false;
+//    state["dashR"] = false;
+//    state["dashL"] = false;
     
     var len = vectorlist.length;
     var line = false;
@@ -42,17 +42,19 @@ function swipeHandler(){
                 
     if(line === true){
         if(gestureStartX - gestureEndX <= -SWIPE_TOLERANCE){
-            swipeR = true;
+//            swipeR = true;
+            state["dashR"] = true;
         }
         if(gestureStartX - gestureEndX >= SWIPE_TOLERANCE){
-            swipeL = true;
+//            swipeL = true;
+            state["dashL"] = true;
         }
     }
 }
 
 function spikeHandler(){
-    specialA = false;
-    specialB = false;
+//    upGesture = false;
+//    downGesture = false;
     
     var len = vectorlist.length;
     
@@ -90,10 +92,11 @@ function spikeHandler(){
                         i += 1;
                         for(i;i<len;i++){
                             if(vectorlist[i].y > prevYCoord){
-                                specialA = false;
+//                                upGesture = false;
                                 break;
                             }else{
-                                specialA = true;
+//                                upGesture = true;
+                                state["special1"] = true;
                             }
                             prevYCoord = vectorlist[i].y;
                         }
@@ -137,10 +140,11 @@ function spikeHandler(){
                         i += 1;
                         for(i;i<len;i++){
                             if(vectorlist[i].y < prevYCoord){
-                               specialB = false;
+//                               downGesture = false;
                                break;
                             } else{
-                                specialB = true;
+//                                downGesture = true;
+                                state["special2"] = true;
                             }
                          prevYCoord = vectorlist[i].y;
                         }
@@ -152,7 +156,7 @@ function spikeHandler(){
 }
 
 function circleHandler(){
-    hyper = false;
+//    circleGesture = false;
     
     var len = vectorlist.length;
     var circle = false;
@@ -224,10 +228,12 @@ function circleHandler(){
             angle = angle * 180/Math.PI;
 
             if(angle >= CIRCLE_ANGLE){
-                hyper = true;
-            } else{
-                hyper = false;
-            }
+//                circleGesture = true;
+                state["hyper"] = true;
+            } 
+//            else{
+//                circleGesture = false;
+//            }
         }   
     }                
 }
