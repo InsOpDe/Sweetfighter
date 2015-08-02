@@ -30,8 +30,8 @@ var loader = {
         //game.phaser.load.script('filter', 'https://cdn.rawgit.com/photonstorm/phaser/master/filters/Fire.js');
 
         //game.phaser.load.spritesheet('muaythai', 'muay_thai.png', 400, 300, 14);
-        game.phaser.load.spritesheet(color1, 'img/' + charname1 + 'blue.png', framesinfo1.w, framesinfo1.h, framesinfo1.count);
-        game.phaser.load.spritesheet(color2, 'img/' + charname2 + 'red.png', framesinfo2.w, framesinfo2.h, framesinfo2.count);
+        game.phaser.load.spritesheet(color1, 'img/' + charname1 + color1 + '.png', framesinfo1.w, framesinfo1.h, framesinfo1.count);
+        game.phaser.load.spritesheet(color2, 'img/' + charname2 + color2 + '.png', framesinfo2.w, framesinfo2.h, framesinfo2.count);
         game.phaser.load.spritesheet('fx1', 'img/fx1.png', 70, 70, 4);
         game.phaser.load.image('bgtrans', 'img/bgtrans.png');
         game.phaser.load.image('ebene1', map+'/ebene1.png');

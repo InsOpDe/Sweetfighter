@@ -154,6 +154,7 @@ var game = {
             var isHyper = game[color].animations.add('hyper',game.options.characters[color].action.hyper.animation.frames);
             //Ko
             var isKO = game[color].animations.add('ko',game.options.characters[color].action.ko.animation.frames);
+            var dead = game[color].animations.add('dead',game.options.characters[color].action.ko.animation.frames.pop());
 
             //add attributes
             var attributes = {
@@ -173,7 +174,8 @@ var game = {
                     isSpecial1:isSpecial1,
                     isSpecial2:isSpecial2,
                     isHyper:isHyper,
-                    isKO:isKO
+                    isKO:isKO,
+                    dead:dead
                 };
             game[color] = $.extend(game[color],attributes);
             
@@ -411,7 +413,14 @@ var game = {
                 projectile.create(color,"hyper");
             }
             else if(game[color].ko){
-                    game[color].animations.play('ko', 3, false);
+                if(!game[color].koAlready){
+                    game[color].animations.play('ko', 10, false);
+                    game[color].koAlready = Date.now();
+                } else if(game[color].koAlready + 500 < Date.now()) {
+
+                    game[color].animations.play('dead', 5, false);
+                }
+
             }
             else {
                 if(game[color].crouch){
@@ -430,7 +439,7 @@ var game = {
             }
             projectile.update(color);
         }
-        
+
         game.ebene2.tilePosition.x += .25;
         
         //Parallax

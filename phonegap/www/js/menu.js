@@ -89,27 +89,30 @@ var menu = {
     },
     gameover : function(data){
         keyboard.block = true;
-        game.phaser.destroy();
-        console.log(data);
-        var text = "";
-        $('#gameover').removeClass('youwin');
-        $('#gameover').removeClass('youlose');
-        if(data.won){
-            $('#gameover').addClass('youwin');
-            text = "Elo dazugewonnen: " ;
-        } else {
-            $('#gameover').addClass('youlose');
-            text = "Elo verloren: " ;
-        }
-        text += data.diff + "<br> Jetztiges Elo: " + data.elo + "<br> Aktueller Platz: " + data.rank;
-        game.options = undefined;
-        $('#gameover div').html(text);
-        $('#gamescreen').hide();
-        $('#gameover').show();
-        $('#back').show();
-        $('#menumusicbutton').show();
-        removeTouchInterface();
-        removeShake();
+        setTimeout(function(){
+            game.phaser.destroy();
+            console.log(data);
+            var text = "";
+            $('#gameover').removeClass('youwin');
+            $('#gameover').removeClass('youlose');
+            if(data.won){
+                $('#gameover').addClass('youwin');
+                text = "Elo dazugewonnen: " ;
+            } else {
+                $('#gameover').addClass('youlose');
+                text = "Elo verloren: " ;
+            }
+            text += data.diff + "<br> Jetztiges Elo: " + data.elo + "<br> Aktueller Platz: " + data.rank;
+            game.options = undefined;
+            $('#gameover div').html(text);
+            $('#gamescreen').hide();
+            $('#gameover').show();
+            $('#back').show();
+            $('#menumusicbutton').show();
+            removeTouchInterface();
+            removeShake();
+        },3000);
+
     },
     selectMap : function(e){
         menu.options.character = $(e.currentTarget).attr('id');
