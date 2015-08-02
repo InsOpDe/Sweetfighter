@@ -29,7 +29,7 @@ var game = {
     projectileCount_p1:0,
     projectile_p2:undefined,
     projectileCount_p2:0,
-
+    audio: {},
     create : function() {
         // spiel ist aktiv auch wenn das fenster nicht fokussiert ist
         game.phaser.stage.disableVisibilityChange = true;
@@ -38,7 +38,18 @@ var game = {
         if (this.game.device.desktop === false){
             this.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
         }
-       
+
+        //sounds
+        game.audio.punch1 = game.phaser.add.audio('punch1');
+        game.audio.punch1.addMarker('punch1', 0, 0.35);
+        game.audio.punch2 = game.phaser.add.audio('punch2');
+        game.audio.punch2.addMarker('punch2', 0, 1.0);
+        game.audio.punch3 = game.phaser.add.audio('punch3');
+        game.audio.punch3.addMarker('punch3', 0, 1.0);
+        game.audio.punch1.allowMultiple = false;
+        game.audio.punch2.allowMultiple = true;
+        game.audio.punch3.allowMultiple = true;
+
         game.phaser.world.setBounds(0, 0, game.options.mapX, game.options.mapY);
         
         game.backgroundGroup = game.phaser.add.group();
@@ -347,6 +358,10 @@ var game = {
             
             if(game[color].gotHitTimer >= Date.now()){
                     game[color].animations.play('gotHit', 5, false);
+                //var rand = Math.floor(Math.random() * 3) + 1;
+                //game.audio['punch'+rand].play('punch'+rand);
+                if(!game.audio['punch1'].isPlaying)
+                    game.audio['punch1'].play('punch1');
             } 
             else if(game[color].blocked){
                 game[color].animations.play('blocked', 5, false);

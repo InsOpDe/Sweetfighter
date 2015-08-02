@@ -163,7 +163,7 @@ var menu = {
         var ranking = $('#ranking');
         boxring.css({top: windowHeight*0.3, left: (-1)*windowWidth*0.07});
         boxring.height(windowHeight*(0.57*(diff*1.5)));
-        boxring.width(boxring.height*1.8597662771285475792988313856427);
+        boxring.width(boxring.height()*1.5);
 
         ranking.css({top: windowHeight*0.1, right: windowWidth*(0.05*(diff))});
         ranking.height(windowHeight*(0.35*diff));

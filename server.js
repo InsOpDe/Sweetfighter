@@ -1998,6 +1998,8 @@ function timerHandler(characterRed, characterBlue){
                         this.prevTime = curTime;
                 }
         } else{
+            try {
+
                 this.enabled = false;
                 if(this.characterRed.hp > this.characterBlue.hp){
                     player[this.characterRed.sid].user.won = true;
@@ -2012,6 +2014,9 @@ function timerHandler(characterRed, characterBlue){
                     player[this.characterBlue.sid].user.won = false;
                     endGame(player[characterRed.sid],player[characterBlue.sid]);
                 }
+            } catch(e){
+                console.log(e);
+            }
         }
     };
 }
