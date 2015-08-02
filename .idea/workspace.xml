@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="9f154007-a0da-4088-8b9b-04a4b67cd507" name="Default" comment="Merge remote-tracking branch 'origin/jonnyWS'&#10;&#10;Conflicts:&#10;&#9;node_modules/express/node_modules/basic-auth/package.json&#10;&#9;node_modules/express/node_modules/commander/package.json&#10;&#9;node_modules/express/node_modules/connect/node_modules/body-parser/node_modules/iconv-lite/package.json&#10;&#9;node_modules/express/node_modules/connect/node_modules/body-parser/node_modules/raw-body/package.json&#10;&#9;node_modules/express/node_modules/connect/node_modules/body-parser/package.json&#10;&#9;node_modules/express/node_modules/connect/node_modules/compression/node_modules/accepts/node_modules/mime-types/package.json&#10;&#9;node_modules/express/node_modules/connect/node_modules/compression/node_modules/accepts/package.json&#10;&#9;node_modules/express/node_modules/connect/node_modules/compression/node_modules/compressible/node_modules/mime-db/package.json&#10;&#9;node_modules/express/node_modules/connect/node_modules/compression/node_modules/compressible/package.json&#10;&#9;node_modules/express/node_modules/connect/node_modules/compression/package.json&#10;&#9;node_modules/express/node_modules/connect/node_modules/csurf/node_modules/csrf/node_modules/base64-url/package.json&#10;&#9;node_modules/express/node_modules/connect/node_modules/csurf/node_modules/csrf/node_modules/scmp/package.json&#10;&#9;node_modules/express/node_modules/connect/node_modules/errorhandler/node_modules/accepts/node_modules/mime-types/package.json&#10;&#9;node_modules/express/node_modules/connect/node_modules/errorhandler/node_modules/accepts/package.json&#10;&#9;node_modules/express/node_modules/connect/node_modules/errorhandler/package.json&#10;&#9;node_modules/express/node_modules/connect/node_modules/express-session/node_modules/uid-safe/node_modules/base64-url/package.json&#10;&#9;node_modules/express/node_modules/connect/node_modules/method-override/package.json&#10;&#9;node_modules/express/node_modules/connect/node_modules/morgan/package.json&#10;&#9;node_modules/express/node_modules/connect/node_modules/multiparty/package.json&#10;&#9;node_modules/express/node_modules/connect/node_modules/pause/package.json&#10;&#9;node_modules/express/node_modules/connect/node_modules/qs/package.json&#10;&#9;node_modules/express/node_modules/connect/node_modules/serve-index/node_modules/accepts/package.json&#10;&#9;node_modules/express/node_modules/connect/node_modules/serve-index/package.json&#10;&#9;node_modules/express/node_modules/connect/node_modules/type-is/HISTORY.md&#10;&#9;node_modules/express/node_modules/connect/node_modules/type-is/node_modules/mime-types/node_modules/mime-db/package.json&#10;&#9;node_modules/express/node_modules/connect/node_modules/type-is/node_modules/mime-types/package.json&#10;&#9;node_modules/express/node_modules/connect/node_modules/type-is/package.json&#10;&#9;node_modules/express/node_modules/connect/node_modules/vhost/HISTORY.md&#10;&#9;node_modules/express/node_modules/connect/node_modules/vhost/README.md&#10;&#9;node_modules/express/node_modules/connect/node_modules/vhost/index.js&#10;&#9;node_modules/express/node_modules/connect/node_modules/vhost/package.json&#10;&#9;node_modules/express/node_modules/connect/package.json&#10;&#9;node_modules/express/node_modules/mkdirp/node_modules/minimist/package.json&#10;&#9;node_modules/express/node_modules/mkdirp/package.json&#10;&#9;node_modules/express/node_modules/send/node_modules/mime/package.json&#10;&#9;node_modules/express/node_modules/vary/package.json&#10;&#9;node_modules/express/package.json&#10;&#9;node_modules/socket.io/node_modules/debug/package.json&#10;&#9;node_modules/socket.io/node_modules/engine.io/node_modules/ws/package.json&#10;&#9;node_modules/socket.io/node_modules/engine.io/package.json&#10;&#9;node_modules/socket.io/node_modules/socket.io-client/node_modules/engine.io-client/package.json&#10;&#9;node_modules/socket.io/node_modules/socket.io-client/package.json&#10;&#9;node_modules/socket.io/node_modules/socket.io-parser/node_modules/benchmark/package.json&#10;&#9;node_modules/socket.io/package.json&#10;">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/phonegap/www/js/game.js" afterPath="$PROJECT_DIR$/phonegap/www/js/game.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/server.js" afterPath="$PROJECT_DIR$/server.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <list id="9148195e-34ee-4c77-819a-7e88c73954d4" name="Failed commit: Default" comment="Merge remote-tracking branch 'origin/jonnyWS'&#10;&#10;Conflicts:&#10;&#9;server.js&#10;" />
@@ -24,13 +24,13 @@
     <favorites_list name="streetfighter" />
   </component>
   <component name="FileEditorManager">
-    <splitter split-orientation="horizontal" split-proportion="0.39285713">
+    <splitter split-orientation="horizontal" split-proportion="0.47678572">
       <split-first>
         <leaf>
           <file leaf-file-name="index.html" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/phonegap/www/index.html">
               <provider selected="true" editor-type-id="text-editor">
-                <state vertical-scroll-proportion="-26.653847">
+                <state vertical-scroll-proportion="0.0">
                   <caret line="108" column="16" selection-start-line="108" selection-start-column="16" selection-end-line="108" selection-end-column="60" />
                   <folding>
                     <element signature="n#style#0;n#div#7;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
@@ -73,10 +73,10 @@
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="game.js" pinned="false" current-in-tab="true">
+          <file leaf-file-name="game.js" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/phonegap/www/js/game.js">
               <provider selected="true" editor-type-id="text-editor">
-                <state vertical-scroll-proportion="0.4576923">
+                <state vertical-scroll-proportion="0.0">
                   <caret line="43" column="53" selection-start-line="43" selection-start-column="53" selection-end-line="43" selection-end-column="53" />
                   <folding />
                 </state>
@@ -86,7 +86,7 @@
           <file leaf-file-name="common.js" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/phonegap/www/js/common.js">
               <provider selected="true" editor-type-id="text-editor">
-                <state vertical-scroll-proportion="-8.965517">
+                <state vertical-scroll-proportion="0.0">
                   <caret line="322" column="45" selection-start-line="322" selection-start-column="42" selection-end-line="322" selection-end-column="45" />
                   <folding />
                 </state>
@@ -113,16 +113,12 @@
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="server.js" pinned="false" current-in-tab="false">
+          <file leaf-file-name="server.js" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/server.js">
               <provider selected="true" editor-type-id="text-editor">
-                <state vertical-scroll-proportion="0.0">
-                  <caret line="1938" column="24" selection-start-line="1938" selection-start-column="24" selection-end-line="1938" selection-end-column="24" />
-                  <folding>
-                    <marker date="1438526081301" expanded="true" signature="2331:3962" placeholder="{...}" />
-                    <marker date="1438526081301" expanded="true" signature="3630:3962" placeholder="{...}" />
-                    <marker date="1438526081301" expanded="true" signature="99734:100647" placeholder="{...}" />
-                  </folding>
+                <state vertical-scroll-proportion="0.24016145">
+                  <caret line="1952" column="17" selection-start-line="1952" selection-start-column="17" selection-end-line="1965" selection-end-column="17" />
+                  <folding />
                 </state>
               </provider>
             </entry>
@@ -133,10 +129,7 @@
                 <state vertical-scroll-proportion="0.0">
                   <caret line="10" column="4" selection-start-line="10" selection-start-column="4" selection-end-line="10" selection-end-column="4" />
                   <folding>
-                    <marker date="1438526081297" expanded="true" signature="15:3407" placeholder="{&quot;block&quot;: false...}" />
-                    <marker date="1438526081297" expanded="true" signature="188:3404" placeholder="{...}" />
                     <marker date="1438526081297" expanded="true" signature="290:1660" placeholder="{...}" />
-                    <marker date="1438526081297" expanded="true" signature="3295:3395" placeholder="{...}" />
                   </folding>
                 </state>
               </provider>
@@ -149,7 +142,7 @@
           <file leaf-file-name="multiplayer.js" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/phonegap/www/js/multiplayer.js">
               <provider selected="true" editor-type-id="text-editor">
-                <state vertical-scroll-proportion="0.45859087">
+                <state vertical-scroll-proportion="0.27951565">
                   <caret line="117" column="66" selection-start-line="117" selection-start-column="63" selection-end-line="117" selection-end-column="66" />
                   <folding />
                 </state>
@@ -159,7 +152,7 @@
           <file leaf-file-name="main.scss" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/phonegap/www/css/main.scss">
               <provider selected="true" editor-type-id="text-editor">
-                <state vertical-scroll-proportion="-15.830189">
+                <state vertical-scroll-proportion="0.0">
                   <caret line="175" column="37" selection-start-line="175" selection-start-column="37" selection-end-line="175" selection-end-column="37" />
                   <folding />
                 </state>
@@ -179,12 +172,12 @@
         <option value="$PROJECT_DIR$/phonegap/www/js/input.js" />
         <option value="$PROJECT_DIR$/.gitignore" />
         <option value="$PROJECT_DIR$/phonegap/www/index.html" />
-        <option value="$PROJECT_DIR$/server.js" />
         <option value="$PROJECT_DIR$/phonegap/www/css/main.scss" />
         <option value="$PROJECT_DIR$/phonegap/www/js/loader.js" />
         <option value="$PROJECT_DIR$/phonegap/www/js/menu.js" />
         <option value="$PROJECT_DIR$/phonegap/www/js/multiplayer.js" />
         <option value="$PROJECT_DIR$/phonegap/www/js/game.js" />
+        <option value="$PROJECT_DIR$/server.js" />
       </list>
     </option>
   </component>
@@ -472,20 +465,20 @@
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.17860648" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.2747792" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32098764" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3298969" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.2747792" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.17860648" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
   <component name="Vcs.Log.UiProperties">
@@ -522,11 +515,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="302" column="13" selection-start-line="302" selection-start-column="13" selection-end-line="302" selection-end-column="13" />
-          <folding>
-            <marker date="1438526081301" expanded="true" signature="2331:3962" placeholder="{...}" />
-            <marker date="1438526081301" expanded="true" signature="3630:3962" placeholder="{...}" />
-            <marker date="1438526081301" expanded="true" signature="99734:100647" placeholder="{...}" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -543,10 +532,7 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="10" column="23" selection-start-line="10" selection-start-column="23" selection-end-line="10" selection-end-column="23" />
           <folding>
-            <marker date="1438526081297" expanded="true" signature="15:3407" placeholder="{&quot;block&quot;: false...}" />
-            <marker date="1438526081297" expanded="true" signature="188:3404" placeholder="{...}" />
             <marker date="1438526081297" expanded="true" signature="290:1660" placeholder="{...}" />
-            <marker date="1438526081297" expanded="true" signature="3295:3395" placeholder="{...}" />
           </folding>
         </state>
       </provider>
@@ -609,11 +595,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="302" column="13" selection-start-line="302" selection-start-column="13" selection-end-line="302" selection-end-column="13" />
-          <folding>
-            <marker date="1438526081301" expanded="true" signature="2331:3962" placeholder="{...}" />
-            <marker date="1438526081301" expanded="true" signature="3630:3962" placeholder="{...}" />
-            <marker date="1438526081301" expanded="true" signature="99734:100647" placeholder="{...}" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -630,10 +612,7 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="10" column="23" selection-start-line="10" selection-start-column="23" selection-end-line="10" selection-end-column="23" />
           <folding>
-            <marker date="1438526081297" expanded="true" signature="15:3407" placeholder="{&quot;block&quot;: false...}" />
-            <marker date="1438526081297" expanded="true" signature="188:3404" placeholder="{...}" />
             <marker date="1438526081297" expanded="true" signature="290:1660" placeholder="{...}" />
-            <marker date="1438526081297" expanded="true" signature="3295:3395" placeholder="{...}" />
           </folding>
         </state>
       </provider>
@@ -696,11 +675,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="302" column="13" selection-start-line="302" selection-start-column="13" selection-end-line="302" selection-end-column="13" />
-          <folding>
-            <marker date="1438526081301" expanded="true" signature="2331:3962" placeholder="{...}" />
-            <marker date="1438526081301" expanded="true" signature="3630:3962" placeholder="{...}" />
-            <marker date="1438526081301" expanded="true" signature="99734:100647" placeholder="{...}" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -717,10 +692,7 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="10" column="23" selection-start-line="10" selection-start-column="23" selection-end-line="10" selection-end-column="23" />
           <folding>
-            <marker date="1438526081297" expanded="true" signature="15:3407" placeholder="{&quot;block&quot;: false...}" />
-            <marker date="1438526081297" expanded="true" signature="188:3404" placeholder="{...}" />
             <marker date="1438526081297" expanded="true" signature="290:1660" placeholder="{...}" />
-            <marker date="1438526081297" expanded="true" signature="3295:3395" placeholder="{...}" />
           </folding>
         </state>
       </provider>
@@ -775,11 +747,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="292" column="13" selection-start-line="292" selection-start-column="13" selection-end-line="292" selection-end-column="13" />
-          <folding>
-            <marker date="1438526081301" expanded="true" signature="2331:3962" placeholder="{...}" />
-            <marker date="1438526081301" expanded="true" signature="3630:3962" placeholder="{...}" />
-            <marker date="1438526081301" expanded="true" signature="99734:100647" placeholder="{...}" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -796,10 +764,7 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="10" column="23" selection-start-line="10" selection-start-column="23" selection-end-line="10" selection-end-column="23" />
           <folding>
-            <marker date="1438526081297" expanded="true" signature="15:3407" placeholder="{&quot;block&quot;: false...}" />
-            <marker date="1438526081297" expanded="true" signature="188:3404" placeholder="{...}" />
             <marker date="1438526081297" expanded="true" signature="290:1660" placeholder="{...}" />
-            <marker date="1438526081297" expanded="true" signature="3295:3395" placeholder="{...}" />
           </folding>
         </state>
       </provider>
@@ -863,14 +828,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/phonegap/www/js/touchInterface.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="40" column="28" selection-start-line="40" selection-start-column="17" selection-end-line="40" selection-end-column="28" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/.gitignore">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.09371555">
@@ -887,19 +844,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/phonegap/www/js/input.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="10" column="4" selection-start-line="10" selection-start-column="4" selection-end-line="10" selection-end-column="4" />
-          <folding>
-            <marker date="1438526081297" expanded="true" signature="15:3407" placeholder="{&quot;block&quot;: false...}" />
-            <marker date="1438526081297" expanded="true" signature="188:3404" placeholder="{...}" />
-            <marker date="1438526081297" expanded="true" signature="290:1660" placeholder="{...}" />
-            <marker date="1438526081297" expanded="true" signature="3295:3395" placeholder="{...}" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/phonegap/www/img/menu/youwin.png">
       <provider selected="true" editor-type-id="images">
         <state />
@@ -908,26 +852,6 @@
     <entry file="file://$PROJECT_DIR$/phonegap/www/img/muaythaiblue.png">
       <provider selected="true" editor-type-id="images">
         <state />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/server.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="1938" column="24" selection-start-line="1938" selection-start-column="24" selection-end-line="1938" selection-end-column="24" />
-          <folding>
-            <marker date="1438526081301" expanded="true" signature="2331:3962" placeholder="{...}" />
-            <marker date="1438526081301" expanded="true" signature="3630:3962" placeholder="{...}" />
-            <marker date="1438526081301" expanded="true" signature="99734:100647" placeholder="{...}" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/phonegap/www/css/main.scss">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-15.830189">
-          <caret line="175" column="37" selection-start-line="175" selection-start-column="37" selection-end-line="175" selection-end-column="37" />
-          <folding />
-        </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/phonegap/www/js/mobile.js">
@@ -940,7 +864,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/phonegap/www/index.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-26.653847">
+        <state vertical-scroll-proportion="0.0">
           <caret line="108" column="16" selection-start-line="108" selection-start-column="16" selection-end-line="108" selection-end-column="60" />
           <folding>
             <element signature="n#style#0;n#div#7;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
@@ -962,7 +886,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/phonegap/www/js/common.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-8.965517">
+        <state vertical-scroll-proportion="0.0">
           <caret line="322" column="45" selection-start-line="322" selection-start-column="42" selection-end-line="322" selection-end-column="45" />
           <folding />
         </state>
@@ -984,18 +908,52 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/phonegap/www/js/touchInterface.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="40" column="28" selection-start-line="40" selection-start-column="17" selection-end-line="40" selection-end-column="28" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/phonegap/www/js/input.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="10" column="4" selection-start-line="10" selection-start-column="4" selection-end-line="10" selection-end-column="4" />
+          <folding>
+            <marker date="1438526081297" expanded="true" signature="290:1660" placeholder="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/phonegap/www/js/multiplayer.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.45859087">
+        <state vertical-scroll-proportion="0.27951565">
           <caret line="117" column="66" selection-start-line="117" selection-start-column="63" selection-end-line="117" selection-end-column="66" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/phonegap/www/css/main.scss">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="175" column="37" selection-start-line="175" selection-start-column="37" selection-end-line="175" selection-end-column="37" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/phonegap/www/js/game.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.4576923">
+        <state vertical-scroll-proportion="0.0">
           <caret line="43" column="53" selection-start-line="43" selection-start-column="53" selection-end-line="43" selection-end-column="53" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/server.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.24016145">
+          <caret line="1952" column="17" selection-start-line="1952" selection-start-column="17" selection-end-line="1965" selection-end-column="17" />
           <folding />
         </state>
       </provider>
