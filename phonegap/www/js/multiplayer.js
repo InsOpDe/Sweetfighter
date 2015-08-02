@@ -113,7 +113,8 @@ var multiplayer = {
                     game[color].projectileX = actions[color].attack.projectile.posX;
                     game[color].projectileY = actions[color].attack.projectile.posY;
                     
-                    if(game[color].gotHit){
+                    if((game[color].gotHit && (game[color].gotHitTimer && game[color].gotHitTimer < Date.now())) ||
+                        (game[color].gotHit && !game[color].gotHitTimer)){
                         game[color].gotHitTimer = Date.now() + 300;
                     }
                     if(game[color].jab){

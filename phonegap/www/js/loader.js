@@ -53,5 +53,10 @@ var loader = {
 
         game.phaser.load.spritesheet('projectile', 'img/EnergySprite.png',80,120,4);
         game.phaser.load.spritesheet('projectileHyper', 'img/EnergySpriteHyper.png',200,300,4);
+
+        //audio
+        game.phaser.load.audio('punch1', 'punch1.wav');
+        game.phaser.load.audio('punch2', 'punch2.wav');
+        game.phaser.load.audio('punch3', 'punch3.wav');
     },
 }
