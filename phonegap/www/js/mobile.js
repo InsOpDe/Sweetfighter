@@ -1,3 +1,4 @@
+var media;
 function initMobile() {
 //    alert("initMobile");
     
@@ -8,12 +9,11 @@ function initMobile() {
     
     
     document.addEventListener("deviceready", onDeviceReady, false);
-    
-    
+
 }
 
 function onDeviceReady(){
-//    alert("onDeviceReady");
+    alert("onDeviceReady");
 //    multiplayer.socket.emit('chat', { name: "mobile device", text: "onDeviceReady" });
     //if device pauses/gets in background/or closes
     document.addEventListener("pause", function(){
@@ -21,6 +21,10 @@ function onDeviceReady(){
 //        multiplayer.socket.emit('disconnect');
         multiplayer.socket.disconnect();
     }, false);
-    
+
+
+    media = new Media('menu.wav', function(){ alert("success")
+    },function(e){alert("error " + JSON.stringify(e))});
+    media.play();
     
 }

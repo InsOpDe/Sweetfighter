@@ -9,7 +9,9 @@
         <script src="js/mobile.js"></script>
         <script type="text/javascript">
             var serverIP = '';
-            if (screen.width < 1000) { //muss noch n besserer weg gefunden werden
+            var app = navigator.userAgent.match(/(iPhone|iPod|iPad|Android|BlackBerry|IEMobile)/);
+            if ( app ) {
+//            if (screen.width < 1000) { //muss noch n besserer weg gefunden werden
                 
                 serverIP = 'http://46.4.84.121:8887/'//server2
                 //serverIP = 'http://134.60.71.134/';   //server1
@@ -54,9 +56,9 @@
         <title>Streetfighter Online</title>
     </head>
     <body>
-    <!--<audio autoplay loop id="menumusic">-->
-        <!--<source src="menu.wav">-->
-    <!--</audio>-->
+    <audio autoplay loop id="menumusic">
+        <source src="menu.wav">
+    </audio>
 
         <div>
             <div id ="touchContainer" style ="z-index:1000;"></div>

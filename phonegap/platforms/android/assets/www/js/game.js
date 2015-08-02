@@ -7,6 +7,9 @@ var game = {
         game.phaser = new Phaser.Game(700, 400, Phaser.AUTO, 'gamescreen', { preload: loader.preload, create: game.create, update: game.update });
         initTouchInterface();
         initShake();
+
+        if(app)media.pause();
+        $('#menumusic').trigger("pause");
         
         $('#waiting').hide();
     },
@@ -29,7 +32,7 @@ var game = {
     projectileCount_p1:0,
     projectile_p2:undefined,
     projectileCount_p2:0,
-
+    audio: {},
     create : function() {
         // spiel ist aktiv auch wenn das fenster nicht fokussiert ist
         game.phaser.stage.disableVisibilityChange = true;
@@ -38,11 +41,27 @@ var game = {
         if (this.game.device.desktop === false){
             this.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
         }
-       
+
+        //sounds
+        game.audio.music = game.phaser.add.audio('music');
+        game.audio.music.addMarker('music', 0, 45);
+        game.audio.music.play('music');
+
+        game.audio.punch1 = game.phaser.add.audio('punch1');
+        game.audio.punch1.addMarker('punch1', 0, 0.35);
+        game.audio.punch2 = game.phaser.add.audio('punch2');
+        game.audio.punch2.addMarker('punch2', 0, 1.0);
+        game.audio.punch3 = game.phaser.add.audio('punch3');
+        game.audio.punch3.addMarker('punch3', 0, 1.0);
+        game.audio.punch1.allowMultiple = false;
+        game.audio.punch2.allowMultiple = true;
+        game.audio.punch3.allowMultiple = true;
+
         game.phaser.world.setBounds(0, 0, game.options.mapX, game.options.mapY);
         
         game.backgroundGroup = game.phaser.add.group();
         game.characterGroup = game.phaser.add.group();
+        game.foregroundGroup = game.phaser.add.group();
         game.effectGroup = game.phaser.add.group();
         game.interfaceGroup = game.phaser.add.group();
 
@@ -53,8 +72,16 @@ var game = {
         game.ebene4 = game.phaser.add.tileSprite(0, 0, game.options.mapX, game.options.mapY, 'ebene4');
         game.backgroundGroup.add(game.ebene1);
         game.backgroundGroup.add(game.ebene2);
-        game.backgroundGroup.add(game.ebene3);
+        if(game.options.map == 'jungle'){
+            game.foregroundGroup.add(game.ebene3);
+        } else {
+            game.backgroundGroup.add(game.ebene3);
+        }
+
         game.backgroundGroup.add(game.ebene4);
+
+
+
         
         //player animations etc
         for(var key in game.players){
@@ -134,6 +161,7 @@ var game = {
             var isHyper = game[color].animations.add('hyper',game.options.characters[color].action.hyper.animation.frames);
             //Ko
             var isKO = game[color].animations.add('ko',game.options.characters[color].action.ko.animation.frames);
+            var dead = game[color].animations.add('dead',game.options.characters[color].action.ko.animation.frames.pop());
 
             //add attributes
             var attributes = {
@@ -153,7 +181,8 @@ var game = {
                     isSpecial1:isSpecial1,
                     isSpecial2:isSpecial2,
                     isHyper:isHyper,
-                    isKO:isKO
+                    isKO:isKO,
+                    dead:dead
                 };
             game[color] = $.extend(game[color],attributes);
             
@@ -230,25 +259,30 @@ var game = {
         avataranimationBPlayerB.animations.play('rotateB',10,true);
         
         game.interface = game.phaser.add.image(2, 0, 'interface');
-        
+
+        var fill = 555151;
+        if(game.options.map == 'jungle'){
+            fill = "#ffffff";
+        }
+
         var nameBlue = game.phaser.add.text(92, 78, game.options.nameBlue,{
             font: "bold 12px Arial",
-            fill: "555151",
+            fill: fill,
             align: "center"
         });
         var eloBlue = game.phaser.add.text(92, 92, game.options.eloBlue + "BP",{
             font: "bold 12px Arial",
-            fill: "555151",
+            fill: fill,
             align: "center"
         });
         var nameRed = game.phaser.add.text(612, 78, game.options.nameRed,{
             font: "bold 12px Arial",
-            fill: "555151",
+            fill: fill,
             align: "center"
         });
         var eloRed = game.phaser.add.text(612, 92, game.options.eloRed + "BP",{
             font: "bold 12px Arial",
-            fill: "555151",
+            fill: fill,
             align: "center"
         }); 
         
@@ -347,6 +381,11 @@ var game = {
             
             if(game[color].gotHitTimer >= Date.now()){
                     game[color].animations.play('gotHit', 5, false);
+
+                if(game[color].hotHitId && game[color].hotHitId != game[color].hotHitIdTemp){
+                    game[color].hotHitIdTemp = game[color].hotHitId;
+                    game.punched();
+                }
             } 
             else if(game[color].blocked){
                 game[color].animations.play('blocked', 5, false);
@@ -381,7 +420,14 @@ var game = {
                 projectile.create(color,"hyper");
             }
             else if(game[color].ko){
-                    game[color].animations.play('ko', 3, false);
+                if(!game[color].koAlready){
+                    game[color].animations.play('ko', 10, false);
+                    game[color].koAlready = Date.now();
+                } else if(game[color].koAlready + 500 < Date.now()) {
+
+                    game[color].animations.play('dead', 5, false);
+                }
+
             }
             else {
                 if(game[color].crouch){
@@ -400,7 +446,7 @@ var game = {
             }
             projectile.update(color);
         }
-        
+
         game.ebene2.tilePosition.x += .25;
         
         //Parallax
@@ -427,6 +473,12 @@ var game = {
         healthgauge.updateHealthgaugeDisplay();
         healthgauge.updateDmgBar();
         hypermeter.updateHypermeterDisplay();
+    },
+    punched : function() {
+        var rand = Math.floor(Math.random() * 3) + 1;
+        game.audio['punch'+rand].play('punch'+rand);
+        //if(!game.audio['punch1'].isPlaying)
+        //    game.audio['punch1'].play('punch1');
     }
 };
 

@@ -7,6 +7,9 @@ var game = {
         game.phaser = new Phaser.Game(700, 400, Phaser.AUTO, 'gamescreen', { preload: loader.preload, create: game.create, update: game.update });
         initTouchInterface();
         initShake();
+
+        if(app)media.pause();
+        $('#menumusic').trigger("pause");
         
         $('#waiting').hide();
     },
@@ -40,6 +43,10 @@ var game = {
         }
 
         //sounds
+        game.audio.music = game.phaser.add.audio('music');
+        game.audio.music.addMarker('music', 0, 45);
+        game.audio.music.play('music');
+
         game.audio.punch1 = game.phaser.add.audio('punch1');
         game.audio.punch1.addMarker('punch1', 0, 0.35);
         game.audio.punch2 = game.phaser.add.audio('punch2');

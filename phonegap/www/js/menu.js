@@ -1,3 +1,4 @@
+musicPlaying = true;
 var menu = {
     options : {character:'muaythai',map:'desert'},
     init : function() {
@@ -15,10 +16,14 @@ var menu = {
 
         $('#menumusicbutton').bind('click tap',function(){
 
-            if($('#menumusic')[0].paused){
+            if(!musicPlaying){
                 $('#menumusic').trigger("play");
+                musicPlaying = true;
+                if(app)media.play();
             } else {
                 $('#menumusic').trigger("pause");
+                musicPlaying = false;
+                if(app)media.pause();
             }
 
         });

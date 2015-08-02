@@ -60,5 +60,6 @@ var loader = {
         game.phaser.load.audio('punch1', 'punch1.wav');
         game.phaser.load.audio('punch2', 'punch2.wav');
         game.phaser.load.audio('punch3', 'punch3.wav');
+        game.phaser.load.audio('music', 'ingame.wav');
     },
 }
