@@ -216,7 +216,7 @@ var physicsloop = setInterval(function(){
         handleDash(p1,p2);
         handleStartup(p1,p2,vz);
         handleEndlag(p1);
-        checkBuffer(p1);
+        checkBuffer(p1,vz);
     }
     
 },15);
@@ -392,31 +392,29 @@ function handleCommand(){
                 p1.velocityY = 0;
             }
         
-        if(!p1.attack.hitstun.gotHit && !p1.characterinfo.dash.active){
+        if(!p1.attack.hitstun.gotHit && !p1.attack.block && !p1.characterinfo.dash.active){
             if(!p1.attack.endlag.hitexecuted){
                 if(c1.left){
                     if(!p1.jump){
                         if(!c1.movedown){
                             if(!c1.hit){
-                                if(!p1.attack.block){
-                                    if(p1.x - movementSpeed >= p1.characterinfo.w/2 + 20){
-                                        if(p1.x < p2.x){
-                                            p1.x -= movementSpeed;
-                                            p1.moving = true;
-                                        } 
-                                        else if(p1.x - p1.characterinfo.w/2 - movementSpeed >= p2.x + p2.characterinfo.w/2 - 20){
-                                            p1.x -= movementSpeed;
-                                            p1.moving = true;
-                                        }
-                                        else if(p1.x - p1.characterinfo.w/2 - movementSpeed < p2.x + p2.characterinfo.w/2 - 20){
-                                            if(!c2.movedown){
-                                                handlePush(p1,p2,"left",movementSpeed,"collide");
-                                            }
-                                        }
-                                    } else if(p1.x - movementSpeed < p1.characterinfo.w/2 + 20){
-                                        p1.x = p1.characterinfo.w/2 + 20;
+                                if(p1.x - movementSpeed >= p1.characterinfo.w/2 + 20){
+                                    if(p1.x < p2.x){
+                                        p1.x -= movementSpeed;
+                                        p1.moving = true;
+                                    } 
+                                    else if(p1.x - p1.characterinfo.w/2 - movementSpeed >= p2.x + p2.characterinfo.w/2 - 20){
+                                        p1.x -= movementSpeed;
                                         p1.moving = true;
                                     }
+                                    else if(p1.x - p1.characterinfo.w/2 - movementSpeed < p2.x + p2.characterinfo.w/2 - 20){
+                                        if(!c2.movedown){
+                                            handlePush(p1,p2,"left",movementSpeed,"collide");
+                                        }
+                                    }
+                                } else if(p1.x - movementSpeed < p1.characterinfo.w/2 + 20){
+                                    p1.x = p1.characterinfo.w/2 + 20;
+                                    p1.moving = true;
                                 }
                             }
                         }
@@ -436,25 +434,23 @@ function handleCommand(){
                     if(!p1.jump){
                         if(!c1.movedown){
                             if(!c1.hit){
-                                if(!p1.attack.block){
-                                    if(p1.x + movementSpeed <= (options.mapX) - (p1.characterinfo.w/2) - 20){
-                                        if(p1.x > p2.x){
-                                            p1.x += movementSpeed;
-                                            p1.moving = true;
-                                        } 
-                                        else if(p1.x + p1.characterinfo.w/2 + movementSpeed <= p2.x - p2.characterinfo.w/2 + 20){
-                                            p1.x += movementSpeed;
-                                            p1.moving = true;
-                                        } 
-                                        else if(p1.x + p1.characterinfo.w/2 + movementSpeed > p2.x - p2.characterinfo.w/2 + 20){
-                                            if(!c2.movedown){
-                                                handlePush(p1,p2,"right",movementSpeed,"collide");
-                                            }
-                                        }                    
-                                    } else if(p1.x + movementSpeed > (options.mapX) - (p1.characterinfo.w / 2) - 20){
-                                        p1.x = (options.mapX) - (p1.characterinfo.w / 2) - 20;
+                                if(p1.x + movementSpeed <= (options.mapX) - (p1.characterinfo.w/2) - 20){
+                                    if(p1.x > p2.x){
+                                        p1.x += movementSpeed;
                                         p1.moving = true;
-                                    }
+                                    } 
+                                    else if(p1.x + p1.characterinfo.w/2 + movementSpeed <= p2.x - p2.characterinfo.w/2 + 20){
+                                        p1.x += movementSpeed;
+                                        p1.moving = true;
+                                    } 
+                                    else if(p1.x + p1.characterinfo.w/2 + movementSpeed > p2.x - p2.characterinfo.w/2 + 20){
+                                        if(!c2.movedown){
+                                            handlePush(p1,p2,"right",movementSpeed,"collide");
+                                        }
+                                    }                    
+                                } else if(p1.x + movementSpeed > (options.mapX) - (p1.characterinfo.w / 2) - 20){
+                                    p1.x = (options.mapX) - (p1.characterinfo.w / 2) - 20;
+                                    p1.moving = true;
                                 }
                             }
                         }
@@ -492,44 +488,41 @@ function handleCommand(){
                         }
                     }
                 }
-
-                if(c1.dashL){
-                    if(!p1.jump){
-                        if(!c1.movedown && !c1.left && !c1.right){
-                            if(!c1.hit){
-                                if(!p1.attack.block){
-                                    if(!p1.characterinfo.dash.active){
-                                        p1.characterinfo.dash.active = true;
-                                        p1.characterinfo.dash.direction = "left";
-                                        p1.characterinfo.dash.endPos = p1.x - p1.characterinfo.dash.distance;
-                                    }
-                                }
-                            }
+            }
+            
+            if(c1.dashL){
+                if(!p1.jump && !p1.crouch && !p1.moving){
+                    if(!p1.attack.endlag.hitexecuted){
+                        if(!p1.characterinfo.dash.active){
+                            p1.characterinfo.dash.active = true;
+                            p1.characterinfo.dash.direction = "left";
+                            p1.characterinfo.dash.endPos = p1.x - p1.characterinfo.dash.distance;
                         }
+                    } else if(p1.attack.endlag.hitexecuted){
+                            p1.attack.buffer.dashL = true;
                     }
                 }
-
-                    if(c1.dashR){
-                        if(!p1.jump){
-                            if(!c1.movedown && !c1.left && !c1.right){
-                                if(!c1.hit){
-                                    if(!p1.attack.block){
-                                        if(!p1.characterinfo.dash.active){
-                                            p1.characterinfo.dash.active = true;
-                                            p1.characterinfo.dash.direction = "right";
-                                            p1.characterinfo.dash.endPos = p1.x + p1.characterinfo.dash.distance;
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
             }
+
+            if(c1.dashR){
+                if(!p1.jump && !p1.crouch && !p1.moving){
+                    if(!p1.attack.endlag.hitexecuted){
+                        if(!p1.characterinfo.dash.active){
+                            p1.characterinfo.dash.active = true;
+                            p1.characterinfo.dash.direction = "right";
+                            p1.characterinfo.dash.endPos = p1.x + p1.characterinfo.dash.distance;
+                        }
+                    } else if(p1.attack.endlag.hitexecuted){
+                            p1.attack.buffer.dashR = true;  
+                    }
+                }
+            }
+            
             //1 = blue, -1 = red
             var vz = (p1.x > p2.x)? -1 : 1;            
             
             //JAB COMBO - TRANSITION FROM JAB, JAB, KICK
-            if(!p1.attack.endlag.hitexecuted && !p1.attack.buffer.special1 && !p1.attack.buffer.special2 && !p1.attack.buffer.hyper){
+            if(!p1.attack.endlag.hitexecuted && !p1.attack.buffer.dashL && !p1.attack.buffer.dashR && !p1.attack.buffer.special1 && !p1.attack.buffer.special2 && !p1.attack.buffer.hyper){
                 if(c1.hit && !c1.right && !c1.left && !c1.moveup && !c1.movedown && !p1.jump){
                     //JAB1
                     if(!p1.attack.neutralcombo.jab1){
@@ -593,15 +586,13 @@ function handleCommand(){
             }            
 
             if(vz === 1){
-                if(!p1.attack.endlag.hitexecuted && !p1.attack.buffer.special1 && !p1.attack.buffer.special2 && !p1.attack.buffer.hyper){
+                if(!p1.attack.endlag.hitexecuted && !p1.attack.buffer.dashL && !p1.attack.buffer.dashR && !p1.attack.buffer.special1 && !p1.attack.buffer.special2 && !p1.attack.buffer.hyper){
                     if(c1.hit && c1.right && !c1.left && !c1.moveup && !c1.movedown && !p1.jump){
                         p1.attack.forwardhit = true;
                         p1.attack.startup.start = true;
                         p1.attack.startup.timer = new Date();
                         p1.attack.startup.move = "forwardhit";
                         p1.moving = false;
-                        
-                        p1.characterinfo.w += p1.characterinfo.w/2;
                         
                         p1.attack.endlag.hitexecuted = true;
                         p1.attack.endlag.timer = new Date();
@@ -610,7 +601,7 @@ function handleCommand(){
                 } else {
                     p1.attack.forwardhit = false;
                 }
-                if(!p1.attack.endlag.hitexecuted && !p1.attack.buffer.special1 && !p1.attack.buffer.special2 && !p1.attack.buffer.hyper){
+                if(!p1.attack.endlag.hitexecuted && !p1.attack.buffer.dashL && !p1.attack.buffer.dashR && !p1.attack.buffer.special1 && !p1.attack.buffer.special2 && !p1.attack.buffer.hyper){
                     if(c1.hit && c1.left && !c1.right && !c1.moveup && !c1.movedown && !p1.jump){
                         if(!p1.attack.projectile.exist){
                             p1.attack.backwardhit = true;
@@ -627,15 +618,13 @@ function handleCommand(){
                 }
                 
             } else if(vz === -1){
-                if(!p1.attack.endlag.hitexecuted && !p1.attack.buffer.special1 && !p1.attack.buffer.special2 && !p1.attack.buffer.hyper){    
+                if(!p1.attack.endlag.hitexecuted && !p1.attack.buffer.dashL && !p1.attack.buffer.dashR && !p1.attack.buffer.special1 && !p1.attack.buffer.special2 && !p1.attack.buffer.hyper){    
                     if(c1.hit && c1.left && !c1.right && !c1.moveup && !c1.movedown && !p1.jump){
                         p1.attack.forwardhit = true;
                         p1.attack.startup.start = true;
                         p1.attack.startup.timer = new Date();
                         p1.attack.startup.move = "forwardhit";
                         p1.moving = false;
-                        
-                        p1.characterinfo.w += p1.characterinfo.w/2;
                         
                         p1.attack.endlag.hitexecuted = true;
                         p1.attack.endlag.timer = new Date();
@@ -644,7 +633,7 @@ function handleCommand(){
                 } else {
                     p1.attack.forwardhit = false;
                 }
-                if(!p1.attack.endlag.hitexecuted && !p1.attack.buffer.special1 && !p1.attack.buffer.special2 && !p1.attack.buffer.hyper){
+                if(!p1.attack.endlag.hitexecuted && !p1.attack.buffer.dashL && !p1.attack.buffer.dashR && !p1.attack.buffer.special1 && !p1.attack.buffer.special2 && !p1.attack.buffer.hyper){
                     if(c1.hit && c1.right && !c1.left && !c1.moveup && !c1.movedown && !p1.jump){
                         if(!p1.attack.projectile.exist){
                             p1.attack.backwardhit = true;
@@ -661,7 +650,7 @@ function handleCommand(){
                 }
             }         
             
-            if(!p1.attack.endlag.hitexecuted && !p1.attack.buffer.special1 && !p1.attack.buffer.special2 && !p1.attack.buffer.hyper){
+            if(!p1.attack.endlag.hitexecuted && !p1.attack.buffer.dashL && !p1.attack.buffer.dashR && !p1.attack.buffer.special1 && !p1.attack.buffer.special2 && !p1.attack.buffer.hyper){
                 if(c1.hit && p1.jump && !c1.movedown){
                     p1.attack.airhit = true;
                     p1.attack.startup.start = true;
@@ -677,7 +666,7 @@ function handleCommand(){
                 p1.attack.airhit = false;
             }
             
-            if(!p1.attack.endlag.hitexecuted && !p1.attack.buffer.special1 && !p1.attack.buffer.special2 && !p1.attack.buffer.hyper){
+            if(!p1.attack.endlag.hitexecuted && !p1.attack.buffer.dashL && !p1.attack.buffer.dashR && !p1.attack.buffer.special1 && !p1.attack.buffer.special2 && !p1.attack.buffer.hyper){
                 if(c1.hit && p1.crouch && !c1.moveup){
                     p1.attack.crouchhit = true;
                     p1.attack.startup.start = true;
@@ -693,7 +682,7 @@ function handleCommand(){
             }
             
 //TODO
-            if(c1.special1 && !p1.jump){
+            if(c1.special1 && !p1.jump && !p1.crouch && !p1.moving){
                 if(p1.characterinfo.hypermeter >= 20){
                     if(!p1.attack.endlag.hitexecuted){
                         p1.attack.special1 = true;
@@ -702,19 +691,22 @@ function handleCommand(){
                         p1.attack.startup.timer = new Date();
                         p1.attack.startup.move = "special1";
                         p1.attack.buffer.special1 = false;
+                        p1.attack.buffer.needed = false;
                         
                         p1.attack.endlag.hitexecuted = true;
                         p1.attack.endlag.timer = new Date();
                         p1.attack.endlag.duration = p1.action.special1.endlag;
                     } else if(p1.attack.endlag.hitexecuted){
-                        p1.attack.buffer.special1 = true;
+                        if(p1.attack.buffer.needed){
+                            p1.attack.buffer.special1 = true;
+                        }  
                     }
                 }
             } else {
                 p1.attack.special1 = false;
             }
             
-            if(c1.special2 && !p1.jump){
+            if(c1.special2 && !p1.jump && !p1.crouch && !p1.moving){
                 if(p1.characterinfo.hypermeter >= 20){
                     if(!p1.attack.endlag.hitexecuted){
                         p1.attack.special2 = true;
@@ -723,31 +715,37 @@ function handleCommand(){
                         p1.attack.startup.timer = new Date();
                         p1.attack.startup.move = "special2";
                         p1.attack.buffer.special2 = false;
+                        p1.attack.buffer.needed = false;
                         
                         p1.attack.endlag.hitexecuted = true;
                         p1.attack.endlag.timer = new Date();
                         p1.attack.endlag.duration = p1.action.special2.endlag;
                     } else if(p1.attack.endlag.hitexecuted){
-                        p1.attack.buffer.special2 = true;
+                        if(p1.attack.buffer.needed){
+                            p1.attack.buffer.special2 = true;
+                        } 
                     }
                 }
             } else {
                 p1.attack.special2 = false;
             }
             
-            if(c1.hyper){
+            if(c1.hyper && !p1.crouch && !p1.moving){
                 if(p1.characterinfo.hypermeter >= 60){
                     if(!p1.attack.endlag.hitexecuted){
                         p1.attack.hyper = true;
                         p1.characterinfo.hypermeter -= 60;
                         handleProjectile.create("hyper", p1,vz,p1.action.hyper.distance);
                         p1.attack.buffer.hyper = false;
+                        p1.attack.buffer.needed = false;
                         
                         p1.attack.endlag.hitexecuted = true;
                         p1.attack.endlag.timer = new Date();
                         p1.attack.endlag.duration = p1.action.hyper.endlag;
                     } else if(p1.attack.endlag.hitexecuted){
-                        p1.attack.buffer.hyper = true;
+                        if(p1.attack.buffer.needed){
+                            p1.attack.buffer.hyper = true;
+                        } 
                     }
                 }
             } else {
@@ -765,7 +763,29 @@ function handleCommand(){
     }
 }
 
-function checkBuffer(p1){
+function checkBuffer(p1,vz){
+    if(p1.attack.buffer.dashL){
+        if(!p1.attack.endlag.hitexecuted){
+            if(!p1.characterinfo.dash.active){
+                p1.characterinfo.dash.active = true;
+                p1.characterinfo.dash.direction = "left";
+                p1.characterinfo.dash.endPos = p1.x - p1.characterinfo.dash.distance;
+                p1.attack.buffer.dashL = false;
+            }
+        }
+    }
+    
+    if(p1.attack.buffer.dashR){
+        if(!p1.attack.endlag.hitexecuted){
+            if(!p1.characterinfo.dash.active){
+                p1.characterinfo.dash.active = true;
+                p1.characterinfo.dash.direction = "right";
+                p1.characterinfo.dash.endPos = p1.x + p1.characterinfo.dash.distance;
+                p1.attack.buffer.dashR = false;
+            }
+        }
+    }
+    
     if(p1.attack.buffer.special1){
         if(!p1.attack.endlag.hitexecuted){
             p1.attack.special1 = true;
@@ -885,9 +905,6 @@ function handleStartup(p1,p2,vz){
         var move = p1.attack.startup.move;
         if(curTime.getTime() - p1.attack.startup.timer.getTime() > p1.action[move].startup){
             handleHitbox(p1.attack.startup.move,p1,p2,vz);
-            if(move.localeCompare("forwardhit")===0){
-                p1.characterinfo.w -= p1.characterinfo.w/3;
-            }
             p1.attack.startup.start = false;
         }
     }
@@ -898,6 +915,7 @@ function handleEndlag(player){
         var curTime = new Date();
         if(curTime.getTime() - player.attack.endlag.timer.getTime() > player.attack.endlag.duration){
             player.attack.endlag.hitexecuted = false;
+            player.attack.buffer.needed = true;
         }
     }
 }
@@ -1254,7 +1272,7 @@ function handleHitbox(action,p1,p2,vz){
             }
             break;
             case "forwardhit":
-                var p1hitboxX = p1.x + vz*(p1.characterinfo.w - p1.characterinfo.w/3)*p1.action.forwardhit.range;
+                var p1hitboxX = p1.x + vz*p1.characterinfo.w*p1.action.forwardhit.range;
                 var p1hitboxYBelow = p1.y - p1.characterinfo.h + p1.characterinfo.h*p1.action.forwardhit.botY;
                 var p1hitboxYAbove = p1.y - p1.characterinfo.h + p1.characterinfo.h*p1.action.forwardhit.topY;
 

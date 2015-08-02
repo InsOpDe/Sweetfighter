@@ -85,12 +85,12 @@ var keyboard = {
             
             if (ev.which == 32) {
                 keyboard.state["hit"] = false;
-                
+
             }
             
             if (ev.which == 13) {
                 keyboard.state["kick"] = false;
-                
+
             }
             
             if (ev.which == 81) {
@@ -117,7 +117,7 @@ var keyboard = {
 
         });
 
-    },
+    }
 };
 
 
