@@ -2145,7 +2145,8 @@ function assignToLobby(socketId) {
                 nameRed:nameRed,
                 eloRed:eloRed,
                 nameBlue:nameBlue,
-                eloBlue: eloBlue
+                eloBlue: eloBlue,
+                map: player[socket.id].map
             };
             
             var characterRed = lobby[lC].red;

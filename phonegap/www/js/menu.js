@@ -117,12 +117,18 @@ var menu = {
         $('#selectscene div').empty();
         $('#selectcharacter').hide();
         $('#selectscene').show();
-        $('#selectscene div')
+        $('#selectscene>div')
                 .append('<div id="desert" style="' +
                     'height:' + $('#selectscene div').height() + 'px;'+
                     'width:' + $('#selectscene div').height() + 'px;'+
-                    '"></div>')
+                    '"></div>');
+        $('#selectscene>div')
+                .append('<div id="jungle" style="' +
+                'height:' + $('#selectscene div').height() + 'px;'+
+                'width:' + $('#selectscene div').height() + 'px;'+
+                '"></div>');
         $('#desert').bind('click tap',menu.startGame);
+        $('#jungle').bind('click tap',menu.startGame);
 
     },
 
