@@ -1,5 +1,5 @@
 function initMobile() {
-    alert("initMobile");
+//    alert("initMobile");
     
     window.onerror = function(message, url, lineNumber) {  
         alert(message + " " + url + " " + lineNumber);
@@ -13,7 +13,7 @@ function initMobile() {
 }
 
 function onDeviceReady(){
-    alert("onDeviceReady");
+//    alert("onDeviceReady");
 //    multiplayer.socket.emit('chat', { name: "mobile device", text: "onDeviceReady" });
     //if device pauses/gets in background/or closes
     document.addEventListener("pause", function(){

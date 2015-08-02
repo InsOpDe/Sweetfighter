@@ -106,6 +106,15 @@ a {
   bottom: 0;
   background: url("../img/menu/menu_leer.png");
   background-size: cover; }
+  #menu #login div {
+    padding: 20px; }
+  #menu #login #loginbutton {
+    padding: 5px;
+    background: #99f;
+    border-radius: 2px;
+    width: 50%;
+    margin: 20px auto 0px;
+    text-align: center; }
   #menu #fight {
     position: absolute;
     left: -10em;
@@ -113,17 +122,41 @@ a {
     width: 56em;
     height: 30em;
     background-image: url("../img/menu/boxring.png");
-    background-size: cover;
+    background-size: contain;
+    background-repeat: no-repeat;
+    animation-name: fight;
+    cursor: pointer; }
+  #menu #ranking {
+    position: absolute;
+    right: 5em;
+    top: 10%;
+    width: 20em;
+    height: 20em;
+    background-image: url("../img/menu/bild.png");
+    background-size: contain;
+    background-repeat: no-repeat;
     animation-name: fight;
     cursor: pointer; }
   #menu #selectcharacter {
     background: url("../img/menu/selectcharacter.png") center 30% no-repeat; }
   #menu #selectscene {
     background: url("../img/menu/selectscene.png") center 30% no-repeat; }
+  #menu #gameover div {
+    margin-top: 2em;
+    height: auto !important;
+    padding: 20px;
+    text-align: center;
+    font-size: large; }
   #menu #waiting {
     background: url("../img/menu/waiting.png") center 30% no-repeat; }
+  #menu #rankingtable {
+    width: 80%; }
+    #menu #rankingtable table {
+      width: 100%; }
+      #menu #rankingtable table tr td {
+        text-align: center; }
   #menu #shadow {
-    display: none;
+    /*display:none;*/
     position: absolute;
     left: 0;
     top: 0;
@@ -156,26 +189,73 @@ a {
   left: 0 !important;
   right: 0 !important; }
 
-.absolute, #menu #selectcharacter, #menu #selectscene, #menu #waiting, #menu #gamescreen {
+.center, #menu #login, #menu #rankingtable {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  -webkit-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%); }
+
+.absolute, #menu #selectcharacter, #menu #selectscene, #menu #gameover, #menu #waiting, #menu #gamescreen {
   position: absolute;
   left: 0;
   top: 0;
   right: 0;
   bottom: 0; }
 
-.select, #menu #selectcharacter div, #menu #selectscene div {
+.select, #menu #selectcharacter > div, #menu #selectscene > div, #menu #gameover div {
   position: absolute;
   top: 35%;
   width: 50%;
+  margin-top: 10px;
   height: 30%;
-  /*background: #f00;*/
   margin-left: auto;
   margin-right: auto;
   left: 0 !important;
   right: 0 !important; }
-  .select div, #menu #selectcharacter div div, #menu #selectscene div div {
+  .select div, #menu #selectcharacter > div div, #menu #selectscene > div div, #menu #gameover div div {
+    margin: 0 10px 0;
     float: left;
     background-size: cover;
     cursor: pointer; }
+
+.bg, #menu #login, #menu #gameover div, #menu #rankingtable {
+  color: white;
+  background: rgba(0, 0, 0, 0.5);
+  border: 2px #00f solid;
+  border-radius: 5px; }
+
+#back {
+  position: fixed;
+  top: 1em;
+  right: 1em;
+  width: 5em;
+  height: 5em;
+  background: url("../img/menu/back.png") center 30% no-repeat;
+  background-size: contain; }
+
+.youwin {
+  background: url("../img/menu/youwin.png") center 30% no-repeat !important; }
+
+.youlose {
+  background: url("../img/menu/youlose.png") center 30% no-repeat !important; }
+
+#menumusicbutton {
+  position: fixed;
+  bottom: 1em;
+  right: 1em;
+  width: 5em;
+  height: 5em;
+  background: url("../img/menu/music.png") no-repeat;
+  background-size: contain; }
+
+#muaythai {
+  background-image: url("../img/menu/muaythai.png"); }
+
+#frau {
+  background-image: url("../img/menu/frau.png"); }
+
+#desert {
+  background-image: url("../img/menu/desert.png"); }
 
 /*# sourceMappingURL=main.css.map */

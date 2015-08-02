@@ -11,7 +11,7 @@
             var serverIP = '';
             if (screen.width < 1000) { //muss noch n besserer weg gefunden werden
                 
-				serverIP = 'http://46.4.84.121:8887'//server2
+                serverIP = 'http://46.4.84.121:8887/'//server2
                 //serverIP = 'http://134.60.71.134/';   //server1
 //                serverIP = 'http://10.0.2.2:8887/'; //host
                 document.write('\x3Cscript src="'+serverIP+'socket.io/socket.io.js">\x3C/script>');
@@ -59,6 +59,7 @@
     <!--</audio>-->
 
         <div>
+            <div id ="touchContainer" style ="z-index:1000;"></div>
             
             <div id="menu">
                 
