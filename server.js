@@ -166,6 +166,7 @@ io.sockets.on('connection', function (socket) {
 
 
         console.log("Player "+player[socket.id].color+" disconnected ("+socket.id+") from Lobby " + player[socket.id].lobby);
+        lobby.splice(lobby.indexOf(player[socket.id].lobby),1);
         delete player[socket.id]
     });
 
@@ -279,9 +280,26 @@ function reCalculateElo(p1,p2) {
     } else {
         //hier springt der nie rein
         console.log("p2");
-        var EA = 1 / (1+Math.pow(10,(elo1-elo2)/400));
-        elo1 = elo1 + k*(1-(1-EA));
-        elo2 = elo2 + k*(0-EA);
+        //var EA = 1 / (1+Math.pow(10,(elo1-elo2)/400));
+        //elo1 = elo1 + k*(1-(1-EA));
+        //elo2 = elo2 + k*(0-EA);
+        if(elo1>=elo2){
+            console.log(">");
+            var EA = 1 / (1+Math.pow(10,(elo2-elo1)/400));
+            console.log(EA);
+
+            elo2 = elo2 + k*(1-(1-EA));
+            elo1 = elo1 + k*(0-EA);
+
+        } else {
+            console.log("<");
+            var EA = 1 / (1+Math.pow(10,(elo2-elo1)/400));
+            EA *= -1;
+            elo1 = elo1 + k*(1-(1-EA));
+            elo2 = elo2 + k*(0-EA);
+            //console.log(EA,1 / (1+Math.pow(10,(elo1-elo2)/400)));
+
+        }
     }
     p1.user.diff = Math.ceil(elo1) - p1.user.elo;
     p2.user.diff = Math.ceil(elo2) - p2.user.elo;
