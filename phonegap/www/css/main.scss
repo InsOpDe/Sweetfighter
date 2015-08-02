@@ -159,7 +159,8 @@ a {
         width: round(30*1.8597662771285475792988313856427)+em;
         height: 30em;
         background-image: url("../img/menu/boxring.png");
-        background-size:cover;
+        background-size:contain;
+        background-repeat: no-repeat;
         animation-name: fight;
         cursor: pointer;
     }
@@ -171,7 +172,8 @@ a {
         width: 20em;
         height: 20em;
         background-image: url("../img/menu/bild.png");
-        background-size:cover;
+        background-size:contain;
+        background-repeat: no-repeat;
         animation-name: fight;
         cursor: pointer;
     }
