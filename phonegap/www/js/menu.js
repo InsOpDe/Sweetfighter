@@ -116,6 +116,9 @@ var menu = {
             $('#menumusicbutton').show();
             removeTouchInterface();
             removeShake();
+            $('#menumusic').trigger("play");
+            musicPlaying = true;
+            if(app)media.play();
         },3000);
 
     },

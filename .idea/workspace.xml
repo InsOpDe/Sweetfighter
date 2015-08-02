@@ -2,94 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="9f154007-a0da-4088-8b9b-04a4b67cd507" name="Default" comment="Merge remote-tracking branch 'origin/jonnyWS'&#10;&#10;Conflicts:&#10;&#9;node_modules/express/node_modules/basic-auth/package.json&#10;&#9;node_modules/express/node_modules/commander/package.json&#10;&#9;node_modules/express/node_modules/connect/node_modules/body-parser/node_modules/iconv-lite/package.json&#10;&#9;node_modules/express/node_modules/connect/node_modules/body-parser/node_modules/raw-body/package.json&#10;&#9;node_modules/express/node_modules/connect/node_modules/body-parser/package.json&#10;&#9;node_modules/express/node_modules/connect/node_modules/compression/node_modules/accepts/node_modules/mime-types/package.json&#10;&#9;node_modules/express/node_modules/connect/node_modules/compression/node_modules/accepts/package.json&#10;&#9;node_modules/express/node_modules/connect/node_modules/compression/node_modules/compressible/node_modules/mime-db/package.json&#10;&#9;node_modules/express/node_modules/connect/node_modules/compression/node_modules/compressible/package.json&#10;&#9;node_modules/express/node_modules/connect/node_modules/compression/package.json&#10;&#9;node_modules/express/node_modules/connect/node_modules/csurf/node_modules/csrf/node_modules/base64-url/package.json&#10;&#9;node_modules/express/node_modules/connect/node_modules/csurf/node_modules/csrf/node_modules/scmp/package.json&#10;&#9;node_modules/express/node_modules/connect/node_modules/errorhandler/node_modules/accepts/node_modules/mime-types/package.json&#10;&#9;node_modules/express/node_modules/connect/node_modules/errorhandler/node_modules/accepts/package.json&#10;&#9;node_modules/express/node_modules/connect/node_modules/errorhandler/package.json&#10;&#9;node_modules/express/node_modules/connect/node_modules/express-session/node_modules/uid-safe/node_modules/base64-url/package.json&#10;&#9;node_modules/express/node_modules/connect/node_modules/method-override/package.json&#10;&#9;node_modules/express/node_modules/connect/node_modules/morgan/package.json&#10;&#9;node_modules/express/node_modules/connect/node_modules/multiparty/package.json&#10;&#9;node_modules/express/node_modules/connect/node_modules/pause/package.json&#10;&#9;node_modules/express/node_modules/connect/node_modules/qs/package.json&#10;&#9;node_modules/express/node_modules/connect/node_modules/serve-index/node_modules/accepts/package.json&#10;&#9;node_modules/express/node_modules/connect/node_modules/serve-index/package.json&#10;&#9;node_modules/express/node_modules/connect/node_modules/type-is/HISTORY.md&#10;&#9;node_modules/express/node_modules/connect/node_modules/type-is/node_modules/mime-types/node_modules/mime-db/package.json&#10;&#9;node_modules/express/node_modules/connect/node_modules/type-is/node_modules/mime-types/package.json&#10;&#9;node_modules/express/node_modules/connect/node_modules/type-is/package.json&#10;&#9;node_modules/express/node_modules/connect/node_modules/vhost/HISTORY.md&#10;&#9;node_modules/express/node_modules/connect/node_modules/vhost/README.md&#10;&#9;node_modules/express/node_modules/connect/node_modules/vhost/index.js&#10;&#9;node_modules/express/node_modules/connect/node_modules/vhost/package.json&#10;&#9;node_modules/express/node_modules/connect/package.json&#10;&#9;node_modules/express/node_modules/mkdirp/node_modules/minimist/package.json&#10;&#9;node_modules/express/node_modules/mkdirp/package.json&#10;&#9;node_modules/express/node_modules/send/node_modules/mime/package.json&#10;&#9;node_modules/express/node_modules/vary/package.json&#10;&#9;node_modules/express/package.json&#10;&#9;node_modules/socket.io/node_modules/debug/package.json&#10;&#9;node_modules/socket.io/node_modules/engine.io/node_modules/ws/package.json&#10;&#9;node_modules/socket.io/node_modules/engine.io/package.json&#10;&#9;node_modules/socket.io/node_modules/socket.io-client/node_modules/engine.io-client/package.json&#10;&#9;node_modules/socket.io/node_modules/socket.io-client/package.json&#10;&#9;node_modules/socket.io/node_modules/socket.io-parser/node_modules/benchmark/package.json&#10;&#9;node_modules/socket.io/package.json&#10;">
-      <change type="DELETED" beforePath="C:\Users\Marcel-Privat\streetfighter\phonegap\platforms\android\ant-build\res\drawable-xxhdpi\icon.png" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Marcel-Privat\streetfighter\phonegap\platforms\android\assets\www\Pyramiden\Ebene1.png" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Marcel-Privat\streetfighter\phonegap\platforms\android\assets\www\Pyramiden\Ebene2.png" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Marcel-Privat\streetfighter\phonegap\platforms\android\assets\www\Pyramiden\Ebene3.png" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Marcel-Privat\streetfighter\phonegap\platforms\android\assets\www\Pyramiden\Ebene4.png" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Marcel-Privat\streetfighter\phonegap\platforms\android\assets\www\js\index.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Marcel-Privat\streetfighter\phonegap\platforms\android\assets\www\js\loadingscreen.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Marcel-Privat\streetfighter\phonegap\platforms\android\res\drawable-xxhdpi\icon.png" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/phonegap/platforms/android/CordovaLib/ant-build/classes/com/squareup/okhttp/Connection.class" afterPath="$PROJECT_DIR$/phonegap/platforms/android/CordovaLib/ant-build/classes/com/squareup/okhttp/Connection.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/phonegap/platforms/android/CordovaLib/ant-build/classes/org/apache/cordova/CordovaResourceApi.class" afterPath="$PROJECT_DIR$/phonegap/platforms/android/CordovaLib/ant-build/classes/org/apache/cordova/CordovaResourceApi.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/phonegap/platforms/android/CordovaLib/ant-build/classes/org/apache/cordova/CordovaWebViewClient$1.class" afterPath="$PROJECT_DIR$/phonegap/platforms/android/CordovaLib/ant-build/classes/org/apache/cordova/CordovaWebViewClient$1.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/phonegap/platforms/android/CordovaLib/ant-build/classes/com/squareup/okhttp/internal/DiskLruCache$Editor.class" afterPath="$PROJECT_DIR$/phonegap/platforms/android/CordovaLib/ant-build/classes/com/squareup/okhttp/internal/DiskLruCache$Editor.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/phonegap/platforms/android/CordovaLib/ant-build/classes/com/squareup/okhttp/Failure$1.class" afterPath="$PROJECT_DIR$/phonegap/platforms/android/CordovaLib/ant-build/classes/com/squareup/okhttp/Failure$1.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/phonegap/platforms/android/CordovaLib/ant-build/classes/com/squareup/okhttp/Failure$Builder.class" afterPath="$PROJECT_DIR$/phonegap/platforms/android/CordovaLib/ant-build/classes/com/squareup/okhttp/Failure$Builder.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/phonegap/platforms/android/CordovaLib/ant-build/classes/com/squareup/okhttp/Failure.class" afterPath="$PROJECT_DIR$/phonegap/platforms/android/CordovaLib/ant-build/classes/com/squareup/okhttp/Failure.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/phonegap/platforms/android/CordovaLib/ant-build/classes/com/squareup/okhttp/internal/http/HttpDate.class" afterPath="$PROJECT_DIR$/phonegap/platforms/android/CordovaLib/ant-build/classes/com/squareup/okhttp/internal/http/HttpDate.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/phonegap/platforms/android/CordovaLib/ant-build/classes/com/squareup/okhttp/HttpResponseCache$3.class" afterPath="$PROJECT_DIR$/phonegap/platforms/android/CordovaLib/ant-build/classes/com/squareup/okhttp/HttpResponseCache$3.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/phonegap/platforms/android/CordovaLib/ant-build/classes/com/squareup/okhttp/HttpResponseCache$CacheRequestImpl.class" afterPath="$PROJECT_DIR$/phonegap/platforms/android/CordovaLib/ant-build/classes/com/squareup/okhttp/HttpResponseCache$CacheRequestImpl.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/phonegap/platforms/android/CordovaLib/ant-build/classes/com/squareup/okhttp/HttpResponseCache$Entry.class" afterPath="$PROJECT_DIR$/phonegap/platforms/android/CordovaLib/ant-build/classes/com/squareup/okhttp/HttpResponseCache$Entry.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/phonegap/platforms/android/CordovaLib/ant-build/classes/com/squareup/okhttp/HttpResponseCache.class" afterPath="$PROJECT_DIR$/phonegap/platforms/android/CordovaLib/ant-build/classes/com/squareup/okhttp/HttpResponseCache.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/phonegap/platforms/android/CordovaLib/ant-build/classes/com/squareup/okhttp/internal/http/HttpTransport$1.class" afterPath="$PROJECT_DIR$/phonegap/platforms/android/CordovaLib/ant-build/classes/com/squareup/okhttp/internal/http/HttpTransport$1.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/phonegap/platforms/android/CordovaLib/ant-build/classes/com/squareup/okhttp/internal/http/HttpTransport$ChunkedOutputStream.class" afterPath="$PROJECT_DIR$/phonegap/platforms/android/CordovaLib/ant-build/classes/com/squareup/okhttp/internal/http/HttpTransport$ChunkedOutputStream.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/phonegap/platforms/android/CordovaLib/ant-build/classes/com/squareup/okhttp/internal/http/HttpTransport$FixedLengthOutputStream.class" afterPath="$PROJECT_DIR$/phonegap/platforms/android/CordovaLib/ant-build/classes/com/squareup/okhttp/internal/http/HttpTransport$FixedLengthOutputStream.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/phonegap/platforms/android/CordovaLib/ant-build/classes/com/squareup/okhttp/internal/http/HttpTransport.class" afterPath="$PROJECT_DIR$/phonegap/platforms/android/CordovaLib/ant-build/classes/com/squareup/okhttp/internal/http/HttpTransport.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/phonegap/platforms/android/CordovaLib/ant-build/classes/com/squareup/okhttp/internal/http/HttpURLConnectionImpl.class" afterPath="$PROJECT_DIR$/phonegap/platforms/android/CordovaLib/ant-build/classes/com/squareup/okhttp/internal/http/HttpURLConnectionImpl.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/phonegap/platforms/android/CordovaLib/ant-build/classes/com/squareup/okhttp/internal/http/HttpsURLConnectionImpl$1.class" afterPath="$PROJECT_DIR$/phonegap/platforms/android/CordovaLib/ant-build/classes/com/squareup/okhttp/internal/http/HttpsURLConnectionImpl$1.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/phonegap/platforms/android/CordovaLib/ant-build/classes/com/squareup/okhttp/internal/http/HttpsURLConnectionImpl$HttpUrlConnectionDelegate.class" afterPath="$PROJECT_DIR$/phonegap/platforms/android/CordovaLib/ant-build/classes/com/squareup/okhttp/internal/http/HttpsURLConnectionImpl$HttpUrlConnectionDelegate.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/phonegap/platforms/android/CordovaLib/ant-build/classes/com/squareup/okhttp/internal/http/HttpsURLConnectionImpl.class" afterPath="$PROJECT_DIR$/phonegap/platforms/android/CordovaLib/ant-build/classes/com/squareup/okhttp/internal/http/HttpsURLConnectionImpl.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/phonegap/platforms/android/CordovaLib/ant-build/classes/com/squareup/okhttp/Job.class" afterPath="$PROJECT_DIR$/phonegap/platforms/android/CordovaLib/ant-build/classes/com/squareup/okhttp/Job.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/phonegap/platforms/android/CordovaLib/ant-build/classes/org/apache/cordova/NativeToJsMessageQueue$1.class" afterPath="$PROJECT_DIR$/phonegap/platforms/android/CordovaLib/ant-build/classes/org/apache/cordova/NativeToJsMessageQueue$1.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/phonegap/platforms/android/CordovaLib/ant-build/classes/org/apache/cordova/NativeToJsMessageQueue$BridgeMode.class" afterPath="$PROJECT_DIR$/phonegap/platforms/android/CordovaLib/ant-build/classes/org/apache/cordova/NativeToJsMessageQueue$BridgeMode.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/phonegap/platforms/android/CordovaLib/ant-build/classes/org/apache/cordova/NativeToJsMessageQueue$LoadUrlBridgeMode.class" afterPath="$PROJECT_DIR$/phonegap/platforms/android/CordovaLib/ant-build/classes/org/apache/cordova/NativeToJsMessageQueue$LoadUrlBridgeMode.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/phonegap/platforms/android/CordovaLib/ant-build/classes/org/apache/cordova/NativeToJsMessageQueue$OnlineEventsBridgeMode.class" afterPath="$PROJECT_DIR$/phonegap/platforms/android/CordovaLib/ant-build/classes/org/apache/cordova/NativeToJsMessageQueue$OnlineEventsBridgeMode.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/phonegap/platforms/android/CordovaLib/ant-build/classes/org/apache/cordova/NativeToJsMessageQueue$PollingBridgeMode.class" afterPath="$PROJECT_DIR$/phonegap/platforms/android/CordovaLib/ant-build/classes/org/apache/cordova/NativeToJsMessageQueue$PollingBridgeMode.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/phonegap/platforms/android/CordovaLib/ant-build/classes/org/apache/cordova/NativeToJsMessageQueue$PrivateApiBridgeMode.class" afterPath="$PROJECT_DIR$/phonegap/platforms/android/CordovaLib/ant-build/classes/org/apache/cordova/NativeToJsMessageQueue$PrivateApiBridgeMode.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/phonegap/platforms/android/CordovaLib/ant-build/classes/org/apache/cordova/NativeToJsMessageQueue.class" afterPath="$PROJECT_DIR$/phonegap/platforms/android/CordovaLib/ant-build/classes/org/apache/cordova/NativeToJsMessageQueue.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/phonegap/platforms/android/CordovaLib/ant-build/classes/com/squareup/okhttp/internal/Platform$1.class" afterPath="$PROJECT_DIR$/phonegap/platforms/android/CordovaLib/ant-build/classes/com/squareup/okhttp/internal/Platform$1.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/phonegap/platforms/android/CordovaLib/ant-build/classes/com/squareup/okhttp/internal/Platform$Android23.class" afterPath="$PROJECT_DIR$/phonegap/platforms/android/CordovaLib/ant-build/classes/com/squareup/okhttp/internal/Platform$Android23.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/phonegap/platforms/android/CordovaLib/ant-build/classes/com/squareup/okhttp/internal/Platform$Android41.class" afterPath="$PROJECT_DIR$/phonegap/platforms/android/CordovaLib/ant-build/classes/com/squareup/okhttp/internal/Platform$Android41.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/phonegap/platforms/android/CordovaLib/ant-build/classes/com/squareup/okhttp/internal/Platform.class" afterPath="$PROJECT_DIR$/phonegap/platforms/android/CordovaLib/ant-build/classes/com/squareup/okhttp/internal/Platform.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/phonegap/platforms/android/CordovaLib/ant-build/classes/com/squareup/okhttp/Request$1.class" afterPath="$PROJECT_DIR$/phonegap/platforms/android/CordovaLib/ant-build/classes/com/squareup/okhttp/Request$1.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/phonegap/platforms/android/CordovaLib/ant-build/classes/com/squareup/okhttp/Request$Builder.class" afterPath="$PROJECT_DIR$/phonegap/platforms/android/CordovaLib/ant-build/classes/com/squareup/okhttp/Request$Builder.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/phonegap/platforms/android/CordovaLib/ant-build/classes/com/squareup/okhttp/Request.class" afterPath="$PROJECT_DIR$/phonegap/platforms/android/CordovaLib/ant-build/classes/com/squareup/okhttp/Request.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/phonegap/platforms/android/CordovaLib/ant-build/classes/com/squareup/okhttp/internal/http/RequestHeaders.class" afterPath="$PROJECT_DIR$/phonegap/platforms/android/CordovaLib/ant-build/classes/com/squareup/okhttp/internal/http/RequestHeaders.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/phonegap/platforms/android/CordovaLib/ant-build/classes/com/squareup/okhttp/Response$1.class" afterPath="$PROJECT_DIR$/phonegap/platforms/android/CordovaLib/ant-build/classes/com/squareup/okhttp/Response$1.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/phonegap/platforms/android/CordovaLib/ant-build/classes/com/squareup/okhttp/Response$Builder.class" afterPath="$PROJECT_DIR$/phonegap/platforms/android/CordovaLib/ant-build/classes/com/squareup/okhttp/Response$Builder.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/phonegap/platforms/android/CordovaLib/ant-build/classes/com/squareup/okhttp/Response.class" afterPath="$PROJECT_DIR$/phonegap/platforms/android/CordovaLib/ant-build/classes/com/squareup/okhttp/Response.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/phonegap/platforms/android/CordovaLib/ant-build/classes/com/squareup/okhttp/internal/http/ResponseHeaders.class" afterPath="$PROJECT_DIR$/phonegap/platforms/android/CordovaLib/ant-build/classes/com/squareup/okhttp/internal/http/ResponseHeaders.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/phonegap/platforms/android/CordovaLib/ant-build/classes/com/squareup/okhttp/internal/spdy/SpdyConnection$1.class" afterPath="$PROJECT_DIR$/phonegap/platforms/android/CordovaLib/ant-build/classes/com/squareup/okhttp/internal/spdy/SpdyConnection$1.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/phonegap/platforms/android/CordovaLib/ant-build/classes/com/squareup/okhttp/internal/spdy/SpdyConnection$2.class" afterPath="$PROJECT_DIR$/phonegap/platforms/android/CordovaLib/ant-build/classes/com/squareup/okhttp/internal/spdy/SpdyConnection$2.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/phonegap/platforms/android/CordovaLib/ant-build/classes/com/squareup/okhttp/internal/spdy/SpdyConnection$3.class" afterPath="$PROJECT_DIR$/phonegap/platforms/android/CordovaLib/ant-build/classes/com/squareup/okhttp/internal/spdy/SpdyConnection$3.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/phonegap/platforms/android/CordovaLib/ant-build/classes/com/squareup/okhttp/internal/spdy/SpdyConnection$Reader.class" afterPath="$PROJECT_DIR$/phonegap/platforms/android/CordovaLib/ant-build/classes/com/squareup/okhttp/internal/spdy/SpdyConnection$Reader.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/phonegap/platforms/android/CordovaLib/ant-build/classes/com/squareup/okhttp/internal/spdy/SpdyStream$1.class" afterPath="$PROJECT_DIR$/phonegap/platforms/android/CordovaLib/ant-build/classes/com/squareup/okhttp/internal/spdy/SpdyStream$1.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/phonegap/platforms/android/CordovaLib/ant-build/classes/com/squareup/okhttp/internal/spdy/SpdyStream$SpdyDataInputStream.class" afterPath="$PROJECT_DIR$/phonegap/platforms/android/CordovaLib/ant-build/classes/com/squareup/okhttp/internal/spdy/SpdyStream$SpdyDataInputStream.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/phonegap/platforms/android/CordovaLib/ant-build/classes/com/squareup/okhttp/internal/spdy/SpdyStream$SpdyDataOutputStream.class" afterPath="$PROJECT_DIR$/phonegap/platforms/android/CordovaLib/ant-build/classes/com/squareup/okhttp/internal/spdy/SpdyStream$SpdyDataOutputStream.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/phonegap/platforms/android/CordovaLib/ant-build/classes/com/squareup/okhttp/internal/spdy/SpdyStream.class" afterPath="$PROJECT_DIR$/phonegap/platforms/android/CordovaLib/ant-build/classes/com/squareup/okhttp/internal/spdy/SpdyStream.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/phonegap/platforms/android/CordovaLib/ant-build/classes/com/squareup/okhttp/internal/Util.class" afterPath="$PROJECT_DIR$/phonegap/platforms/android/CordovaLib/ant-build/classes/com/squareup/okhttp/internal/Util.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/phonegap/platforms/android/ant-build/dexedLibs/classes-109dc18af3352ad331dac782fc2f7905.jar" afterPath="$PROJECT_DIR$/phonegap/platforms/android/ant-build/dexedLibs/classes-109dc18af3352ad331dac782fc2f7905.jar" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/phonegap/platforms/android/ant-build/classes.dex" afterPath="$PROJECT_DIR$/phonegap/platforms/android/ant-build/classes.dex" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/phonegap/platforms/android/CordovaLib/ant-build/classes.jar" afterPath="$PROJECT_DIR$/phonegap/platforms/android/CordovaLib/ant-build/classes.jar" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/phonegap/platforms/android/ant-build/streetfighter-debug-unaligned.apk" afterPath="$PROJECT_DIR$/phonegap/platforms/android/ant-build/streetfighter-debug-unaligned.apk" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/phonegap/platforms/android/ant-build/streetfighter-debug.apk" afterPath="$PROJECT_DIR$/phonegap/platforms/android/ant-build/streetfighter-debug.apk" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/phonegap/platforms/android/ant-build/streetfighter.ap_" afterPath="$PROJECT_DIR$/phonegap/platforms/android/ant-build/streetfighter.ap_" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/phonegap/platforms/android/ant-build/AndroidManifest.cordova.xml" afterPath="$PROJECT_DIR$/phonegap/platforms/android/ant-build/AndroidManifest.cordova.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/phonegap/platforms/android/CordovaLib/ant-build/AndroidManifest.xml.d" afterPath="$PROJECT_DIR$/phonegap/platforms/android/CordovaLib/ant-build/AndroidManifest.xml.d" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/phonegap/platforms/android/ant-build/AndroidManifest.xml.d" afterPath="$PROJECT_DIR$/phonegap/platforms/android/ant-build/AndroidManifest.xml.d" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/phonegap/platforms/android/AndroidManifest.xml" afterPath="$PROJECT_DIR$/phonegap/platforms/android/AndroidManifest.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/phonegap/plugins/android.json" afterPath="$PROJECT_DIR$/phonegap/plugins/android.json" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/phonegap/platforms/android/CordovaLib/ant-build/build.prop" afterPath="$PROJECT_DIR$/phonegap/platforms/android/CordovaLib/ant-build/build.prop" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/phonegap/platforms/android/ant-build/build.prop" afterPath="$PROJECT_DIR$/phonegap/platforms/android/ant-build/build.prop" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/phonegap/platforms/android/ant-build/classes.dex.d" afterPath="$PROJECT_DIR$/phonegap/platforms/android/ant-build/classes.dex.d" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/phonegap/config.xml" afterPath="$PROJECT_DIR$/phonegap/config.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/phonegap/platforms/android/res/xml/config.xml" afterPath="$PROJECT_DIR$/phonegap/platforms/android/res/xml/config.xml" />
-      <change type="MODIFICATION" beforePath="C:\Users\Marcel-Privat\streetfighter\phonegap\platforms\android\assets\www\cordova_plugins.js" afterPath="C:\Users\Marcel-Privat\streetfighter\phonegap\platforms\android\assets\www\cordova_plugins.js" />
-      <change type="MODIFICATION" beforePath="C:\Users\Marcel-Privat\streetfighter\phonegap\platforms\android\assets\www\js\game.js" afterPath="C:\Users\Marcel-Privat\streetfighter\phonegap\platforms\android\assets\www\js\game.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/phonegap/www/js/game.js" afterPath="$PROJECT_DIR$/phonegap/www/js/game.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/phonegap/www/index.html" afterPath="$PROJECT_DIR$/phonegap/www/index.html" />
-      <change type="MODIFICATION" beforePath="C:\Users\Marcel-Privat\streetfighter\phonegap\platforms\android\assets\www\js\input.js" afterPath="C:\Users\Marcel-Privat\streetfighter\phonegap\platforms\android\assets\www\js\input.js" />
-      <change type="MODIFICATION" beforePath="C:\Users\Marcel-Privat\streetfighter\phonegap\platforms\android\assets\www\js\loader.js" afterPath="C:\Users\Marcel-Privat\streetfighter\phonegap\platforms\android\assets\www\js\loader.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/phonegap/www/js/loader.js" afterPath="$PROJECT_DIR$/phonegap/www/js/loader.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/phonegap/platforms/android/assets/www/css/main.css" afterPath="$PROJECT_DIR$/phonegap/platforms/android/assets/www/css/main.css" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/phonegap/www/js/menu.js" afterPath="$PROJECT_DIR$/phonegap/www/js/menu.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/phonegap/www/js/mobile.js" afterPath="$PROJECT_DIR$/phonegap/www/js/mobile.js" />
-      <change type="MODIFICATION" beforePath="C:\Users\Marcel-Privat\streetfighter\phonegap\platforms\android\assets\www\js\multiplayer.js" afterPath="C:\Users\Marcel-Privat\streetfighter\phonegap\platforms\android\assets\www\js\multiplayer.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/phonegap/platforms/android/ant-build/streetfighter-debug-unaligned.apk.d" afterPath="$PROJECT_DIR$/phonegap/platforms/android/ant-build/streetfighter-debug-unaligned.apk.d" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/phonegap/platforms/android/ant-build/streetfighter.ap_.d" afterPath="$PROJECT_DIR$/phonegap/platforms/android/ant-build/streetfighter.ap_.d" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/phonegap/platforms/android/res/values/strings.xml" afterPath="$PROJECT_DIR$/phonegap/platforms/android/res/values/strings.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <list id="9148195e-34ee-4c77-819a-7e88c73954d4" name="Failed commit: Default" comment="Merge remote-tracking branch 'origin/jonnyWS'&#10;&#10;Conflicts:&#10;&#9;server.js&#10;" />
     <ignored path="streetfighter.iws" />
@@ -139,11 +52,11 @@
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="menu.js" pinned="false" current-in-tab="false">
+          <file leaf-file-name="menu.js" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/phonegap/www/js/menu.js">
               <provider selected="true" editor-type-id="text-editor">
-                <state vertical-scroll-proportion="-13.4827585">
-                  <caret line="23" column="16" selection-start-line="23" selection-start-column="16" selection-end-line="23" selection-end-column="49" />
+                <state vertical-scroll-proportion="0.77029705">
+                  <caret line="120" column="32" selection-start-line="120" selection-start-column="32" selection-end-line="120" selection-end-column="32" />
                   <folding />
                 </state>
               </provider>
@@ -159,11 +72,11 @@
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="game.js" pinned="false" current-in-tab="true">
+          <file leaf-file-name="game.js" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/phonegap/www/js/game.js">
               <provider selected="true" editor-type-id="text-editor">
-                <state vertical-scroll-proportion="0.35346535">
-                  <caret line="46" column="51" selection-start-line="46" selection-start-column="51" selection-end-line="46" selection-end-column="51" />
+                <state vertical-scroll-proportion="-19.931034">
+                  <caret line="34" column="14" selection-start-line="34" selection-start-column="14" selection-end-line="34" selection-end-column="14" />
                   <folding />
                 </state>
               </provider>
@@ -251,11 +164,11 @@
         <option value="$PROJECT_DIR$/phonegap/www/js/input.js" />
         <option value="$PROJECT_DIR$/server.js" />
         <option value="$PROJECT_DIR$/phonegap/www/index.html" />
-        <option value="$PROJECT_DIR$/phonegap/www/js/menu.js" />
         <option value="$PROJECT_DIR$/phonegap/www/js/mobile.js" />
         <option value="$PROJECT_DIR$/phonegap/www/js/loader.js" />
         <option value="$PROJECT_DIR$/phonegap/www/js/game.js" />
         <option value="$PROJECT_DIR$/phonegap/www/js/multiplayer.js" />
+        <option value="$PROJECT_DIR$/phonegap/www/js/menu.js" />
       </list>
     </option>
   </component>
@@ -1039,14 +952,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/phonegap/www/js/menu.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-13.4827585">
-          <caret line="23" column="16" selection-start-line="23" selection-start-column="16" selection-end-line="23" selection-end-column="49" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/phonegap/www/js/common.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -1063,18 +968,26 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/phonegap/www/js/game.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.35346535">
-          <caret line="46" column="51" selection-start-line="46" selection-start-column="51" selection-end-line="46" selection-end-column="51" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/phonegap/www/js/multiplayer.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.2930693">
           <caret line="115" column="40" selection-start-line="115" selection-start-column="40" selection-end-line="115" selection-end-column="40" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/phonegap/www/js/game.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-19.931034">
+          <caret line="34" column="14" selection-start-line="34" selection-start-column="14" selection-end-line="34" selection-end-column="14" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/phonegap/www/js/menu.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.77029705">
+          <caret line="120" column="32" selection-start-line="120" selection-start-column="32" selection-end-line="120" selection-end-column="32" />
           <folding />
         </state>
       </provider>
