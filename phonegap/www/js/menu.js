@@ -10,6 +10,7 @@ var menu = {
             $('#rankingtable').hide();
             $('#shadow').hide();
             $('#gameover').hide();
+            $('#back').hide();
         });
 
         $('#menumusicbutton').bind('click tap',function(){
@@ -106,7 +107,9 @@ var menu = {
         $('#gamescreen').hide();
         $('#gameover').show();
         $('#back').show();
-        $('#touchInterface').remove();
+        $('#menumusicbutton').show();
+        removeTouchInterface();
+        removeShake();
     },
     selectMap : function(e){
         menu.options.character = $(e.currentTarget).attr('id');
@@ -126,6 +129,7 @@ var menu = {
     startGame : function(e){
         menu.options.map = $(e.currentTarget).attr('id');
         $('#selectscene').hide();
+        $('#menumusicbutton').hide();
 //        $('#shadow').hide()
 //        $('#menu').hide()
         $('#waiting').show();

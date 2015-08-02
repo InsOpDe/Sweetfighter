@@ -2,7 +2,9 @@
 var touchable = "createTouch" in document,
     canvas,
     ctx,
-    div;
+    div,
+    drawInterval,
+    sendInterval;
     
 //CONTROL
 var touches = [],
@@ -27,10 +29,7 @@ var CONTROL_TOLERANCE = 15,
     MAX_SAVED_VECTORS = 200;
 
 //INPUT CONTROL
-var state = {left:false,right:false,moveup:false,movedown:false,hit:false};
-
-//DEBUG
-var debugLine;
+var state = {left:false,right:false,moveup:false,movedown:false,hit:false,special1:false,special2:false,hyper:false,mode:false,dashL:false,dashR:false};
 
 function initTouchInterface(){
     canvas = document.createElement("canvas");
@@ -39,25 +38,28 @@ function initTouchInterface(){
     ctx = canvas.getContext("2d");
     
     canvas.id = "touchInterface";
-    div = document.getElementById("gamescreen");
+    div = document.getElementById("touchContainer");
     
     div.appendChild(canvas);
     
     if(touchable){
         canvas.addEventListener("touchstart", onTouchStart);
         canvas.addEventListener("touchmove", onTouchMove);
-        canvas.addEventListener("touchend", onTouchEnd);       
+        canvas.addEventListener("touchend", onTouchEnd);  
+        drawInterval = setInterval(draw,30);
+        sendInterval = setInterval(function(){
+            multiplayer.sendCommand({ state: state });
+            state["special1"] = false;
+            state["special2"] = false;
+            state["hyper"] = false;
+            state["mode"] = false;
+            state["mode"] = false;
+            state["dashR"] = false;
+            state["dashL"] = false;
+        },30);
     }else{
         canvas.addEventListener("mousemove", onMouseMove);
     }
-    
-    setInterval(draw,30);
-    
-    //DEBUG
-    var debugWindow = document.getElementById("debugWindow");
-    debugLine = document.createElement("p");
-    debugWindow.appendChild(debugLine);
-    debugLine.innerHTML = "GESTUREDEBUG";
 }
 
 function onTouchStart(e){
@@ -74,7 +76,7 @@ function onTouchStart(e){
             continue;
         }else{
             state["hit"] = true;
-            multiplayer.sendCommand({ state: state });
+            //multiplayer.sendCommand({ state: state });
 
             gestureStartX = touch.clientX;
             gestureStartY = touch.clientY;  
@@ -122,7 +124,7 @@ function onTouchMove(e){
                 state["movedown"] = false;
             }
             
-            multiplayer.sendCommand({ state: state });
+            //multiplayer.sendCommand({ state: state });
 
             continue;
         }else{
@@ -153,13 +155,11 @@ function onTouchEnd(e){
             state["moveup"] = false;
             state["movedown"] = false;
             
-            multiplayer.sendCommand({ state: state });
+            //multiplayer.sendCommand({ state: state });
                         
             continue;
         }else{
             state["hit"] = false;
-            
-            multiplayer.sendCommand({ state: state });
                         
             gestureEndX = touch.clientX;            
             gestureEndY = touch.clientY;
@@ -168,6 +168,8 @@ function onTouchEnd(e){
             vectorlist.push(vector);
                         
             gestureHandler();
+            
+            //multiplayer.sendCommand({ state: state });
                         
             vectorlist = [];
                         
@@ -214,5 +216,7 @@ function draw(){
 
 function removeTouchInterface(){
     var remove = document.getElementById("touchInterface");
+    clearInterval(drawInterval);
+    clearInterval(sendInterval);
     remove.parentNode.removeChild(remove);
 }

@@ -2,7 +2,9 @@
 var touchable = "createTouch" in document,
     canvas,
     ctx,
-    div;
+    div,
+    drawInterval,
+    sendInterval;
     
 //CONTROL
 var touches = [],
@@ -36,7 +38,7 @@ function initTouchInterface(){
     ctx = canvas.getContext("2d");
     
     canvas.id = "touchInterface";
-    div = document.getElementById("gamescreen");
+    div = document.getElementById("touchContainer");
     
     div.appendChild(canvas);
     
@@ -44,8 +46,8 @@ function initTouchInterface(){
         canvas.addEventListener("touchstart", onTouchStart);
         canvas.addEventListener("touchmove", onTouchMove);
         canvas.addEventListener("touchend", onTouchEnd);  
-        setInterval(draw,30);
-        setInterval(function(){
+        drawInterval = setInterval(draw,30);
+        sendInterval = setInterval(function(){
             multiplayer.sendCommand({ state: state });
             state["special1"] = false;
             state["special2"] = false;
@@ -214,5 +216,7 @@ function draw(){
 
 function removeTouchInterface(){
     var remove = document.getElementById("touchInterface");
+    clearInterval(drawInterval);
+    clearInterval(sendInterval);
     remove.parentNode.removeChild(remove);
 }

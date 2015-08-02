@@ -11,7 +11,8 @@
             var serverIP = '';
             if (screen.width < 1000) { //muss noch n besserer weg gefunden werden
                 
-                serverIP = 'http://134.60.71.134/';   //server
+                serverIP = 'http://46.4.84.121:8887/'//server2
+                //serverIP = 'http://134.60.71.134/';   //server1
 //                serverIP = 'http://10.0.2.2:8887/'; //host
                 document.write('\x3Cscript src="'+serverIP+'socket.io/socket.io.js">\x3C/script>');
                 document.write('\x3Cscript type="text/javascript" src="cordova.js">\x3C/script>');
@@ -50,22 +51,57 @@
         <!--<script src="js/pixi.dev.js"></script>-->
         <script src="js/jquery.min.js"></script>
 		
-        <title>Hello World</title>
+        <title>Streetfighter Online</title>
     </head>
     <body>
+    <!--<audio autoplay loop id="menumusic">-->
+        <!--<source src="menu.wav">-->
+    <!--</audio>-->
+
         <div>
+            <div id ="touchContainer" style ="z-index:1000;"></div>
             
             <div id="menu">
+                
+                
+<!--                Menubuttons-->
                 <div id="fight"></div>
-                
-                
                 <div id="options"></div>
                 <div id="ranking"></div>
                 <div id="profile"></div>
                 <div id="training"></div>
-                
+
+
                 <div id="shadow"></div>
+
+
+
+
+
+                <!--ui-->
+                <div id="login">
+                    <div>
+                        <table>
+                            <tr><td>Username:</td><td><input id="name" /></td></tr>
+                            <tr><td>Passwort:</td><td><input type="password" id="pass" /></td></tr>
+                            <tr id="loginerror" style="display:none"><td colspan="2" style="color:red;">Falsche Zugangsdaten!</td></tr>
+                            <tr><td colspan="2"><div id="loginbutton">Login</div></td></tr>
+                        </table>
+                    </div>
+                </div>
                 
+                <div id="rankingtable" style="display:none">
+                    <table>
+                        <thead>
+                            <tr><th>Platz</th><th>Name</th><th>Punkte</th><th>Charakter</th><th></th></tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+
+
+
+                <div id="gameover"  style="display:none;"><div></div></div>
                 <div id="selectcharacter" style="display:none;"><div></div></div>
                 <div id="selectscene" style="display:none;"><div></div></div>
                 
@@ -75,6 +111,9 @@
                     
 
                 </div>
+
+                <div id="back" style="display:none"></div>
+                <div id="menumusicbutton"></div>
             </div>
         
 	

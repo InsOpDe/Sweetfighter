@@ -1,11 +1,14 @@
 var keyboard = {
     state : { left:false , right:false , moveup:false , movedown:false, hit:false, kick:false},
     player : { blue:{} , red:{} },
+    block : false,
     init: function() {
         
         var keyboardInput = $(window);
         
         keyboardInput.keydown(function(ev) {
+            if(keyboard.block)
+                return;
 //            console.log("key pressed: ", ev.which);
 //            multiplayer.socket.emit('command', { action : ev.which } );
             
@@ -46,6 +49,15 @@ var keyboard = {
             //e hyper
             if (ev.which == 69) {
                 keyboard.state["hyper"] = true;
+            }
+            if(ev.which == 89){
+                keyboard.state["mode"] = true;
+            }
+            if(ev.which == 79){
+                keyboard.state["dashL"] = true;
+            }
+            if(ev.which == 80){
+                keyboard.state["dashR"] = true;
             }
             multiplayer.sendCommand({ state: keyboard.state });
 
@@ -91,6 +103,15 @@ var keyboard = {
             //e hyper
             if (ev.which == 69) {
                 keyboard.state["hyper"] = false;
+            }
+            if(ev.which == 89){
+                keyboard.state["mode"] = false;
+            }
+            if(ev.which == 79){
+                keyboard.state["dashL"] = false;
+            }
+            if(ev.which == 80){
+                keyboard.state["dashR"] = false;
             }
             multiplayer.sendCommand({ state: keyboard.state });
 

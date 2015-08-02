@@ -6,14 +6,14 @@ var deviceMotion = window.DeviceMotionEvent,
     prevTime;
 
 //INPUT
-var comboBreak = false;
+//var shake = false;
 
 //CONSTANTS - DO NOT CHANGE
 var TIME_INTERVAL = 1000, 
     SHAKE_TOLERANCE = 15;
     
 //DEBUG
-var debugShake;
+//var debugShake;
 
 function initShake(){
     if(deviceMotion){
@@ -25,10 +25,10 @@ function initShake(){
         window.addEventListener('devicemotion', shakeHandler, false);
         
         //DEBUG
-        var debugWindow = document.getElementById("debugWindow");
-        debugShake = document.createElement("p");
-        debugWindow.appendChild(debugShake);
-        debugShake.innerHTML = "Shake:" + comboBreak;
+//        var debugWindow = document.getElementById("debugWindow");
+//        debugShake = document.createElement("p");
+//        debugWindow.appendChild(debugShake);
+//        debugShake.innerHTML = "Shake:" + shake;
     }
 }
 
@@ -61,10 +61,11 @@ function shakeHandler(e){
         var curTime = new Date();
         
         if(curTime.getTime() - prevTime.getTime() > TIME_INTERVAL){
-            comboBreak = true;
+//            shake = true;
+            state["mode"] = true;
             prevTime = curTime;
-            //DEBUG
-            setTimeout(function(){comboBreak = false;}, 3000);
+//            DEBUG
+//            setTimeout(function(){shake = false;}, 3000);
         }
     }
     
@@ -72,5 +73,5 @@ function shakeHandler(e){
     prevY = acceleration.y;
     prevZ = acceleration.z;
     
-    debugShake.innerHTML = "Shake:" + comboBreak;
+//    debugShake.innerHTML = "Shake:" + shake;
 }
