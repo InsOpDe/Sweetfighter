@@ -53,6 +53,12 @@ var keyboard = {
             if(ev.which == 89){
                 keyboard.state["mode"] = true;
             }
+            if(ev.which == 79){
+                keyboard.state["dashL"] = true;
+            }
+            if(ev.which == 80){
+                keyboard.state["dashR"] = true;
+            }
             multiplayer.sendCommand({ state: keyboard.state });
 
         });
@@ -100,6 +106,12 @@ var keyboard = {
             }
             if(ev.which == 89){
                 keyboard.state["mode"] = false;
+            }
+            if(ev.which == 79){
+                keyboard.state["dashL"] = false;
+            }
+            if(ev.which == 80){
+                keyboard.state["dashR"] = false;
             }
             multiplayer.sendCommand({ state: keyboard.state });
 

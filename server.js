@@ -129,7 +129,7 @@ io.sockets.on('connection', function (socket) {
         
         //assignQueue
         //TODO: get Player name via db
-        console.log("init: " + data.character);
+//        console.log("init: " + data.character);
         player[socket.id].character = data.character ;
         player[socket.id].map = data.map ;
         assignQueue.push(player[socket.id]);
@@ -211,6 +211,23 @@ var assignloop = setInterval(function(){
 var physicsloop = setInterval(function(){
     handleCommand();
     handleHitstun();
+    
+    for(var p in controls){
+        //if lobby isnt full yet
+        if(typeof player[p] === 'undefined')
+            continue;
+        var lob = player[p].lobby;
+        if(typeof lob === 'undefined' || !lobby[lob]  || !lobby[lob].hasOwnProperty("options"))
+            continue;
+        var col = player[p].color;
+        var p1 = lobby[lob][col];
+        var p2 = (col === "red")? lobby[lob]["blue"] : lobby[lob]["red"];
+        var vz = (p1.x > p2.x)? -1 : 1;
+        handleDash(p1,p2);
+        handleStartup(p1,p2,vz);
+        handleEndlag(p1);
+    }
+    
 },15);
 
 //updateloop
@@ -226,6 +243,7 @@ var updateloop = setInterval(function(){
     
         var update = {players:{red: characterRed, blue: characterBlue}, meta:{timer: gameTimer.timer}};
         
+        checkKO(characterRed,characterBlue);
         gameTimer.update();
         hypermeter.update(characterRed, characterBlue);
         handleProjectile.update(characterRed, characterBlue);
@@ -332,13 +350,10 @@ var characterAttributes;
 getDb('character',function(characters){
     characterAttributes = characters;
 });
-
 // Portnummer in die Konsole schreiben
 console.log('Der Server läuft nun auf dem Port ' + conf.port);
 
 //FOLLOWING ARE INPUT- AND HITBOXHANDLER
-
-var movementSpeed = 5;
 var gravityAccelerationY = 1;
 var jumpHeightSquared = -25;
 var minJumpHeight = ( jumpHeightSquared / 3 );
@@ -359,41 +374,50 @@ function handleCommand(){
         var p2 = (col === "red")? lobby[lob]["blue"] : lobby[lob]["red"];
         var c2 = controls[p2.sid];
         
-        if(!p1.hitstun.gotHit){
+        var movementSpeed = p1.characterinfo.movementspeed;
         
+            p1.velocityY += gravityAccelerationY ;
+            p1.y += p1.velocityY ;
+            if (p1.y > options.mapY) {
+                p1.y = options.mapY;
+                p1.jump = false;
+                p1.velocityY = 0;
+            }
+        
+        if(!p1.attack.hitstun.gotHit && !p1.characterinfo.dash.active){
             if(c1.left){
                 if(!p1.jump){
                     if(!c1.movedown){
                         if(!c1.hit){
                             if(!p1.attack.block){
-                                if(p1.x - movementSpeed >= p1.w/2 + 20){
+                                if(p1.x - movementSpeed >= p1.characterinfo.w/2 + 20){
                                     if(p1.x < p2.x){
                                         p1.x -= movementSpeed;
                                         p1.moving = true;
                                     } 
-                                    else if(p1.x - p1.w/2 > p2.x + p2.w/2 - 20){
+                                    else if(p1.x - p1.characterinfo.w/2 - movementSpeed >= p2.x + p2.characterinfo.w/2 - 20){
                                         p1.x -= movementSpeed;
                                         p1.moving = true;
-                                    } else if(p1.x - p1.w/2 === p2.x + p2.w/2 - 20){
-                                        //console.log("Collide");
+                                    }
+                                    else if(p1.x - p1.characterinfo.w/2 - movementSpeed < p2.x + p2.characterinfo.w/2 - 20){
                                         if(!c2.movedown){
                                             handlePush(p1,p2,"left",movementSpeed,"collide");
                                         }
                                     }
-                                } else if(p1.x - movementSpeed < p1.w/2 + 20){
-                                    p1.x = p1.w/2 + 20;
+                                } else if(p1.x - movementSpeed < p1.characterinfo.w/2 + 20){
+                                    p1.x = p1.characterinfo.w/2 + 20;
                                     p1.moving = true;
                                 }
                             }
                         }
                     }
                 } else if(p1.jump){
-                    if(p1.x - movementSpeed >= p1.w/2 + 20){
+                    if(p1.x - movementSpeed >= p1.characterinfo.w/2 + 20){
                         if(p1.x < p2.x){
                             p1.x -= movementSpeed;
                             p1.moving = true;
                         } 
-                        else if(p1.x - p1.w/2 > p2.x + p2.w/2 - 20){
+                        else if(p1.x - p1.characterinfo.w/2 > p2.x + p2.characterinfo.w/2 - 20){
                             p1.x -= movementSpeed;
                             p1.moving = true;
                         }
@@ -404,33 +428,34 @@ function handleCommand(){
                     if(!c1.movedown){
                         if(!c1.hit){
                             if(!p1.attack.block){
-                                if(p1.x + movementSpeed <= (options.mapX) - (p1.w / 2) - 20){
+                                if(p1.x + movementSpeed <= (options.mapX) - (p1.characterinfo.w/2) - 20){
                                     if(p1.x > p2.x){
                                         p1.x += movementSpeed;
                                         p1.moving = true;
                                     } 
-                                    else if(p1.x + p1.w/2 < p2.x - p2.w/2 + 20){
+                                    else if(p1.x + p1.characterinfo.w/2 + movementSpeed <= p2.x - p2.characterinfo.w/2 + 20){
                                         p1.x += movementSpeed;
                                         p1.moving = true;
-                                    } else if(p1.x + p1.w/2 === p2.x - p2.w/2 + 20){
-                                        //console.log("Collide");
+                                    } 
+                                    else if(p1.x + p1.characterinfo.w/2 + movementSpeed > p2.x - p2.characterinfo.w/2 + 20){
                                         if(!c2.movedown){
                                             handlePush(p1,p2,"right",movementSpeed,"collide");
                                         }
                                     }                    
-                                } else if(p1.x + movementSpeed > (options.mapX) - (p1.w / 2) - 20){
-                                    p1.x = (options.mapX) - (p1.w / 2) - 20;
+                                } else if(p1.x + movementSpeed > (options.mapX) - (p1.characterinfo.w / 2) - 20){
+                                    p1.x = (options.mapX) - (p1.characterinfo.w / 2) - 20;
+                                    p1.moving = true;
                                 }
                             }
                         }
                     }
                 } else if(p1.jump){
-                    if(p1.x + movementSpeed <= (options.mapX) - (p1.w / 2) - 20){
+                    if(p1.x + movementSpeed <= (options.mapX) - (p1.characterinfo.w/2) - 20){
                         if(p1.x > p2.x){
                             p1.x += movementSpeed;
                             p1.moving = true;
                         } 
-                        else if(p1.x + p1.w/2 < p2.x - p2.w/2 + 20){
+                        else if(p1.x + p1.characterinfo.w/2 < p2.x - p2.characterinfo.w/2 + 20){
                             p1.x += movementSpeed;
                             p1.moving = true;
                         }
@@ -451,177 +476,392 @@ function handleCommand(){
                 } else {
                     if (c1.movedown && !p1.jump) {
                         p1.crouch=true;
-                        p1.h = 170;
+                        p1.characterinfo.h = p1.action.crouch.h;
                     } else {
                         p1.crouch=false;
-                        p1.h = 300;
+                        p1.characterinfo.h = p1.action.idle.h;
                     }
                 }
             }
-
-            p1.velocityY += gravityAccelerationY ;
-            p1.y += p1.velocityY ;
-            if (p1.y > options.mapY) {
-                p1.y = options.mapY;
-                p1.jump = false;
-                p1.velocityY = 0;
-            } 
-
-            //1 = blue, -1 = red
-            var vz = (p1.x > p2.x)? -1 : 1;
             
-            //JAB COMBO - TRANSITION FROM JAB, JAB, KICK
-            if(c1.hit && !c1.right && !c1.left && !c1.moveup && !c1.movedown && !p1.jump){
-                p1.attack.jabcommand.jab = false;
-                p1.attack.jabcommand.kick = false;
-
-                //JAB1
-                if(!p1.attack.jabcommand.jab1){
-                    if(!p1.attack.jabcommand.jabcomboend){
-                        p1.attack.jabcommand.jab = true;
-                        handleHitbox("jab",p1,p2,vz);
-                        p1.attack.jabcommand.jab1 = true;
-                        p1.attack.jabcommand.jab1Time = new Date();
-                    } else if(p1.attack.jabcommand.jabcomboend){
-                        var curTime = new Date;
-                        if(curTime.getTime() - p1.attack.jabcommand.jabcomboendTime.getTime() >= 1000){
-                            p1.attack.jabcommand.jab = true;
-                            handleHitbox("jab",p1,p2,vz);
-                            p1.attack.jabcommand.jab1 = true;
-                            p1.attack.jabcommand.jab1Time = new Date();
-                            p1.attack.jabcommand.jabcomboend = false;
-                        }
-                    } 
-                } else if(p1.attack.jabcommand.jab1){
-                    //JAB2
-                    if(!p1.attack.jabcommand.jab2){
-                        p1.attack.jabcommand.jab = false;
-                        var curTime = new Date();
-                        if(curTime.getTime() - p1.attack.jabcommand.jab1Time.getTime() >= 300){
-                            if(curTime.getTime() - p1.attack.jabcommand.jab1Time.getTime() <= 700){
-                                p1.attack.jabcommand.jab = true;
-                                handleHitbox("jab",p1,p2,vz);
-                                p1.attack.jabcommand.jab2 = true;
-                                p1.attack.jabcommand.jab2Time = new Date();
-                            } else{     
-                                p1.attack.jabcommand.jab1 = false;
-                            }
-                        }
-                    } else if(p1.attack.jabcommand.jab2){
-                        //JAB3
-                        if(!p1.attack.jabcommand.jab3){
-                            p1.attack.jabcommand.jab = false;
-                            var curTime = new Date();
-                            if(curTime.getTime() - p1.attack.jabcommand.jab2Time.getTime() >= 300){
-                                if(curTime.getTime() - p1.attack.jabcommand.jab2Time.getTime() <= 700){
-                                    p1.attack.jabcommand.kick = true;
-                                    handleHitbox("kick",p1,p2,vz);
-                                    p1.attack.jabcommand.jabcomboend = true;
-                                    p1.attack.jabcommand.jabcomboendTime = new Date();
-                                    p1.attack.jabcommand.jab1 = false;
-                                    p1.attack.jabcommand.jab2 = false;
-                                } else{
-                                    p1.attack.jabcommand.jab1 = false;
-                                    p1.attack.jabcommand.jab2 = false;
+            if(c1.dashL){
+                if(!p1.jump){
+                    if(!c1.movedown && !c1.left && !c1.right){
+                        if(!c1.hit){
+                            if(!p1.attack.block){
+                                if(!p1.characterinfo.dash.active){
+                                    p1.characterinfo.dash.active = true;
+                                    p1.characterinfo.dash.direction = "left";
+                                    p1.characterinfo.dash.endPos = p1.x - p1.characterinfo.dash.distance;
                                 }
                             }
                         }
                     }
                 }
-            } else {
-                p1.attack.jabcommand.jab = false;
-                p1.attack.jabcommand.kick = false;
             }
+                
+                if(c1.dashR){
+                    if(!p1.jump){
+                        if(!c1.movedown && !c1.left && !c1.right){
+                            if(!c1.hit){
+                                if(!p1.attack.block){
+                                    if(!p1.characterinfo.dash.active){
+                                        p1.characterinfo.dash.active = true;
+                                        p1.characterinfo.dash.direction = "right";
+                                        p1.characterinfo.dash.endPos = p1.x + p1.characterinfo.dash.distance;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            
+            //1 = blue, -1 = red
+            var vz = (p1.x > p2.x)? -1 : 1;            
+            
+            //JAB COMBO - TRANSITION FROM JAB, JAB, KICK
+            if(!p1.attack.endlag.hitexecuted){
+                if(c1.hit && !c1.right && !c1.left && !c1.moveup && !c1.movedown && !p1.jump){
+                    //JAB1
+                    if(!p1.attack.neutralcombo.jab1){
+                        p1.attack.jab = true;
+                        p1.attack.startup.start = true;
+                        p1.attack.startup.timer = new Date();
+                        p1.attack.startup.move = "jab";
+                        
+                        p1.attack.neutralcombo.jab1 = true;
+                        p1.attack.neutralcombo.timer = new Date();
 
-            //TODO
-            if(c1.hit && p1.jump){
-                p1.attack.airhit = true;
-            } else{
-                p1.attack.airhit = false;
-            }
-            if(c1.special1){
-                p1.attack.special1 = true;
+                        p1.attack.endlag.hitexecuted = true;
+                        p1.attack.endlag.timer = new Date();
+                        p1.attack.endlag.duration = p1.action.jab.endlag; 
+                    } else if(p1.attack.neutralcombo.jab1){
+                        //JAB2
+                        if(!p1.attack.neutralcombo.jab2){
+                            p1.attack.jab = false;
+                            var curTime = new Date();
+                            if(curTime.getTime() - p1.attack.neutralcombo.timer.getTime() <= p1.attack.neutralcombo.comboTime){
+                                p1.attack.jab = true;
+                                p1.attack.startup.start = true;
+                                p1.attack.startup.timer = new Date();
+                                p1.attack.startup.move = "jab";
+                                
+                                p1.attack.neutralcombo.jab2 = true;
+                                p1.attack.neutralcombo.timer = new Date();
+
+                                p1.attack.endlag.hitexecuted = true;
+                                p1.attack.endlag.timer = new Date();
+                                p1.attack.endlag.duration = p1.action.jab.endlag;
+                            } else{     
+                                p1.attack.neutralcombo.jab1 = false;
+                            }
+                        } else if(p1.attack.neutralcombo.jab2){
+                            //JAB3
+                            p1.attack.jab = false;
+                            var curTime = new Date();
+                            if(curTime.getTime() - p1.attack.neutralcombo.timer.getTime() <= p1.attack.neutralcombo.comboTime){
+                                p1.attack.kick = true;
+                                p1.attack.startup.start = true;
+                                p1.attack.startup.timer = new Date();
+                                p1.attack.startup.move = "kick";
+                                
+                                p1.attack.neutralcombo.jab1 = false;
+                                p1.attack.neutralcombo.jab2 = false;
+
+                                p1.attack.endlag.hitexecuted = true;
+                                p1.attack.endlag.timer = new Date();
+                                p1.attack.endlag.duration = p1.action.kick.endlag;
+                            } else{
+                                p1.attack.neutralcombo.jab1 = false;
+                                p1.attack.neutralcombo.jab2 = false;
+                            }
+                        }
+                    }
+                }
             } else {
-                p1.attack.special1 = false;
-            }
-            if(c1.special2){
-                p1.attack.special2 = true;
-            } else {
-                p1.attack.special2 = false;
-            }
-            if(c1.hyper){
-                p1.attack.hyper = true;
-            } else {
-                p1.attack.hyper = false;
-            }
+                p1.attack.jab = false;
+                p1.attack.kick = false;
+            }            
 
             if(vz === 1){
-                if(c1.hit && c1.right && !p1.jump){
-                    p1.attack.fowardhit = true;
+                if(!p1.attack.endlag.hitexecuted){
+                    if(c1.hit && c1.right && !c1.left && !c1.moveup && !c1.movedown && !p1.jump){
+                        p1.attack.forwardhit = true;
+                        p1.attack.startup.start = true;
+                        p1.attack.startup.timer = new Date();
+                        p1.attack.startup.move = "forwardhit";
+                        
+                        p1.characterinfo.w += p1.characterinfo.w/2;
+                        
+                        p1.attack.endlag.hitexecuted = true;
+                        p1.attack.endlag.timer = new Date();
+                        p1.attack.endlag.duration = p1.action.forwardhit.endlag;
+                    }
                 } else {
-                    p1.attack.fowardhit = false;
+                    p1.attack.forwardhit = false;
                 }
-                if(c1.hit && c1.left && !p1.jump){
-                    p1.attack.backwardhit = true;
-                    handleProjectile.create(p1,vz,500);
+                if(!p1.attack.endlag.hitexecuted){
+                    if(c1.hit && c1.left && !c1.right && !c1.moveup && !c1.movedown && !p1.jump){
+                        if(!p1.attack.projectile.exist){
+                            p1.attack.backwardhit = true;
+                            handleProjectile.create("backwardhit",p1,vz,p1.action.backwardhit.distance);
+                            
+                            p1.attack.endlag.hitexecuted = true;
+                            p1.attack.endlag.timer = new Date();
+                            p1.attack.endlag.duration = p1.action.backwardhit.endlag;
+                        }
+                    }
                 } else {
                     p1.attack.backwardhit = false;
                 }
                 
             } else if(vz === -1){
-                if(c1.hit && c1.left && !p1.jump){
-                    p1.attack.fowardhit = true;
+                if(!p1.attack.endlag.hitexecuted){    
+                    if(c1.hit && c1.left && !c1.right && !c1.moveup && !c1.movedown && !p1.jump){
+                        p1.attack.forwardhit = true;
+                        p1.attack.startup.start = true;
+                        p1.attack.startup.timer = new Date();
+                        p1.attack.startup.move = "forwardhit";
+                        
+                        p1.characterinfo.w += p1.characterinfo.w/2;
+                        
+                        p1.attack.endlag.hitexecuted = true;
+                        p1.attack.endlag.timer = new Date();
+                        p1.attack.endlag.duration = p1.action.forwardhit.endlag;
+                    }
                 } else {
-                    p1.attack.fowardhit = false;
+                    p1.attack.forwardhit = false;
                 }
-                if(c1.hit && c1.right && !p1.jump){
-                    p1.attack.backwardhit = true;
-                    handleProjectile.create(p1,vz,500);
+                if(!p1.attack.endlag.hitexecuted){
+                    if(c1.hit && c1.right && !c1.left && !c1.moveup && !c1.movedown && !p1.jump){
+                        if(!p1.attack.projectile.exist){
+                            p1.attack.backwardhit = true;
+                            handleProjectile.create("backwardhit",p1,vz,p1.action.backwardhit.distance);
+                            
+                            p1.attack.endlag.hitexecuted = true;
+                            p1.attack.endlag.timer = new Date();
+                            p1.attack.endlag.duration = p1.action.backwardhit.endlag;
+                        }
+                    }
                 } else {
                     p1.attack.backwardhit = false;
                 }
+            }         
+            
+            if(!p1.attack.endlag.hitexecuted){
+                if(c1.hit && p1.jump && !c1.movedown){
+                    p1.attack.airhit = true;
+                    p1.attack.startup.start = true;
+                    p1.attack.startup.timer = new Date();
+                    p1.attack.startup.move = "airhit";
+                    
+                    p1.attack.endlag.hitexecuted = true;
+                    p1.attack.endlag.timer = new Date();
+                    p1.attack.endlag.duration = p1.action.airhit.endlag;
+                }
+            } else{
+                p1.attack.airhit = false;
             }
             
-            if(c1.mode && p1.hypermeter === 100){
+            if(!p1.attack.endlag.hitexecuted){
+                if(c1.hit && p1.crouch && !c1.moveup){
+                    p1.attack.crouchhit = true;
+                    p1.attack.startup.start = true;
+                    p1.attack.startup.timer = new Date();
+                    p1.attack.startup.move = "crouchhit";
+                    
+                    p1.attack.endlag.hitexecuted = true;
+                    p1.attack.endlag.timer = new Date();
+                    p1.attack.endlag.duration = p1.action.crouchhit.endlag;
+                }
+            } else{
+                p1.attack.crouchhit = false;
+            }
+            
+//TODO
+            if(!p1.attack.endlag.hitexecuted){
+                if(c1.special1){
+                    if(p1.characterinfo.hypermeter >= 20){
+                        p1.attack.special1 = true;
+                        p1.characterinfo.hypermeter -= 20;
+                        p1.attack.startup.start = true;
+                        p1.attack.startup.timer = new Date();
+                        p1.attack.startup.move = "special1";
+                        
+                        p1.attack.endlag.hitexecuted = true;
+                        p1.attack.endlag.timer = new Date();
+                        p1.attack.endlag.duration = p1.action.special1.endlag;
+                    }
+                }
+            } else {
+                p1.attack.special1 = false;
+            }
+            
+            if(!p1.attack.endlag.hitexecuted){
+                if(c1.special2){
+                    if(p1.characterinfo.hypermeter >= 20){
+                        p1.attack.special2 = true;
+                        p1.characterinfo.hypermeter -= 20;
+                        p1.attack.startup.start = true;
+                        p1.attack.startup.timer = new Date();
+                        p1.attack.startup.move = "special2";
+                        
+                        p1.attack.endlag.hitexecuted = true;
+                        p1.attack.endlag.timer = new Date();
+                        p1.attack.endlag.duration = p1.action.special2.endlag;
+                    }
+                }
+            } else {
+                p1.attack.special2 = false;
+            }
+            
+            if(!p1.attack.endlag.hitexecuted){
+                if(c1.hyper){
+                    if(p1.characterinfo.hypermeter >= 60){
+                        p1.attack.hyper = true;
+                        p1.characterinfo.hypermeter -= 60;
+                        handleProjectile.create("hyper", p1,vz,p1.action.hyper.distance);
+                        
+                        p1.attack.endlag.hitexecuted = true;
+                        p1.attack.endlag.timer = new Date();
+                        p1.attack.endlag.duration = p1.action.hyper.endlag;
+                    }
+                }
+            } else {
+                p1.attack.hyper = false;
+            }
+//
+
+            if(c1.mode && p1.characterinfo.hypermeter === 100){
                 p1.attack.mode.active = true;
-                p1.attack.mode.dmgMultiplicator = 2;
+                p1.attack.mode.dmgMultiplicator = p1.characterinfo.dmgMultiplicator;
             }
             
         }
         
     }
 }
-//TODO PROJECTILE
-//projectile:{exist:false,timer:undefined,posX:undefined,posY:undefined,distance:undefined},
+
+var mapX = 1000;
+
+function handleDash(p1, p2){
+    if(p1.attack.hitstun.gotHit){
+        p1.characterinfo.dash.active = false;
+    }
+    if(p1.characterinfo.dash.active){
+        var direction = p1.characterinfo.dash.direction;
+        switch(direction){
+            case "left":
+                if(p1.x > p1.characterinfo.dash.endPos){
+                    if(p1.x - p1.characterinfo.dash.speed >= p1.characterinfo.w/2 + 20){
+                        if(p1.x < p2.x){
+                            p1.x -= p1.characterinfo.dash.speed;
+                            p1.moving = true;
+                        } 
+                        else if(p1.x - p1.characterinfo.w/2 - p1.characterinfo.dash.speed >= p2.x + p2.characterinfo.w/2 - 20){
+                            p1.x -= p1.characterinfo.dash.speed;
+                            p1.moving = true;
+                        }
+                        else if(p1.x - p1.characterinfo.w/2 - p1.characterinfo.dash.speed < p2.x + p2.characterinfo.w/2 - 20){
+                            if(!controls[p2.sid].movedown){
+                                handlePush(p1,p2,"left",p1.characterinfo.movementspeed,"collide");
+                            }
+                            p1.x = p2.x + p2.characterinfo.w/2 - 20 + p1.characterinfo.w/2;
+                            p1.characterinfo.dash.active = false;
+                        }
+                    } else if(p1.x - p1.characterinfo.dash.speed < p1.characterinfo.w/2 + 20){
+                        p1.x = p1.characterinfo.w/2 + 20;
+                        p1.moving = true;
+                        p1.characterinfo.dash.active = false;
+                    }
+                } else{
+                    p1.characterinfo.dash.active = false;
+                }
+
+                break;
+            case "right":
+                if(p1.x < p1.characterinfo.dash.endPos){
+                    if(p1.x + p1.characterinfo.dash.speed <= mapX - (p1.characterinfo.w/2) - 20){
+                        if(p1.x > p2.x){
+                            p1.x += p1.characterinfo.dash.speed;
+                            p1.moving = true;
+                        } 
+                        else if(p1.x + p1.characterinfo.w/2 + p1.characterinfo.dash.speed <= p2.x - p2.characterinfo.w/2 + 20){
+                            p1.x += p1.characterinfo.dash.speed;
+                            p1.moving = true;
+                        } 
+                        else if(p1.x + p1.characterinfo.w/2 + p1.characterinfo.dash.speed > p2.x - p2.characterinfo.w/2 + 20){
+                            if(!controls[p2.sid].movedown){
+                                handlePush(p1,p2,"right",p1.characterinfo.movementspeed,"collide");
+                            }
+                            p1.x = p2.x - p2.characterinfo.w/2 + 20 - p1.characterinfo.w/2;
+                            p1.characterinfo.dash.active = false;
+                        }                    
+                    } else if(p1.x + p1.characterinfo.dash.speed > mapX - (p1.characterinfo.w / 2) - 20){
+                        p1.x = mapX - (p1.characterinfo.w / 2) - 20;
+                        p1.moving = true;
+                        p1.characterinfo.dash.active = false;
+                    }
+                } else{
+                    p1.characterinfo.dash.active = false;
+                }
+                
+                break;
+        }
+    }
+}
+
+function handleStartup(p1,p2,vz){
+    if(p1.attack.startup.start){
+        var curTime = new Date();
+        var move = p1.attack.startup.move;
+        if(curTime.getTime() - p1.attack.startup.timer.getTime() > p1.action[move].startup){
+            handleHitbox(p1.attack.startup.move,p1,p2,vz);
+            if(move.localeCompare("forwardhit")===0){
+                p1.characterinfo.w -= p1.characterinfo.w/3;
+            }
+            p1.attack.startup.start = false;
+        }
+    }
+}
+
+function handleEndlag(player){
+    if(player.attack.endlag.hitexecuted){
+        var curTime = new Date();
+        if(curTime.getTime() - player.attack.endlag.timer.getTime() > player.attack.endlag.duration){
+            player.attack.endlag.hitexecuted = false;
+        }
+    }
+}
+
 var handleProjectile = {
-    create:function(player,vz,distance){
+    create:function(move,player,vz,distance){
         if(player.attack.projectile.exist === false){
             player.attack.projectile.exist = true;
-            player.attack.projectile.timer = new Date();
-            player.attack.projectile.posX = player.x - vz*(50);
-            player.attack.projectile.posY = player.y - (220);
-            console.log(player.y);
+            player.attack.projectile.posX = player.x - vz*player.characterinfo.w*player.action[move].spawnX;
+            player.attack.projectile.posY = player.y - player.characterinfo.h*player.action[move].spawnY;
+            player.attack.projectile.speed = player.action[move].speed;
             player.attack.projectile.distance = player.x + vz*distance;
+            player.attack.projectile.range = player.action[move].range;
+            player.attack.projectile.botY = player.action[move].botY;
+            player.attack.projectile.pierce = player.action[move].pierce;
+            player.attack.projectile.damage = player.action[move].damage;
+            player.attack.projectile.hitstun = player.action[move].hitstun;
+            player.attack.projectile.push = player.action[move].push;
         }
     },
     update:function(characterRed,characterBlue){
         if(characterRed.attack.projectile.exist === true){
-            var curDate = new Date();
-            if(characterRed.attack.projectile.posX >= characterRed.attack.projectile.distance && curDate.getTime() - characterRed.attack.projectile.timer.getTime() >= 50){
-                characterRed.attack.projectile.posX -= 10;
-                //console.log(characterRed.attack.projectile.posX);
-                characterRed.attack.projectile.timer = curDate;
+            if(characterRed.attack.projectile.posX >= characterRed.attack.projectile.distance){
+                characterRed.attack.projectile.posX -= characterRed.attack.projectile.speed;
             } else if(characterRed.attack.projectile.posX < characterRed.attack.projectile.distance){
                 characterRed.attack.projectile.exist = false;
             }
         }
         
         if(characterBlue.attack.projectile.exist === true){
-            var curDate = new Date();
-            if(characterBlue.attack.projectile.posX <= characterBlue.attack.projectile.distance && curDate.getTime() - characterBlue.attack.projectile.timer.getTime() >= 50){
-                characterBlue.attack.projectile.posX += 10;
-                //console.log(characterBlue.attack.projectile.posX);
-                characterBlue.attack.projectile.timer = curDate;
+            if(characterBlue.attack.projectile.posX <= characterBlue.attack.projectile.distance){
+                characterBlue.attack.projectile.posX += characterBlue.attack.projectile.speed;
             } else if(characterBlue.attack.projectile.posX > characterBlue.attack.projectile.distance){
                 characterBlue.attack.projectile.exist = false;
             }
@@ -630,90 +870,140 @@ var handleProjectile = {
     
     handleHitbox:function(characterRed, characterBlue){
         if(characterBlue.attack.projectile.exist){
-            var p1hitbox = characterBlue.attack.projectile.posX + 40;
-            var p2hitbox = characterRed.x - characterRed.w/2;
-            if(p1hitbox > p2hitbox){
-                characterBlue.attack.projectile.exist = false;
-                characterRed.hp -= 20;
-                if(characterRed.hp < 0){
-                    characterRed.hp = 0;
+            var p1hitboxleftX = characterBlue.attack.projectile.posX;
+            var p1hitboxrightX = characterBlue.attack.projectile.posX + characterBlue.attack.projectile.range;
+            var p1hitboxtopY = characterBlue.attack.projectile.posY + 30;
+            var p1hitboxbotY = characterBlue.attack.projectile.posY + characterBlue.attack.projectile.botY;
+            var p2hitboxleftX = characterRed.x - characterRed.characterinfo.w/2;
+            var p2hitboxrightX = characterRed.x + characterRed.characterinfo.w/2;
+            var p2hitboxtopY = characterRed.y - characterRed.characterinfo.h;
+            var p2hitboxbotY = characterRed.y;
+            
+            var block = controls[characterRed.sid].right;
+            if((characterRed.x > p1hitboxrightX && p1hitboxrightX > p2hitboxleftX) || (characterRed.x < p1hitboxleftX && p1hitboxleftX < p2hitboxrightX)){
+                if(p1hitboxtopY < p2hitboxbotY || !(p1hitboxtopY > p2hitboxbotY) && p1hitboxbotY > p2hitboxtopY){
+                    if(!characterBlue.attack.projectile.pierce){
+                        characterBlue.attack.projectile.exist = false;
+                    }
+                    if(!block || characterRed.jump){
+                        characterRed.characterinfo.hp -= characterBlue.attack.projectile.damage*characterBlue.attack.mode.dmgMultiplicator;
+                        if(characterRed.characterinfo.hp < 0){
+                            characterRed.characterinfo.hp = 0;
+                        }
+                        characterRed.attack.hitstun.gotHit = true;
+                        characterRed.attack.hitstun.timer = new hitstunTimer(characterBlue.attack.projectile.hitstun);
+                        handlePush(characterBlue,characterRed,"right",characterBlue.attack.projectile.push,"projectile");
+                    } else if(block && !characterRed.attack.hitstun.gotHit && !characterRed.jump){
+                        characterRed.attack.block = true;
+                        if(characterRed.characterinfo.hp > 1){
+                            characterRed.characterinfo.hp -= 1;
+                        }
+                        characterRed.attack.hitstun.timer = new hitstunTimer(100);
+                        handlePush(characterBlue,characterRed,"right",5,"projectile");
+                    }
                 }
-                characterRed.hitstun.gotHit = true;
-                characterRed.hitstun.timer = new hitstunTimer(100);
-                handlePush(characterBlue,characterRed,"right",5,"projectile");
             }
         }
         
         if(characterRed.attack.projectile.exist){
-            var p1hitbox = characterRed.attack.projectile.posX + 40;
-            var p2hitbox = characterBlue.x + characterBlue.w/2;
-            if(p1hitbox < p2hitbox){
-                characterRed.attack.projectile.exist = false;
-                characterBlue.hp -= 20;
-                if(characterBlue.hp < 0){
-                    characterBlue.hp = 0;
+            var p1hitboxleftX2 = characterRed.attack.projectile.posX;
+            var p1hitboxrightX2 = characterRed.attack.projectile.posX + characterRed.attack.projectile.range;
+            var p1hitboxtopY2 = characterRed.attack.projectile.posY + 30;
+            var p1hitboxbotY2 = characterRed.attack.projectile.posY + characterRed.attack.projectile.botY;
+            var p2hitboxleftX2 = characterBlue.x - characterBlue.characterinfo.w/2;
+            var p2hitboxrightX2 = characterBlue.x + characterBlue.characterinfo.w/2;
+            var p2hitboxtopY2 = characterBlue.y - characterBlue.characterinfo.h;
+            var p2hitboxbotY2 = characterBlue.y;
+            
+            var block = controls[characterBlue.sid].left;
+            if((characterBlue.x > p1hitboxrightX2 && p1hitboxrightX2 > p2hitboxleftX2) || (characterBlue.x < p1hitboxleftX2 && p1hitboxleftX2 < p2hitboxrightX2)){
+                if(p1hitboxtopY2 < p2hitboxbotY2 || !(p1hitboxtopY2 > p2hitboxbotY2) && p1hitboxbotY2 > p2hitboxtopY2){
+                    if(!characterRed.attack.projectile.pierce){
+                        characterRed.attack.projectile.exist = false;
+                    }
+                    if(!block || characterBlue.jump){
+                        characterBlue.characterinfo.hp -= characterRed.attack.projectile.damage*characterRed.attack.mode.dmgMultiplicator;
+                        if(characterBlue.characterinfo.hp < 0){
+                            characterBlue.characterinfo.hp = 0;
+                        }
+                        characterBlue.attack.hitstun.gotHit = true;
+                        characterBlue.attack.hitstun.timer = new hitstunTimer(characterRed.attack.projectile.hitstun);
+                        handlePush(characterRed,characterBlue,"left",characterRed.attack.projectile.push,"projectile");
+                    } else if(block && !characterBlue.attack.hitstun.gotHit && !characterBlue.jump){
+                        characterBlue.attack.block = true;
+                        if(characterBlue.characterinfo.hp > 1){
+                            characterBlue.characterinfo.hp -= 1;
+                        }
+                        characterBlue.attack.hitstun.timer = new hitstunTimer(100);
+                        handlePush(characterRed,characterBlue,"left",5,"projectile");
+                    }
                 }
-                characterBlue.hitstun.gotHit = true;
-                characterBlue.hitstun.timer = new hitstunTimer(100);
-                handlePush(characterRed,characterBlue,"left",5,"projectile");
             }
         }
     }
 };
 
-//TODO - CHANGE VALUES TO VARIABLE CUZ DATABASE/JSON
 //CAN'T DIE ON BLOCK
 function handleHitbox(action,p1,p2,vz){
     switch(action){
         case "jab":
-            var p1hitboxX = p1.x + vz*100;
-            var p1hitboxYBelow = p1.y - p1.h + 62;
-            var p1hitboxYAbove = p1.y - p1.h + 46;
+            var p1hitboxX = p1.x + vz*p1.characterinfo.w*p1.action.jab.range;
+            var p1hitboxYBelow = p1.y - p1.characterinfo.h + p1.characterinfo.h*p1.action.jab.botY;
+            var p1hitboxYAbove = p1.y - p1.characterinfo.h + p1.characterinfo.h*p1.action.jab.topY;
         
-            var p2hitboxX = p2.x - vz*p2.w/2;
+            var p2hitboxX = p2.x - vz*p2.characterinfo.w/2;
             var p2hitboxYBelow = p2.y;
-            var p2hitboxYAbove = p2.y - p2.h;
+            var p2hitboxYAbove = p2.y - p2.characterinfo.h;
 
             if(p1hitboxYAbove > p2hitboxYAbove && p1hitboxYBelow < p2hitboxYBelow){
                 switch(vz){
                     case 1:
                         var block = controls[p2.sid].right;
                         if(p1hitboxX > p2hitboxX){
-                            if(block && !p2.hitstun.gotHit && !p2.jump){
+                            if(block && !p2.attack.hitstun.gotHit && !p2.jump){
                                 p2.attack.block = true;
-                                if(p2.hp > 1){
-                                    p2.hp -= 1;
+                                if(p2.characterinfo.hp > 1){
+                                    p2.characterinfo.hp -= 1;
                                 }
-                                p2.hitstun.timer = new hitstunTimer(100);
+                                p2.attack.hitstun.timer = new hitstunTimer(100);
                                 handlePush(p1,p2,"right",5,"hit");
                                 
                                 if(!p1.attack.mode.active){
-                                    if(p1.hypermeter <= 100 - 1){
-                                        p1.hypermeter += 1;
+                                    if(p1.characterinfo.hypermeter <= 100 - 1){
+                                        p1.characterinfo.hypermeter += 1;
                                     } else{
-                                        p1.hypermeter = 100;
+                                        p1.characterinfo.hypermeter = 100;
+                                    }
+                                }
+                                if(!p2.attack.mode.active){
+                                    if(p2.characterinfo.hypermeter <= 100 - 1){
+                                        p2.characterinfo.hypermeter += 1;
+                                    } else{
+                                        p2.characterinfo.hypermeter = 100;
                                     }
                                 }
                             } else if(!block || p2.jump){
-                                p2.hp -= 20*p1.attack.mode.dmgMultiplicator;
-                                if(p2.hp < 0){
-                                    p2.hp = 100;
-//                                    p2.hp = 0;
-//                                    console.log("preendgame");
-//                                    player[p1.sid].user.won = true;
-//                                    player[p2.sid].user.won = false;
-//                                    endGame(player[p1.sid],player[p2.sid]);
+                                p2.characterinfo.hp -= p1.action.jab.damage*p1.attack.mode.dmgMultiplicator;
+                                if(p2.characterinfo.hp < 0){
+                                    p2.characterinfo.hp = 0;
                                 }
                                 
-                                p2.hitstun.gotHit = true;
-                                p2.hitstun.timer = new hitstunTimer(300);
-                                handlePush(p1,p2,"right",20,"hit");
+                                p2.attack.hitstun.gotHit = true;
+                                p2.attack.hitstun.timer = new hitstunTimer(p1.action.jab.hitstun);
+                                handlePush(p1,p2,"right",p1.action.jab.push,"hit");
                                 
                                 if(!p1.attack.mode.active){
-                                    if(p1.hypermeter <= 100 - 2){
-                                        p1.hypermeter += 2;
+                                    if(p1.characterinfo.hypermeter <= 100 - p1.action.jab.damage){
+                                        p1.characterinfo.hypermeter += p1.action.jab.damage;
                                     } else{
-                                        p1.hypermeter = 100;
+                                        p1.characterinfo.hypermeter = 100;
+                                    }
+                                }
+                                if(!p2.attack.mode.active){
+                                    if(p2.characterinfo.hypermeter <= 100 - 1){
+                                        p2.characterinfo.hypermeter += 1;
+                                    } else{
+                                        p2.characterinfo.hypermeter = 100;
                                     }
                                 }
                             }
@@ -722,42 +1012,51 @@ function handleHitbox(action,p1,p2,vz){
                     case -1:
                         var block = controls[p2.sid].left;
                         if(p1hitboxX < p2hitboxX){
-                            if(block && !p2.hitstun.gotHit && !p2.jump){
+                            if(block && !p2.attack.hitstun.gotHit && !p2.jump){
                                 p2.attack.block = true;
-                                if(p2.hp > 1){
-                                    p2.hp -= 1;
+                                if(p2.characterinfo.hp > 1){
+                                    p2.characterinfo.hp -= 1;
                                 }
                                 
-                                p2.hitstun.timer = new hitstunTimer(100);
+                                p2.attack.hitstun.timer = new hitstunTimer(100);
                                 handlePush(p1,p2,"left",5,"hit");
 
                                 if(!p1.attack.mode.active){
-                                    if(p1.hypermeter <= 100 - 1){
-                                        p1.hypermeter += 1;
+                                    if(p1.characterinfo.hypermeter <= 100 - 1){
+                                        p1.characterinfo.hypermeter += 1;
                                     } else{
-                                        p1.hypermeter = 100;
+                                        p1.characterinfo.hypermeter = 100;
+                                    }
+                                }
+                                if(!p2.attack.mode.active){
+                                    if(p2.characterinfo.hypermeter <= 100 - 1){
+                                        p2.characterinfo.hypermeter += 1;
+                                    } else{
+                                        p2.characterinfo.hypermeter = 100;
                                     }
                                 }
                             } else if(!block || p2.jump){
-                                p2.hp -= 20*p1.attack.mode.dmgMultiplicator;
-                                if(p2.hp < 0){
-                                    p2.hp = 100;
-//                                    p2.hp = 0;
-//                                    console.log("preendgame");
-//                                    player[p1.sid].user.won = true;
-//                                    player[p2.sid].user.won = false;
-//                                    endGame(player[p1.sid],player[p2.sid]);
+                                p2.characterinfo.hp -= p2.action.jab.damage*p1.attack.mode.dmgMultiplicator;
+                                if(p2.characterinfo.hp < 0){
+                                    p2.characterinfo.hp = 0;
                                 }
                                 
-                                p2.hitstun.gotHit = true;
-                                p2.hitstun.timer = new hitstunTimer(300);
-                                handlePush(p1,p2,"left",20,"hit");
+                                p2.attack.hitstun.gotHit = true;
+                                p2.attack.hitstun.timer = new hitstunTimer(p1.action.jab.hitstun);
+                                handlePush(p1,p2,"left",p1.action.jab.push,"hit");
                             
                                 if(!p1.attack.mode.active){
-                                    if(p1.hypermeter <= 100 - 2){
-                                        p1.hypermeter += 2;
+                                    if(p1.characterinfo.hypermeter <= 100 - p2.action.jab.damage){
+                                        p1.characterinfo.hypermeter += p2.action.jab.damage;
                                     } else{
-                                        p1.hypermeter = 100;
+                                        p1.characterinfo.hypermeter = 100;
+                                    }
+                                }
+                                if(!p2.attack.mode.active){
+                                    if(p2.characterinfo.hypermeter <= 100 - 1){
+                                        p2.characterinfo.hypermeter += 1;
+                                    } else{
+                                        p2.characterinfo.hypermeter = 100;
                                     }
                                 }
                             }
@@ -767,55 +1066,64 @@ function handleHitbox(action,p1,p2,vz){
             }
             break;
         case "kick":
-            var p1hitboxX = p1.x + vz*100;
-            var p1hitboxYBelow = p1.y - p1.h + 122;
-            var p1hitboxYAbove = p1.y - p1.h + 86;
+            var p1hitboxX = p1.x + vz*p1.characterinfo.w*p1.action.kick.range;
+            var p1hitboxYBelow = p1.y - p1.characterinfo.h + p1.characterinfo.h*p1.action.kick.botY;
+            var p1hitboxYAbove = p1.y - p1.characterinfo.h + p1.characterinfo.h*p1.action.kick.topY;
         
-            var p2hitboxX = p2.x - vz*p2.w/2;
+            var p2hitboxX = p2.x - vz*p2.characterinfo.w/2;
             var p2hitboxYBelow = p2.y;
-            var p2hitboxYAbove = p2.y - p2.h;
+            var p2hitboxYAbove = p2.y - p2.characterinfo.h;
 
             if(p1hitboxYAbove > p2hitboxYAbove && p1hitboxYBelow < p2hitboxYBelow){
                 switch(vz){
                     case 1:
                         var block = controls[p2.sid].right;
                         if(p1hitboxX > p2hitboxX){
-                            if(block && !p2.hitstun.gotHit && !p2.jump){
+                            if(block && !p2.attack.hitstun.gotHit && !p2.jump){
                                 p2.attack.block = true;
-                                if(p2.hp > 1){
-                                    p2.hp -= 1;
+                                if(p2.characterinfo.hp > 1){
+                                    p2.characterinfo.hp -= 1;
                                 }
                                 
-                                p2.hitstun.timer = new hitstunTimer(100);
+                                p2.attack.hitstun.timer = new hitstunTimer(100);
                                 handlePush(p1,p2,"right",5,"hit");
 
                                 if(!p1.attack.mode.active){
-                                    if(p1.hypermeter <= 100 - 1){
-                                        p1.hypermeter += 1;
+                                    if(p1.characterinfo.hypermeter <= 100 - 1){
+                                        p1.characterinfo.hypermeter += 1;
                                     } else{
-                                        p1.hypermeter = 100;
+                                        p1.characterinfo.hypermeter = 100;
+                                    }
+                                }
+                                if(!p2.attack.mode.active){
+                                    if(p2.characterinfo.hypermeter <= 100 - 1){
+                                        p2.characterinfo.hypermeter += 1;
+                                    } else{
+                                        p2.characterinfo.hypermeter = 100;
                                     }
                                 }
                             } else if(!block || p2.jump){
-                                p2.hp -= 30*p1.attack.mode.dmgMultiplicator;
-                                if(p2.hp < 0){
-                                    p2.hp = 100;
-//                                    p2.hp = 0;
-//                                    console.log("preendgame");
-//                                    player[p1.sid].user.won = true;
-//                                    player[p2.sid].user.won = false;
-//                                    endGame(player[p1.sid],player[p2.sid]);
+                                p2.characterinfo.hp -= p1.action.kick.damage*p1.attack.mode.dmgMultiplicator;
+                                if(p2.characterinfo.hp < 0){
+                                    p2.characterinfo.hp = 0;
                                 }
                                 
-                                p2.hitstun.gotHit = true;
-                                p2.hitstun.timer = new hitstunTimer(500);
-                                handlePush(p1,p2,"right",100,"hit");
+                                p2.attack.hitstun.gotHit = true;
+                                p2.attack.hitstun.timer = new hitstunTimer(p1.action.kick.hitstun);
+                                handlePush(p1,p2,"right",p1.action.kick.push,"hit");
                             
                                 if(!p1.attack.mode.active){
-                                    if(p1.hypermeter <= 100 - 3){
-                                        p1.hypermeter += 3;
+                                    if(p1.characterinfo.hypermeter <= 100 - p1.action.kick.damage){
+                                        p1.characterinfo.hypermeter += p1.action.kick.damage;
                                     } else{
-                                        p1.hypermeter = 100;
+                                        p1.characterinfo.hypermeter = 100;
+                                    }
+                                }
+                                if(!p2.attack.mode.active){
+                                    if(p2.characterinfo.hypermeter <= 100 - 1){
+                                        p2.characterinfo.hypermeter += 1;
+                                    } else{
+                                        p2.characterinfo.hypermeter = 100;
                                     }
                                 }
                             }
@@ -824,42 +1132,51 @@ function handleHitbox(action,p1,p2,vz){
                     case -1:
                         var block = controls[p2.sid].left;
                         if(p1hitboxX < p2hitboxX){
-                            if(block && !p2.hitstun.gotHit && !p2.jump){
+                            if(block && !p2.attack.hitstun.gotHit && !p2.jump){
                                 p2.attack.block = true;
-                                if(p2.hp > 1){
-                                    p2.hp -= 1;
+                                if(p2.characterinfo.hp > 1){
+                                    p2.characterinfo.hp -= 1;
                                 }
                                 
-                                p2.hitstun.timer = new hitstunTimer(100);
+                                p2.attack.hitstun.timer = new hitstunTimer(100);
                                 handlePush(p1,p2,"left",5,"hit");
 
                                 if(!p1.attack.mode.active){
-                                    if(p1.hypermeter <= 100 - 1){
-                                        p1.hypermeter += 1;
+                                    if(p1.characterinfo.hypermeter <= 100 - 1){
+                                        p1.characterinfo.hypermeter += 1;
                                     } else{
-                                        p1.hypermeter = 100;
+                                        p1.characterinfo.hypermeter = 100;
+                                    }
+                                }
+                                if(!p2.attack.mode.active){
+                                    if(p2.characterinfo.hypermeter <= 100 - 1){
+                                        p2.characterinfo.hypermeter += 1;
+                                    } else{
+                                        p2.characterinfo.hypermeter = 100;
                                     }
                                 }
                             } else if(!block || p2.jump){
-                                p2.hp -= 30*p1.attack.mode.dmgMultiplicator;
-                                if(p2.hp < 0){
-                                    p2.hp = 100;
-//                                    p2.hp = 0;
-//                                    console.log("preendgame");
-//                                    player[p1.sid].user.won = true;
-//                                    player[p2.sid].user.won = false;
-//                                    endGame(player[p1.sid],player[p2.sid]);
+                                p2.characterinfo.hp -= p1.action.kick.damage*p1.attack.mode.dmgMultiplicator;
+                                if(p2.characterinfo.hp < 0){
+                                    p2.characterinfo.hp = 0;
                                 }
                                 
-                                p2.hitstun.gotHit = true;
-                                p2.hitstun.timer = new hitstunTimer(500);
-                                handlePush(p1,p2,"left",100,"hit");
+                                p2.attack.hitstun.gotHit = true;
+                                p2.attack.hitstun.timer = new hitstunTimer(p1.action.kick.hitstun);
+                                handlePush(p1,p2,"left",p1.action.kick.push,"hit");
                             
                                 if(!p1.attack.mode.active){
-                                    if(p1.hypermeter <= 100 - 3){
-                                        p1.hypermeter += 3;
+                                    if(p1.characterinfo.hypermeter <= 100 - p1.action.kick.damage){
+                                        p1.characterinfo.hypermeter += p1.action.kick.damage;
                                     } else{
-                                        p1.hypermeter = 100;
+                                        p1.characterinfo.hypermeter = 100;
+                                    }
+                                }
+                                if(!p2.attack.mode.active){
+                                    if(p2.characterinfo.hypermeter <= 100 - 1){
+                                        p2.characterinfo.hypermeter += 1;
+                                    } else{
+                                        p2.characterinfo.hypermeter = 100;
                                     }
                                 }
                             }
@@ -868,14 +1185,570 @@ function handleHitbox(action,p1,p2,vz){
                 }
             }
             break;
+            case "forwardhit":
+                var p1hitboxX = p1.x + vz*(p1.characterinfo.w - p1.characterinfo.w/3)*p1.action.forwardhit.range;
+                var p1hitboxYBelow = p1.y - p1.characterinfo.h + p1.characterinfo.h*p1.action.forwardhit.botY;
+                var p1hitboxYAbove = p1.y - p1.characterinfo.h + p1.characterinfo.h*p1.action.forwardhit.topY;
+
+                var p2hitboxX = p2.x - vz*p2.characterinfo.w/2;
+                var p2hitboxYBelow = p2.y;
+                var p2hitboxYAbove = p2.y - p2.characterinfo.h;
+
+                if(p1hitboxYAbove > p2hitboxYAbove && p1hitboxYBelow < p2hitboxYBelow){
+                    switch(vz){
+                        case 1:
+                            var block = controls[p2.sid].right;
+                            if(p1hitboxX > p2hitboxX){
+                                if(block && !p2.attack.hitstun.gotHit && !p2.jump){
+                                    p2.attack.block = true;
+                                    if(p2.characterinfo.hp > 1){
+                                        p2.characterinfo.hp -= 1;
+                                    }
+
+                                    p2.attack.hitstun.timer = new hitstunTimer(100);
+                                    handlePush(p1,p2,"right",5,"hit");
+
+                                    if(!p1.attack.mode.active){
+                                        if(p1.characterinfo.hypermeter <= 100 - 1){
+                                            p1.characterinfo.hypermeter += 1;
+                                        } else{
+                                            p1.characterinfo.hypermeter = 100;
+                                        }
+                                    }
+                                    if(!p2.attack.mode.active){
+                                        if(p2.characterinfo.hypermeter <= 100 - 1){
+                                            p2.characterinfo.hypermeter += 1;
+                                        } else{
+                                            p2.characterinfo.hypermeter = 100;
+                                        }
+                                    }
+                                } else if(!block || p2.jump){
+                                    p2.characterinfo.hp -= p1.action.forwardhit.damage*p1.attack.mode.dmgMultiplicator;
+                                    if(p2.characterinfo.hp < 0){
+                                        p2.characterinfo.hp = 0;
+                                    }
+
+                                    p2.attack.hitstun.gotHit = true;
+                                    p2.attack.hitstun.timer = new hitstunTimer(p1.action.forwardhit.hitstun);
+                                    handlePush(p1,p2,"right",p1.action.forwardhit.push,"hit");
+
+                                    if(!p1.attack.mode.active){
+                                        if(p1.characterinfo.hypermeter <= 100 - p1.action.forwardhit.damage){
+                                            p1.characterinfo.hypermeter += p1.action.forwardhit.damage;
+                                        } else{
+                                            p1.characterinfo.hypermeter = 100;
+                                        }
+                                    }
+                                    if(!p2.attack.mode.active){
+                                        if(p2.characterinfo.hypermeter <= 100 - 1){
+                                            p2.characterinfo.hypermeter += 1;
+                                        } else{
+                                            p2.characterinfo.hypermeter = 100;
+                                        }
+                                    }
+                                }
+                            }
+                            break;
+                        case -1:
+                            var block = controls[p2.sid].left;
+                            if(p1hitboxX < p2hitboxX){
+                                if(block && !p2.attack.hitstun.gotHit && !p2.jump){
+                                    p2.attack.block = true;
+                                    if(p2.characterinfo.hp > 1){
+                                        p2.characterinfo.hp -= 1;
+                                    }
+
+                                    p2.attack.hitstun.timer = new hitstunTimer(100);
+                                    handlePush(p1,p2,"left",5,"hit");
+
+                                    if(!p1.attack.mode.active){
+                                        if(p1.characterinfo.hypermeter <= 100 - 1){
+                                            p1.characterinfo.hypermeter += 1;
+                                        } else{
+                                            p1.characterinfo.hypermeter = 100;
+                                        }
+                                    }
+                                    if(!p2.attack.mode.active){
+                                        if(p2.characterinfo.hypermeter <= 100 - 1){
+                                            p2.characterinfo.hypermeter += 1;
+                                        } else{
+                                            p2.characterinfo.hypermeter = 100;
+                                        }
+                                    }
+                                } else if(!block || p2.jump){
+                                    p2.characterinfo.hp -= p1.action.forwardhit.damage*p1.attack.mode.dmgMultiplicator;
+                                    if(p2.characterinfo.hp < 0){
+                                        p2.characterinfo.hp = 0;
+                                    }
+
+                                    p2.attack.hitstun.gotHit = true;
+                                    p2.attack.hitstun.timer = new hitstunTimer(p1.action.forwardhit.hitstun);
+                                    handlePush(p1,p2,"left",p1.action.forwardhit.push,"hit");
+
+                                    if(!p1.attack.mode.active){
+                                        if(p1.characterinfo.hypermeter <= 100 - p1.action.forwardhit.damage){
+                                            p1.characterinfo.hypermeter += p1.action.forwardhit.damage;
+                                        } else{
+                                            p1.characterinfo.hypermeter = 100;
+                                        }
+                                    }
+                                    if(!p2.attack.mode.active){
+                                        if(p2.characterinfo.hypermeter <= 100 - 1){
+                                            p2.characterinfo.hypermeter += 1;
+                                        } else{
+                                            p2.characterinfo.hypermeter = 100;
+                                        }
+                                    }
+                                }
+                            }
+                            break;
+                    }
+                }
+                break;
+                case "airhit":
+                    var p1hitboxX = p1.x + vz*p1.characterinfo.w*p1.action.airhit.range;
+                    var p1hitboxYBelow = p1.y - p1.characterinfo.h + p1.characterinfo.h*p1.action.airhit.botY;
+                    var p1hitboxYAbove = p1.y - p1.characterinfo.h + p1.characterinfo.h*p1.action.airhit.topY;
+
+                    var p2hitboxX = p2.x - vz*p2.characterinfo.w/2;
+                    var p2hitboxYBelow = p2.y;
+                    var p2hitboxYAbove = p2.y - p2.characterinfo.h;
+
+                    if(p1hitboxYAbove > p2hitboxYAbove && p1hitboxYBelow < p2hitboxYBelow){
+                        switch(vz){
+                            case 1:
+                                var block = controls[p2.sid].right;
+                                if(p1hitboxX > p2hitboxX){
+                                    if(block && !p2.attack.hitstun.gotHit && !p2.jump){
+                                        p2.attack.block = true;
+                                        if(p2.characterinfo.hp > 1){
+                                            p2.characterinfo.hp -= 1;
+                                        }
+
+                                        p2.attack.hitstun.timer = new hitstunTimer(100);
+                                        handlePush(p1,p2,"right",5,"hit");
+
+                                        if(!p1.attack.mode.active){
+                                            if(p1.characterinfo.hypermeter <= 100 - 1){
+                                                p1.characterinfo.hypermeter += 1;
+                                            } else{
+                                                p1.characterinfo.hypermeter = 100;
+                                            }
+                                        }
+                                        if(!p2.attack.mode.active){
+                                            if(p2.characterinfo.hypermeter <= 100 - 1){
+                                                p2.characterinfo.hypermeter += 1;
+                                            } else{
+                                                p2.characterinfo.hypermeter = 100;
+                                            }
+                                        }
+                                    } else if(!block || p2.jump){
+                                        p2.characterinfo.hp -= p1.action.airhit.damage*p1.attack.mode.dmgMultiplicator;
+                                        if(p2.characterinfo.hp < 0){
+                                            p2.characterinfo.hp = 0;
+                                        }
+
+                                        p2.attack.hitstun.gotHit = true;
+                                        p2.attack.hitstun.timer = new hitstunTimer(p1.action.airhit.hitstun);
+                                        handlePush(p1,p2,"right",p1.action.airhit.push,"hit");
+
+                                        if(!p1.attack.mode.active){
+                                            if(p1.characterinfo.hypermeter <= 100 - p1.action.airhit.damage){
+                                                p1.characterinfo.hypermeter += p1.action.airhit.damage;
+                                            } else{
+                                                p1.characterinfo.hypermeter = 100;
+                                            }
+                                        }
+                                        if(!p2.attack.mode.active){
+                                            if(p2.characterinfo.hypermeter <= 100 - 1){
+                                                p2.characterinfo.hypermeter += 1;
+                                            } else{
+                                                p2.characterinfo.hypermeter = 100;
+                                            }
+                                        }
+                                    }
+                                }
+                                break;
+                            case -1:
+                                var block = controls[p2.sid].left;
+                                if(p1hitboxX < p2hitboxX){
+                                    if(block && !p2.attack.hitstun.gotHit && !p2.jump){
+                                        p2.attack.block = true;
+                                        if(p2.characterinfo.hp > 1){
+                                            p2.characterinfo.hp -= 1;
+                                        }
+
+                                        p2.attack.hitstun.timer = new hitstunTimer(100);
+                                        handlePush(p1,p2,"left",5,"hit");
+
+                                        if(!p1.attack.mode.active){
+                                            if(p1.characterinfo.hypermeter <= 100 - 1){
+                                                p1.characterinfo.hypermeter += 1;
+                                            } else{
+                                                p1.characterinfo.hypermeter = 100;
+                                            }
+                                        }
+                                        if(!p2.attack.mode.active){
+                                            if(p2.characterinfo.hypermeter <= 100 - 1){
+                                                p2.characterinfo.hypermeter += 1;
+                                            } else{
+                                                p2.characterinfo.hypermeter = 100;
+                                            }
+                                        }
+                                    } else if(!block || p2.jump){
+                                        p2.characterinfo.hp -= p1.action.airhit.damage*p1.attack.mode.dmgMultiplicator;
+                                        if(p2.characterinfo.hp < 0){
+                                            p2.characterinfo.hp = 0;
+                                        }
+
+                                        p2.attack.hitstun.gotHit = true;
+                                        p2.attack.hitstun.timer = new hitstunTimer(p1.action.airhit.hitstun);
+                                        handlePush(p1,p2,"left",p1.action.airhit.push,"hit");
+
+                                        if(!p1.attack.mode.active){
+                                            if(p1.characterinfo.hypermeter <= 100 - p1.action.airhit.damage){
+                                                p1.characterinfo.hypermeter += p1.action.airhit.damage;
+                                            } else{
+                                                p1.characterinfo.hypermeter = 100;
+                                            }
+                                        }
+                                        if(!p2.attack.mode.active){
+                                            if(p2.characterinfo.hypermeter <= 100 - 1){
+                                                p2.characterinfo.hypermeter += 1;
+                                            } else{
+                                                p2.characterinfo.hypermeter = 100;
+                                            }
+                                        }
+                                    }
+                                }
+                                break;
+                        }
+                    }
+                    break;
+                    case "crouchhit":
+                        var p1hitboxX = p1.x + vz*p1.characterinfo.w*p1.action.crouchhit.range;
+                        var p1hitboxYBelow = p1.y - p1.characterinfo.h + p1.characterinfo.h*p1.action.crouchhit.botY;
+                        var p1hitboxYAbove = p1.y - p1.characterinfo.h + p1.characterinfo.h*p1.action.crouchhit.topY;
+
+                        var p2hitboxX = p2.x - vz*p2.characterinfo.w/2;
+                        var p2hitboxYBelow = p2.y;
+                        var p2hitboxYAbove = p2.y - p2.characterinfo.h;
+
+                        if(p1hitboxYAbove > p2hitboxYAbove && p1hitboxYBelow < p2hitboxYBelow){
+                            switch(vz){
+                                case 1:
+                                    var block = controls[p2.sid].right;
+                                    if(p1hitboxX > p2hitboxX){
+                                        if(block && !p2.attack.hitstun.gotHit && !p2.jump){
+                                            p2.attack.block = true;
+                                            if(p2.characterinfo.hp > 1){
+                                                p2.characterinfo.hp -= 1;
+                                            }
+
+                                            p2.attack.hitstun.timer = new hitstunTimer(100);
+                                            handlePush(p1,p2,"right",5,"hit");
+
+                                            if(!p1.attack.mode.active){
+                                                if(p1.characterinfo.hypermeter <= 100 - 1){
+                                                    p1.characterinfo.hypermeter += 1;
+                                                } else{
+                                                    p1.characterinfo.hypermeter = 100;
+                                                }
+                                            }
+                                            if(!p2.attack.mode.active){
+                                                if(p2.characterinfo.hypermeter <= 100 - 1){
+                                                    p2.characterinfo.hypermeter += 1;
+                                                } else{
+                                                    p2.characterinfo.hypermeter = 100;
+                                                }
+                                            }
+                                        } else if(!block || p2.jump){
+                                            p2.characterinfo.hp -= p1.action.crouchhit.damage*p1.attack.mode.dmgMultiplicator;
+                                            if(p2.characterinfo.hp < 0){
+                                                p2.characterinfo.hp = 0;
+                                            }
+
+                                            p2.attack.hitstun.gotHit = true;
+                                            p2.attack.hitstun.timer = new hitstunTimer(p1.action.crouchhit.hitstun);
+                                            handlePush(p1,p2,"right",p1.action.crouchhit.push,"hit");
+
+                                            if(!p1.attack.mode.active){
+                                                if(p1.characterinfo.hypermeter <= 100 - p1.action.crouchhit.damage){
+                                                    p1.characterinfo.hypermeter += p1.action.crouchhit.damage;
+                                                } else{
+                                                    p1.characterinfo.hypermeter = 100;
+                                                }
+                                            }
+                                            if(!p2.attack.mode.active){
+                                                if(p2.characterinfo.hypermeter <= 100 - 1){
+                                                    p2.characterinfo.hypermeter += 1;
+                                                } else{
+                                                    p2.characterinfo.hypermeter = 100;
+                                                }
+                                            }
+                                        }
+                                    }
+                                    break;
+                                case -1:
+                                    var block = controls[p2.sid].left;
+                                    if(p1hitboxX < p2hitboxX){
+                                        if(block && !p2.attack.hitstun.gotHit && !p2.jump){
+                                            p2.attack.block = true;
+                                            if(p2.characterinfo.hp > 1){
+                                                p2.characterinfo.hp -= 1;
+                                            }
+
+                                            p2.attack.hitstun.timer = new hitstunTimer(100);
+                                            handlePush(p1,p2,"left",5,"hit");
+
+                                            if(!p1.attack.mode.active){
+                                                if(p1.characterinfo.hypermeter <= 100 - 1){
+                                                    p1.characterinfo.hypermeter += 1;
+                                                } else{
+                                                    p1.characterinfo.hypermeter = 100;
+                                                }
+                                            }
+                                            if(!p2.attack.mode.active){
+                                                if(p2.characterinfo.hypermeter <= 100 - 1){
+                                                    p2.characterinfo.hypermeter += 1;
+                                                } else{
+                                                    p2.characterinfo.hypermeter = 100;
+                                                }
+                                            }
+                                        } else if(!block || p2.jump){
+                                            p2.characterinfo.hp -= p1.action.crouchhit.damage*p1.attack.mode.dmgMultiplicator;
+                                            if(p2.characterinfo.hp < 0){
+                                                p2.characterinfo.hp = 0;
+                                            }
+
+                                            p2.attack.hitstun.gotHit = true;
+                                            p2.attack.hitstun.timer = new hitstunTimer(p1.action.crouchhit.hitstun);
+                                            handlePush(p1,p2,"left",p1.action.crouchhit.push,"hit");
+
+                                            if(!p1.attack.mode.active){
+                                                if(p1.characterinfo.hypermeter <= 100 - p1.action.crouchhit.damage){
+                                                    p1.characterinfo.hypermeter += p1.action.crouchhit.damage;
+                                                } else{
+                                                    p1.characterinfo.hypermeter = 100;
+                                                }
+                                            }
+                                            if(!p2.attack.mode.active){
+                                                if(p2.characterinfo.hypermeter <= 100 - 1){
+                                                    p2.characterinfo.hypermeter += 1;
+                                                } else{
+                                                    p2.characterinfo.hypermeter = 100;
+                                                }
+                                            }
+                                        }
+                                    }
+                                    break;
+                            }
+                        }
+                        break;
+                    case "special1":
+                        var p1hitboxX = p1.x + vz*p1.characterinfo.w*p1.action.special1.range;
+                        var p1hitboxYBelow = p1.y - p1.characterinfo.h + p1.characterinfo.h*p1.action.special1.botY;
+                        var p1hitboxYAbove = p1.y - p1.characterinfo.h + p1.characterinfo.h*p1.action.special1.topY;
+
+                        var p2hitboxX = p2.x - vz*p2.characterinfo.w/2;
+                        var p2hitboxYBelow = p2.y;
+                        var p2hitboxYAbove = p2.y - p2.characterinfo.h;
+
+                        if(p1hitboxYAbove > p2hitboxYAbove && p1hitboxYBelow < p2hitboxYBelow){
+                            switch(vz){
+                                case 1:
+                                    var block = controls[p2.sid].right;
+                                    if(p1hitboxX > p2hitboxX){
+                                        if(block && !p2.attack.hitstun.gotHit && !p2.jump){
+                                            p2.attack.block = true;
+                                            if(p2.characterinfo.hp > 1){
+                                                p2.characterinfo.hp -= 1;
+                                            }
+
+                                            p2.attack.hitstun.timer = new hitstunTimer(100);
+                                            handlePush(p1,p2,"right",5,"hit");
+
+                                            if(!p2.attack.mode.active){
+                                                if(p2.characterinfo.hypermeter <= 100 - 1){
+                                                    p2.characterinfo.hypermeter += 1;
+                                                } else{
+                                                    p2.characterinfo.hypermeter = 100;
+                                                }
+                                            }
+                                        } else if(!block || p2.jump){
+                                            p2.characterinfo.hp -= p1.action.special1.damage*p1.attack.mode.dmgMultiplicator;
+                                            if(p2.characterinfo.hp < 0){
+                                                p2.characterinfo.hp = 0;
+                                            }
+
+                                            p2.attack.hitstun.gotHit = true;
+                                            p2.attack.hitstun.timer = new hitstunTimer(p1.action.special1.hitstun);
+                                            handlePush(p1,p2,"right",p1.action.special1.push,"hit");
+
+                                            if(!p2.attack.mode.active){
+                                                if(p2.characterinfo.hypermeter <= 100 - 1){
+                                                    p2.characterinfo.hypermeter += 1;
+                                                } else{
+                                                    p2.characterinfo.hypermeter = 100;
+                                                }
+                                            }
+                                        }
+                                    }
+                                    break;
+                                case -1:
+                                    var block = controls[p2.sid].left;
+                                    if(p1hitboxX < p2hitboxX){
+                                        if(block && !p2.attack.hitstun.gotHit && !p2.jump){
+                                            p2.attack.block = true;
+                                            if(p2.characterinfo.hp > 1){
+                                                p2.characterinfo.hp -= 1;
+                                            }
+
+                                            p2.attack.hitstun.timer = new hitstunTimer(100);
+                                            handlePush(p1,p2,"left",5,"hit");
+
+                                            if(!p2.attack.mode.active){
+                                                if(p2.characterinfo.hypermeter <= 100 - 1){
+                                                    p2.characterinfo.hypermeter += 1;
+                                                } else{
+                                                    p2.characterinfo.hypermeter = 100;
+                                                }
+                                            }
+                                        } else if(!block || p2.jump){
+                                            p2.characterinfo.hp -= p1.action.special1.damage*p1.attack.mode.dmgMultiplicator;
+                                            if(p2.characterinfo.hp < 0){
+                                                p2.characterinfo.hp = 0;
+                                            }
+
+                                            p2.attack.hitstun.gotHit = true;
+                                            p2.attack.hitstun.timer = new hitstunTimer(p1.action.special1.hitstun);
+                                            handlePush(p1,p2,"left",p1.action.special1.push,"hit");
+
+                                            if(!p2.attack.mode.active){
+                                                if(p2.characterinfo.hypermeter <= 100 - 1){
+                                                    p2.characterinfo.hypermeter += 1;
+                                                } else{
+                                                    p2.characterinfo.hypermeter = 100;
+                                                }
+                                            }
+                                        }
+                                    }
+                                    break;
+                            }
+                        }
+                        break;
+                    case "special2":
+                        var p1hitboxX = p1.x + vz*p1.characterinfo.w*p1.action.special2.range;
+                        var p1hitboxYBelow = p1.y - p1.characterinfo.h + p1.characterinfo.h*p1.action.special2.botY;
+                        var p1hitboxYAbove = p1.y - p1.characterinfo.h + p1.characterinfo.h*p1.action.special2.topY;
+
+                        var p2hitboxX = p2.x - vz*p2.characterinfo.w/2;
+                        var p2hitboxYBelow = p2.y;
+                        var p2hitboxYAbove = p2.y - p2.characterinfo.h;
+
+                        if(p1hitboxYAbove > p2hitboxYAbove && p1hitboxYBelow < p2hitboxYBelow){
+                            switch(vz){
+                                case 1:
+                                    var block = controls[p2.sid].right;
+                                    if(p1hitboxX > p2hitboxX){
+                                        if(block && !p2.attack.hitstun.gotHit && !p2.jump){
+                                            p2.attack.block = true;
+                                            if(p2.characterinfo.hp > 1){
+                                                p2.characterinfo.hp -= 1;
+                                            }
+
+                                            p2.attack.hitstun.timer = new hitstunTimer(100);
+                                            handlePush(p1,p2,"right",5,"hit");
+
+                                            if(!p2.attack.mode.active){
+                                                if(p2.characterinfo.hypermeter <= 100 - 1){
+                                                    p2.characterinfo.hypermeter += 1;
+                                                } else{
+                                                    p2.characterinfo.hypermeter = 100;
+                                                }
+                                            }
+                                        } else if(!block || p2.jump){
+                                            p2.characterinfo.hp -= p1.action.special2.damage*p1.attack.mode.dmgMultiplicator;
+                                            if(p2.characterinfo.hp < 0){
+                                                p2.characterinfo.hp = 0;
+                                            }
+
+                                            p2.attack.hitstun.gotHit = true;
+                                            p2.attack.hitstun.timer = new hitstunTimer(p1.action.special2.hitstun);
+                                            handlePush(p1,p2,"right",p1.action.special2.push,"hit");
+
+                                            if(!p2.attack.mode.active){
+                                                if(p2.characterinfo.hypermeter <= 100 - 1){
+                                                    p2.characterinfo.hypermeter += 1;
+                                                } else{
+                                                    p2.characterinfo.hypermeter = 100;
+                                                }
+                                            }
+                                        }
+                                    }
+                                    break;
+                                case -1:
+                                    var block = controls[p2.sid].left;
+                                    if(p1hitboxX < p2hitboxX){
+                                        if(block && !p2.attack.hitstun.gotHit && !p2.jump){
+                                            p2.attack.block = true;
+                                            if(p2.characterinfo.hp > 1){
+                                                p2.characterinfo.hp -= 1;
+                                            }
+
+                                            p2.attack.hitstun.timer = new hitstunTimer(100);
+                                            handlePush(p1,p2,"left",5,"hit");
+
+                                            if(!p2.attack.mode.active){
+                                                if(p2.characterinfo.hypermeter <= 100 - 1){
+                                                    p2.characterinfo.hypermeter += 1;
+                                                } else{
+                                                    p2.characterinfo.hypermeter = 100;
+                                                }
+                                            }
+                                        } else if(!block || p2.jump){
+                                            p2.characterinfo.hp -= p1.action.special2.damage*p1.attack.mode.dmgMultiplicator;
+                                            if(p2.characterinfo.hp < 0){
+                                                p2.characterinfo.hp = 0;
+                                            }
+
+                                            p2.attack.hitstun.gotHit = true;
+                                            p2.attack.hitstun.timer = new hitstunTimer(p1.action.special2.hitstun);
+                                            handlePush(p1,p2,"left",p1.action.special2.push,"hit");
+
+                                            if(!p2.attack.mode.active){
+                                                if(p2.characterinfo.hypermeter <= 100 - 1){
+                                                    p2.characterinfo.hypermeter += 1;
+                                                } else{
+                                                    p2.characterinfo.hypermeter = 100;
+                                                }
+                                            }
+                                        }
+                                    }
+                                    break;
+                            }
+                        }
+                        break;
     }
 }
 
-//TODO
-var mapX = 1000;
+function checkKO(p1,p2){
+    if(p1.characterinfo.hp === 0){
+        p1.characterinfo.ko = true;
+        player[p1.sid].user.won = false;
+        player[p2.sid].user.won = true;
+        endGame(player[p1.sid],player[p2.sid]);
+    }else if(p2.characterinfo.hp === 0){
+        p2.characterinfo.ko = true;
+        player[p1.sid].user.won = true;
+        player[p2.sid].user.won = false;
+        endGame(player[p1.sid],player[p2.sid]);
+    }
+}
+
 function handlePush(p1,p2,direction,distance,action){
-    var boundaryL = p1.w/2 + 20;
-    var boundaryR  = mapX - (p1.w / 2) - 20;
+    var boundaryL = p1.characterinfo.w/2 + 20;
+    var boundaryR  = mapX - (p1.characterinfo.w/2) - 20;
     
     switch(action){
         case "collide":
@@ -896,7 +1769,6 @@ function handlePush(p1,p2,direction,distance,action){
                     } else if(push > boundaryR){
                         p2.x = boundaryR;
                     }
-                    p2.x += distance;
                     break;
             }
             break;
@@ -976,13 +1848,13 @@ function handleHitstun(){
         var characterRed = lobby[i].red;
         var characterBlue = lobby[i].blue;
         
-        if(characterRed.hitstun.gotHit || characterRed.attack.block){
-            var hitstunRed = characterRed.hitstun.timer;
+        if(characterRed.attack.hitstun.gotHit || characterRed.attack.block){
+            var hitstunRed = characterRed.attack.hitstun.timer;
             hitstunRed.check(characterRed);
         }
         
-        if(characterBlue.hitstun.gotHit || characterBlue.attack.block){
-            var hitstunBlue = characterBlue.hitstun.timer;
+        if(characterBlue.attack.hitstun.gotHit || characterBlue.attack.block){
+            var hitstunBlue = characterBlue.attack.hitstun.timer;
             hitstunBlue.check(characterBlue);
         }
     }
@@ -996,12 +1868,12 @@ function hitstunTimer(duration){
     this.duration = duration;
     
     this.check = function(defender){
-        if(defender.hitstun.gotHit){
+        if(defender.attack.hitstun.gotHit){
             var curTime = new Date();
             if(curTime.getTime() - this.start.getTime() > this.duration){
-                defender.hitstun.gotHit = false;
+                defender.attack.hitstun.gotHit = false;
             }
-        } else if(!defender.hitstun.gotHit){
+        } else if(!defender.attack.hitstun.gotHit){
             var curTime = new Date();
             if(curTime.getTime() - this.start.getTime() > this.duration){
                 defender.attack.block = false;
@@ -1076,7 +1948,6 @@ function timerHandler(characterRed, characterBlue){
                         this.prevTime = curTime;
                 }
         } else{
-                console.log(this.characterBlue.hp + " " + this.characterRed.hp);
                 this.enabled = false;
                 if(this.characterRed.hp > this.characterBlue.hp){
                     player[this.characterRed.sid].user.won = true;
@@ -1108,28 +1979,28 @@ function hypermeterHandler(){
             var curTime = new Date();
             if(curTime.getTime() - this.prevTime.getTime() >= 1000){   
                 if(characterRed.attack.mode.active){
-                    characterRed.hypermeter -= 5;
-                    if(characterRed.hypermeter <= 0){
-                        characterRed.hypermeter = 0;
+                    characterRed.characterinfo.hypermeter -= 5;
+                    if(characterRed.characterinfo.hypermeter <= 0){
+                        characterRed.characterinfo.hypermeter = 0;
                         characterRed.attack.mode.active = false;
                         characterRed.attack.mode.dmgMultiplicator = 1;
                     }
                 } else{
-                    if(characterRed.hypermeter < 100){
-                        characterRed.hypermeter++;
+                    if(characterRed.characterinfo.hypermeter < 100){
+                        characterRed.characterinfo.hypermeter++;
                     }
                 }
                 
                 if(characterBlue.attack.mode.active){
-                    characterBlue.hypermeter -= 5;
-                    if(characterBlue.hypermeter <= 0){
-                        characterBlue.hypermeter = 0;
+                    characterBlue.characterinfo.hypermeter -= 5;
+                    if(characterBlue.characterinfo.hypermeter <= 0){
+                        characterBlue.characterinfo.hypermeter = 0;
                         characterBlue.attack.mode.active = false;
                         characterBlue.attack.mode.dmgMultiplicator = 1;
                     }
                 } else{
-                    if(characterBlue.hypermeter < 100){
-                        characterBlue.hypermeter++;
+                    if(characterBlue.characterinfo.hypermeter < 100){
+                        characterBlue.characterinfo.hypermeter++;
                     }   
                 }
                     
@@ -1162,7 +2033,7 @@ function assignToLobby(socketId) {
         }
             var character = [];
             character[slot] = extend({},cA);
-            console.log(lobby[lc],lc);
+//            console.log(lobby[lc],lc);
 
             lobby[lc][slot] = character[slot];
             //lobby[lc] = {blue:character["blue"],red:character["red"]};
@@ -1170,7 +2041,7 @@ function assignToLobby(socketId) {
         //
         //}
 
-        console.log(lobby[lc],slot);
+//        console.log(lobby[lc],slot);
         team.pop();
         lobby[lc][slot].sid = socket.id;
 //        lobby[lc].sockets = {};
@@ -1190,7 +2061,7 @@ function assignToLobby(socketId) {
         lobby[++lc] = {};
         lobby[lc][slot] = character[slot];
         //lobby[++lc] = {blue:character["blue"],red:character["red"]};
-        console.log(lc);
+//        console.log(lc);
         team.pop();
         lobby[lc][slot].sid = socket.id;
     }
@@ -1224,8 +2095,8 @@ function assignToLobby(socketId) {
             
             var characterRed = lobby[lC].red;
             var characterBlue = lobby[lC].blue;
-            console.log("characterRed: ", characterRed.name);
-            console.log("characterBlue: ", characterBlue.name);
+//            console.log("characterRed: ", characterRed.name);
+//            console.log("characterBlue: ", characterBlue.name);
             
             var gameTimer = new timerHandler(characterRed, characterBlue);
             var hypermeter = new hypermeterHandler();
@@ -1238,6 +2109,8 @@ function assignToLobby(socketId) {
             characterRed.start = characterRed.x = 850 - options.playerStartDelta;
             characterBlue.y=characterRed.y= options.mapY;
             characterBlue.lobby=characterRed.lobby= lC;
+            characterBlue.attack.endlag.timer =  
+            characterRed.attack.endlag.timer = new Date();
 
     //      if(lobby[1])console.log(lobby[0].red.lobby,lobby[1].red.lobby,lC);
     //        else console.log(lobby[0].red.lobby,lC);

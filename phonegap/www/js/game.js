@@ -101,37 +101,39 @@ var game = {
             
             
             //stand consists of frames 0,1,2
-            game[color].animations.add('stand',[0,1,2,2,1,0]);
+            game[color].animations.add('stand',game.options.characters[color].action.idle.animation.frames);
             //10 fps
             game[color].animations.play('stand', 10, true);
             //jump animation
-            var isJumping = game[color].animations.add('jump',[3]);
+            var isJumping = game[color].animations.add('jump',game.options.characters[color].action.jump.animation.frames);
             //crouch
-            var isCrouching = game[color].animations.add('crouch',[5]);
-            //defence
-            var isDefending = game[color].animations.add('defence',[4]);
+            var isCrouching = game[color].animations.add('crouch',game.options.characters[color].action.crouch.animation.frames);
             //move
-            var isWalking = game[color].animations.add('walk',[7,8,9,8]);
+            var isWalking = game[color].animations.add('walk',game.options.characters[color].action.walk.animation.frames);
             //gotHit
-            var gotHit = game[color].animations.add('gotHit',[13]);
+            var gotHit = game[color].animations.add('gotHit',game.options.characters[color].action.gotHit.animation.frames);
             //block
-            var blocked = game[color].animations.add('blocked',[4]);
+            var blocked = game[color].animations.add('blocked',game.options.characters[color].action.blocked.animation.frames);
             //jab
-            var isJabbing = game[color].animations.add('jab',[10,11,11,11,10]);
+            var isJabbing = game[color].animations.add('jab',game.options.characters[color].action.jab.animation.frames);
             //airhit
-            var isAirhit = game[color].animations.add('airhit',[3,20,20,20,3]);
+            var isAirhit = game[color].animations.add('airhit',game.options.characters[color].action.airhit.animation.frames);
+            //crouchhit
+            var isCrouchhit = game[color].animations.add('crouchhit', game.options.characters[color].action.crouchhit.animation.frames);
             //foward hit
-            var isFowardhit = game[color].animations.add('fowardhit',[14,15,16,15]);
+            var isForwardhit = game[color].animations.add('forwardhit',game.options.characters[color].action.forwardhit.animation.frames);
             //backward hit
-            var isBackwardhit = game[color].animations.add('backwardhit',[21,21,22,23,22]);
+            var isBackwardhit = game[color].animations.add('backwardhit',game.options.characters[color].action.backwardhit.animation.frames);
             //kick
-            var isKicking = game[color].animations.add('kick',[4,6,6,6,6,4,4,4,4]);
+            var isKicking = game[color].animations.add('kick',game.options.characters[color].action.kick.animation.frames);
             //special1 
-            var isSpecial1 = game[color].animations.add('special1',[24,25,26,25]);
+            var isSpecial1 = game[color].animations.add('special1',game.options.characters[color].action.special1.animation.frames);
             //special2  
-            var isSpecial2 = game[color].animations.add('special2',[28,28,29,30,30,29]);
+            var isSpecial2 = game[color].animations.add('special2',game.options.characters[color].action.special2.animation.frames);
             //hyper 
-            var isHyper = game[color].animations.add('hyper',[21,21,22,23,22]);
+            var isHyper = game[color].animations.add('hyper',game.options.characters[color].action.hyper.animation.frames);
+            //Ko
+            var isKO = game[color].animations.add('ko',game.options.characters[color].action.ko.animation.frames);
 
             //add attributes
             var attributes = {
@@ -141,16 +143,17 @@ var game = {
                     isWalkingSince:Date.now(),
                     isJumping:isJumping,
                     isCrouching:isCrouching,
-                    isDefending:isDefending,
                     isAttacking:false,
                     isJabbing:isJabbing,
                     isAirhit:isAirhit,
-                    isFowardhit:isFowardhit,
+                    isCrouchhit:isCrouchhit,
+                    isForwardhit:isForwardhit,
                     isBackwardhit:isBackwardhit,
                     isKicking:isKicking,
                     isSpecial1:isSpecial1,
                     isSpecial2:isSpecial2,
-                    isHyper:isHyper
+                    isHyper:isHyper,
+                    isKO:isKO
                 };
             game[color] = $.extend(game[color],attributes);
             
@@ -176,8 +179,7 @@ var game = {
         game.meterbar_p1 = game.phaser.add.image(102,63, 'meterbar');
         game.meterbar_p2 = game.phaser.add.image(452,63, 'meterbar');
                 
-        //Avatar player A - Last parameter is sprite no. on spritesheet
-        //TODO - Get sprite no. from game.options
+        //Avatar - Last parameter is sprite no. on spritesheet
         var avatarA;
         var avatarB;
         if(game.options.characters['blue'].name.indexOf("muaythai") > -1){
@@ -190,9 +192,6 @@ var game = {
         } else if(game.options.characters['red'].name.indexOf("frau") > -1){
             avatarB = 1;
         }
-
-        
-        
         
         var avaPA = game.phaser.add.sprite(20,15, 'avatar',avatarA);
         avaPA.scale.setTo(0.4, 0.4);
@@ -333,15 +332,6 @@ var game = {
         
         debug.run();
         
-        //TODO TEST ENERGYBALL
-//        var energyball = game.phaser.add.sprite(500,0,'energyball');
-//        game.effectGroup.add(energyball);
-        
-//TODO
-//        if(game.phaser.camera.target === null){
-//            game.phaser.camera.follow(game[game.options.color]);
-//        }
-        
         //players
         for(var key in game.players){
             var color = game.players[key];
@@ -367,15 +357,18 @@ var game = {
             else if(game[color].kickTimer >= Date.now()){
                 game[color].animations.play('kick', 20, false);
             }
-            else if(game[color].fowardhitTimer >= Date.now()){
-                game[color].animations.play('fowardhit', 7, false);
+            else if(game[color].forwardhitTimer >= Date.now()){
+                game[color].animations.play('forwardhit', 7, false);
             }
             else if(game[color].backwardhitTimer >= Date.now()){
                 game[color].animations.play('backwardhit', 7, false);
-                projectile.create(color);
+                projectile.create(color,"projectile");
             }
             else if(game[color].airhitTimer >= Date.now()){
                 game[color].animations.play('airhit', 20, false);
+            }
+            else if(game[color].crouchhitTimer >= Date.now()){
+                game[color].animations.play('crouchhit', 5, false);
             }
             else if(game[color].special1Timer >= Date.now()){
                 game[color].animations.play('special1', 10, false);
@@ -385,6 +378,10 @@ var game = {
             }
             else if(game[color].hyperTimer >= Date.now()){
                 game[color].animations.play('hyper', 10, false);
+                projectile.create(color,"hyper");
+            }
+            else if(game[color].ko){
+                    game[color].animations.play('ko', 3, false);
             }
             else {
                 if(game[color].crouch){
@@ -549,12 +546,19 @@ var hypermeter = {
 };
 
 var projectile = {
-    create:function(color){
+    create:function(color,projectile){
         switch(color){  
             case 'red':
                 if(game[color].projectileExist && game.projectileCount_p1 < 1){
                     game.projectileCount_p1++;
-                    game.projectile_p1 = game.phaser.add.sprite(game[color].projectileX, game[color].projectileY,'projectile');
+                    switch(projectile){
+                        case "projectile":
+                            game.projectile_p1 = game.phaser.add.sprite(game[color].projectileX, game[color].projectileY,'projectile');
+                            break;
+                        case "hyper":
+                            game.projectile_p1 = game.phaser.add.sprite(game[color].projectileX, game[color].projectileY,'projectileHyper');
+                            break;
+                    }
                     game.effectGroup.add(game.projectile_p1);
                     game.projectile_p1.animations.add('move',[0,1]);
                     game.projectile_p1.animations.play('move', 3, true);
@@ -563,7 +567,14 @@ var projectile = {
             case 'blue':
                 if(game[color].projectileExist && game.projectileCount_p2 < 1){
                     game.projectileCount_p2++;
-                    game.projectile_p2 = game.phaser.add.sprite(game[color].projectileX, game[color].projectileY,'projectile');
+                    switch(projectile){
+                        case "projectile":
+                            game.projectile_p2 = game.phaser.add.sprite(game[color].projectileX, game[color].projectileY,'projectile');
+                            break;
+                        case "hyper":
+                            game.projectile_p2 = game.phaser.add.sprite(game[color].projectileX, game[color].projectileY,'projectileHyper');
+                            break;
+                    }
                     game.effectGroup.add(game.projectile_p2);
                     game.projectile_p2.animations.add('move',[0,1]);
                     game.projectile_p2.animations.play('move', 3, true);

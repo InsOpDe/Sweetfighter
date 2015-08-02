@@ -52,5 +52,6 @@ var loader = {
         game.phaser.load.spritesheet('avataranimationBPlayerB', 'img/Avatar_AnimationBPlayerB_Spritesheet.png', 160, 160, 18);
 
         game.phaser.load.spritesheet('projectile', 'img/EnergySprite.png',80,120,4);
+        game.phaser.load.spritesheet('projectileHyper', 'img/EnergySpriteHyper.png',200,300,4);
     },
 }

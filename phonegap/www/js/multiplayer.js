@@ -69,12 +69,12 @@ var multiplayer = {
                     game[color].y = actions[color].y;
                     game[color].realX = actions[color].x;
                     game[color].realY = actions[color].y;
-                    game[color].w = actions[color].w;
-                    game[color].h = actions[color].h;
+                    game[color].w = actions[color].characterinfo.w;
+                    game[color].h = actions[color].characterinfo.h;
                     
-                    healthgauge.healthplayers[color].hp = actions[color].hp;
-                    healthgauge.gotHit[color] = actions[color].hitstun.gotHit;
-                    hypermeter.hyperplayer[color].hyper = actions[color].hypermeter;
+                    healthgauge.healthplayers[color].hp = actions[color].characterinfo.hp;
+                    healthgauge.gotHit[color] = actions[color].attack.hitstun.gotHit;
+                    hypermeter.hyperplayer[color].hyper = actions[color].characterinfo.hypermeter;
                     
 //                    game[color].attackRange.x = actions[color].attack.x - (actions[color].attack.w / 2);
 //                    game[color].attackRange.y = actions[color].attack.y - (actions[color].attack.h / 2);
@@ -93,18 +93,21 @@ var multiplayer = {
 //                            }
 //                        },20);
 //                    }
-                    game[color].gotHit = actions[color].hitstun.gotHit;
+                
+                    game[color].gotHit = actions[color].attack.hitstun.gotHit;
                     game[color].blocked = actions[color].attack.block;
                     game[color].isWalking = actions[color].moving;
                     game[color].crouch = actions[color].crouch;
-                    game[color].jab = actions[color].attack.jabcommand.jab;
-                    game[color].kick = actions[color].attack.jabcommand.kick;
+                    game[color].jab = actions[color].attack.jab;
+                    game[color].kick = actions[color].attack.kick;
                     game[color].airhit = actions[color].attack.airhit;
-                    game[color].fowardhit = actions[color].attack.fowardhit;
+                    game[color].crouchhit = actions[color].attack.crouchhit;
+                    game[color].forwardhit = actions[color].attack.forwardhit;
                     game[color].backwardhit = actions[color].attack.backwardhit;
                     game[color].special1 = actions[color].attack.special1;
                     game[color].special2 = actions[color].attack.special2;
                     game[color].hyper = actions[color].attack.hyper;
+                    game[color].ko = actions[color].characterinfo.ko;
                     
                     game[color].projectileExist = actions[color].attack.projectile.exist;
                     game[color].projectileX = actions[color].attack.projectile.posX;
@@ -116,14 +119,17 @@ var multiplayer = {
                     if(game[color].jab){
                         game[color].jabTimer = Date.now() + 300; //genaue zeit wielange ein jab dauert!
                     }
-                    if(game[color].fowardhit){
-                        game[color].fowardhitTimer = Date.now() + 500; //genaue zeit wielange ein jab dauert!
+                    if(game[color].forwardhit){
+                        game[color].forwardhitTimer = Date.now() + 500; //genaue zeit wielange ein jab dauert!
                     }
                     if(game[color].backwardhit){
                         game[color].backwardhitTimer = Date.now() + 500;
                     }
                     if(game[color].airhit){
                         game[color].airhitTimer = Date.now() + 300; //genaue zeit wielange ein jab dauert!
+                    }
+                    if(game[color].crouchhit){
+                        game[color].crouchhitTimer = Date.now() + 300; //genaue zeit wielange ein jab dauert!
                     }
                     if(game[color].kick){
                         game[color].kickTimer = Date.now() + 500; //genaue zeit wielange ein jab dauert!
