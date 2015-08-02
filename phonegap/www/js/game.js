@@ -54,6 +54,7 @@ var game = {
         
         game.backgroundGroup = game.phaser.add.group();
         game.characterGroup = game.phaser.add.group();
+        game.foregroundGroup = game.phaser.add.group();
         game.effectGroup = game.phaser.add.group();
         game.interfaceGroup = game.phaser.add.group();
 
@@ -64,8 +65,16 @@ var game = {
         game.ebene4 = game.phaser.add.tileSprite(0, 0, game.options.mapX, game.options.mapY, 'ebene4');
         game.backgroundGroup.add(game.ebene1);
         game.backgroundGroup.add(game.ebene2);
-        game.backgroundGroup.add(game.ebene3);
+        if(game.options.map == 'jungle'){
+            game.foregroundGroup.add(game.ebene3);
+        } else {
+            game.backgroundGroup.add(game.ebene3);
+        }
+
         game.backgroundGroup.add(game.ebene4);
+
+
+
         
         //player animations etc
         for(var key in game.players){
@@ -241,25 +250,30 @@ var game = {
         avataranimationBPlayerB.animations.play('rotateB',10,true);
         
         game.interface = game.phaser.add.image(2, 0, 'interface');
-        
+
+        var fill = 555151;
+        if(game.options.map == 'jungle'){
+            fill = "#ffffff";
+        }
+
         var nameBlue = game.phaser.add.text(92, 78, game.options.nameBlue,{
             font: "bold 12px Arial",
-            fill: "555151",
+            fill: fill,
             align: "center"
         });
         var eloBlue = game.phaser.add.text(92, 92, game.options.eloBlue + "BP",{
             font: "bold 12px Arial",
-            fill: "555151",
+            fill: fill,
             align: "center"
         });
         var nameRed = game.phaser.add.text(612, 78, game.options.nameRed,{
             font: "bold 12px Arial",
-            fill: "555151",
+            fill: fill,
             align: "center"
         });
         var eloRed = game.phaser.add.text(612, 92, game.options.eloRed + "BP",{
             font: "bold 12px Arial",
-            fill: "555151",
+            fill: fill,
             align: "center"
         }); 
         
@@ -358,10 +372,11 @@ var game = {
             
             if(game[color].gotHitTimer >= Date.now()){
                     game[color].animations.play('gotHit', 5, false);
-                //var rand = Math.floor(Math.random() * 3) + 1;
-                //game.audio['punch'+rand].play('punch'+rand);
-                if(!game.audio['punch1'].isPlaying)
-                    game.audio['punch1'].play('punch1');
+
+                if(game[color].hotHitId && game[color].hotHitId != game[color].hotHitIdTemp){
+                    game[color].hotHitIdTemp = game[color].hotHitId;
+                    game.punched();
+                }
             } 
             else if(game[color].blocked){
                 game[color].animations.play('blocked', 5, false);
@@ -442,6 +457,12 @@ var game = {
         healthgauge.updateHealthgaugeDisplay();
         healthgauge.updateDmgBar();
         hypermeter.updateHypermeterDisplay();
+    },
+    punched : function() {
+        var rand = Math.floor(Math.random() * 3) + 1;
+        game.audio['punch'+rand].play('punch'+rand);
+        //if(!game.audio['punch1'].isPlaying)
+        //    game.audio['punch1'].play('punch1');
     }
 };
 
