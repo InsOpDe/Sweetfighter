@@ -122,7 +122,8 @@ a {
     width: 56em;
     height: 30em;
     background-image: url("../img/menu/boxring.png");
-    background-size: cover;
+    background-size: contain;
+    background-repeat: no-repeat;
     animation-name: fight;
     cursor: pointer; }
   #menu #ranking {
@@ -132,7 +133,8 @@ a {
     width: 20em;
     height: 20em;
     background-image: url("../img/menu/bild.png");
-    background-size: cover;
+    background-size: contain;
+    background-repeat: no-repeat;
     animation-name: fight;
     cursor: pointer; }
   #menu #selectcharacter {
