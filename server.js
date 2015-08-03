@@ -730,7 +730,7 @@ function handleCommand(){
                 p1.attack.special2 = false;
             }
             
-            if(c1.hyper && !p1.crouch && !p1.moving){
+            if(c1.hyper && !p1.jump && !p1.crouch && !p1.moving){
                 if(p1.characterinfo.hypermeter >= 60){
                     if(!p1.attack.endlag.hitexecuted){
                         p1.attack.hyper = true;
