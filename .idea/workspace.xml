@@ -2,14 +2,28 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="9f154007-a0da-4088-8b9b-04a4b67cd507" name="Default" comment="Merge remote-tracking branch 'origin/jonnyWS'&#10;&#10;Conflicts:&#10;&#9;node_modules/express/node_modules/basic-auth/package.json&#10;&#9;node_modules/express/node_modules/commander/package.json&#10;&#9;node_modules/express/node_modules/connect/node_modules/body-parser/node_modules/iconv-lite/package.json&#10;&#9;node_modules/express/node_modules/connect/node_modules/body-parser/node_modules/raw-body/package.json&#10;&#9;node_modules/express/node_modules/connect/node_modules/body-parser/package.json&#10;&#9;node_modules/express/node_modules/connect/node_modules/compression/node_modules/accepts/node_modules/mime-types/package.json&#10;&#9;node_modules/express/node_modules/connect/node_modules/compression/node_modules/accepts/package.json&#10;&#9;node_modules/express/node_modules/connect/node_modules/compression/node_modules/compressible/node_modules/mime-db/package.json&#10;&#9;node_modules/express/node_modules/connect/node_modules/compression/node_modules/compressible/package.json&#10;&#9;node_modules/express/node_modules/connect/node_modules/compression/package.json&#10;&#9;node_modules/express/node_modules/connect/node_modules/csurf/node_modules/csrf/node_modules/base64-url/package.json&#10;&#9;node_modules/express/node_modules/connect/node_modules/csurf/node_modules/csrf/node_modules/scmp/package.json&#10;&#9;node_modules/express/node_modules/connect/node_modules/errorhandler/node_modules/accepts/node_modules/mime-types/package.json&#10;&#9;node_modules/express/node_modules/connect/node_modules/errorhandler/node_modules/accepts/package.json&#10;&#9;node_modules/express/node_modules/connect/node_modules/errorhandler/package.json&#10;&#9;node_modules/express/node_modules/connect/node_modules/express-session/node_modules/uid-safe/node_modules/base64-url/package.json&#10;&#9;node_modules/express/node_modules/connect/node_modules/method-override/package.json&#10;&#9;node_modules/express/node_modules/connect/node_modules/morgan/package.json&#10;&#9;node_modules/express/node_modules/connect/node_modules/multiparty/package.json&#10;&#9;node_modules/express/node_modules/connect/node_modules/pause/package.json&#10;&#9;node_modules/express/node_modules/connect/node_modules/qs/package.json&#10;&#9;node_modules/express/node_modules/connect/node_modules/serve-index/node_modules/accepts/package.json&#10;&#9;node_modules/express/node_modules/connect/node_modules/serve-index/package.json&#10;&#9;node_modules/express/node_modules/connect/node_modules/type-is/HISTORY.md&#10;&#9;node_modules/express/node_modules/connect/node_modules/type-is/node_modules/mime-types/node_modules/mime-db/package.json&#10;&#9;node_modules/express/node_modules/connect/node_modules/type-is/node_modules/mime-types/package.json&#10;&#9;node_modules/express/node_modules/connect/node_modules/type-is/package.json&#10;&#9;node_modules/express/node_modules/connect/node_modules/vhost/HISTORY.md&#10;&#9;node_modules/express/node_modules/connect/node_modules/vhost/README.md&#10;&#9;node_modules/express/node_modules/connect/node_modules/vhost/index.js&#10;&#9;node_modules/express/node_modules/connect/node_modules/vhost/package.json&#10;&#9;node_modules/express/node_modules/connect/package.json&#10;&#9;node_modules/express/node_modules/mkdirp/node_modules/minimist/package.json&#10;&#9;node_modules/express/node_modules/mkdirp/package.json&#10;&#9;node_modules/express/node_modules/send/node_modules/mime/package.json&#10;&#9;node_modules/express/node_modules/vary/package.json&#10;&#9;node_modules/express/package.json&#10;&#9;node_modules/socket.io/node_modules/debug/package.json&#10;&#9;node_modules/socket.io/node_modules/engine.io/node_modules/ws/package.json&#10;&#9;node_modules/socket.io/node_modules/engine.io/package.json&#10;&#9;node_modules/socket.io/node_modules/socket.io-client/node_modules/engine.io-client/package.json&#10;&#9;node_modules/socket.io/node_modules/socket.io-client/package.json&#10;&#9;node_modules/socket.io/node_modules/socket.io-parser/node_modules/benchmark/package.json&#10;&#9;node_modules/socket.io/package.json&#10;">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/phonegap/www/img/Screen.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/phonegap/plugins/fetch.json" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/phonegap/platforms/android/ant-build/classes.dex" afterPath="$PROJECT_DIR$/phonegap/platforms/android/ant-build/classes.dex" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/phonegap/platforms/android/CordovaLib/ant-build/classes.jar" afterPath="$PROJECT_DIR$/phonegap/platforms/android/CordovaLib/ant-build/classes.jar" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/phonegap/platforms/android/ant-build/streetfighter-debug-unaligned.apk" afterPath="$PROJECT_DIR$/phonegap/platforms/android/ant-build/streetfighter-debug-unaligned.apk" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/phonegap/platforms/android/ant-build/streetfighter-debug.apk" afterPath="$PROJECT_DIR$/phonegap/platforms/android/ant-build/streetfighter-debug.apk" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/phonegap/platforms/android/ant-build/streetfighter.ap_" afterPath="$PROJECT_DIR$/phonegap/platforms/android/ant-build/streetfighter.ap_" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/phonegap/platforms/android/CordovaLib/ant-build/AndroidManifest.xml.d" afterPath="$PROJECT_DIR$/phonegap/platforms/android/CordovaLib/ant-build/AndroidManifest.xml.d" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/phonegap/platforms/android/ant-build/AndroidManifest.xml.d" afterPath="$PROJECT_DIR$/phonegap/platforms/android/ant-build/AndroidManifest.xml.d" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/phonegap/platforms/android/CordovaLib/ant-build/build.prop" afterPath="$PROJECT_DIR$/phonegap/platforms/android/CordovaLib/ant-build/build.prop" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/phonegap/platforms/android/ant-build/build.prop" afterPath="$PROJECT_DIR$/phonegap/platforms/android/ant-build/build.prop" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/phonegap/platforms/android/ant-build/classes.dex.d" afterPath="$PROJECT_DIR$/phonegap/platforms/android/ant-build/classes.dex.d" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/phonegap/platforms/android/assets/www/js/game.js" afterPath="$PROJECT_DIR$/phonegap/platforms/android/assets/www/js/game.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/phonegap/www/js/game.js" afterPath="$PROJECT_DIR$/phonegap/www/js/game.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/phonegap/platforms/android/assets/www/js/loader.js" afterPath="$PROJECT_DIR$/phonegap/platforms/android/assets/www/js/loader.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/phonegap/www/js/loader.js" afterPath="$PROJECT_DIR$/phonegap/www/js/loader.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/phonegap/www/js/menu.js" afterPath="$PROJECT_DIR$/phonegap/www/js/menu.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/phonegap/platforms/android/assets/www/js/multiplayer.js" afterPath="$PROJECT_DIR$/phonegap/platforms/android/assets/www/js/multiplayer.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/phonegap/www/js/multiplayer.js" afterPath="$PROJECT_DIR$/phonegap/www/js/multiplayer.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/server.js" afterPath="$PROJECT_DIR$/server.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/phonegap/platforms/android/ant-build/streetfighter-debug-unaligned.apk.d" afterPath="$PROJECT_DIR$/phonegap/platforms/android/ant-build/streetfighter-debug-unaligned.apk.d" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/phonegap/platforms/android/ant-build/streetfighter.ap_.d" afterPath="$PROJECT_DIR$/phonegap/platforms/android/ant-build/streetfighter.ap_.d" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <list id="9148195e-34ee-4c77-819a-7e88c73954d4" name="Failed commit: Default" comment="Merge remote-tracking branch 'origin/jonnyWS'&#10;&#10;Conflicts:&#10;&#9;server.js&#10;" />
     <ignored path="streetfighter.iws" />
@@ -63,7 +77,7 @@
             <entry file="file://$PROJECT_DIR$/phonegap/www/js/menu.js">
               <provider selected="true" editor-type-id="text-editor">
                 <state vertical-scroll-proportion="-69.75862">
-                  <caret line="119" column="24" selection-start-line="119" selection-start-column="12" selection-end-line="119" selection-end-column="24" />
+                  <caret line="123" column="24" selection-start-line="123" selection-start-column="12" selection-end-line="123" selection-end-column="24" />
                   <folding />
                 </state>
               </provider>
@@ -73,7 +87,7 @@
             <entry file="file://$PROJECT_DIR$/phonegap/www/js/loader.js">
               <provider selected="true" editor-type-id="text-editor">
                 <state vertical-scroll-proportion="0.0">
-                  <caret line="62" column="41" selection-start-line="62" selection-start-column="41" selection-end-line="62" selection-end-column="51" />
+                  <caret line="65" column="6" selection-start-line="64" selection-start-column="41" selection-end-line="64" selection-end-column="51" />
                   <folding />
                 </state>
               </provider>
@@ -82,8 +96,8 @@
           <file leaf-file-name="game.js" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/phonegap/www/js/game.js">
               <provider selected="true" editor-type-id="text-editor">
-                <state vertical-scroll-proportion="0.3831683">
-                  <caret line="483" column="46" selection-start-line="483" selection-start-column="46" selection-end-line="483" selection-end-column="46" />
+                <state vertical-scroll-proportion="0.63564354">
+                  <caret line="512" column="46" selection-start-line="512" selection-start-column="46" selection-end-line="512" selection-end-column="46" />
                   <folding />
                 </state>
               </provider>
@@ -102,11 +116,12 @@
           <file leaf-file-name="server.js" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/server.js">
               <provider selected="true" editor-type-id="text-editor">
-                <state vertical-scroll-proportion="-11.586206">
-                  <caret line="321" column="9" selection-start-line="321" selection-start-column="9" selection-end-line="321" selection-end-column="9" />
+                <state vertical-scroll-proportion="-16.862068">
+                  <caret line="330" column="0" selection-start-line="330" selection-start-column="0" selection-end-line="330" selection-end-column="0" />
                   <folding>
-                    <marker date="1438563070715" expanded="true" signature="5536:6157" placeholder="{...}" />
-                    <marker date="1438563070715" expanded="true" signature="5611:6157" placeholder="{...}" />
+                    <marker date="1438592488562" expanded="true" signature="5536:5537" placeholder="{...}" />
+                    <marker date="1438592488562" expanded="true" signature="104412:105715" placeholder="{...}" />
+                    <marker date="1438592488562" expanded="true" signature="104412:105795" placeholder="{...}" />
                   </folding>
                 </state>
               </provider>
@@ -120,7 +135,7 @@
             <entry file="file://$PROJECT_DIR$/phonegap/www/js/multiplayer.js">
               <provider selected="true" editor-type-id="text-editor">
                 <state vertical-scroll-proportion="0.2930693">
-                  <caret line="115" column="40" selection-start-line="115" selection-start-column="40" selection-end-line="115" selection-end-column="40" />
+                  <caret line="117" column="40" selection-start-line="117" selection-start-column="40" selection-end-line="117" selection-end-column="40" />
                   <folding />
                 </state>
               </provider>
@@ -155,8 +170,8 @@
         <option value="$PROJECT_DIR$/phonegap/www/js/loader.js" />
         <option value="$PROJECT_DIR$/phonegap/www/js/multiplayer.js" />
         <option value="$PROJECT_DIR$/phonegap/www/js/menu.js" />
-        <option value="$PROJECT_DIR$/phonegap/www/js/game.js" />
         <option value="$PROJECT_DIR$/phonegap/www/js/mobile.js" />
+        <option value="$PROJECT_DIR$/phonegap/www/js/game.js" />
       </list>
     </option>
   </component>
@@ -624,8 +639,9 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="302" column="13" selection-start-line="302" selection-start-column="13" selection-end-line="302" selection-end-column="13" />
           <folding>
-            <marker date="1438563070715" expanded="true" signature="5536:6157" placeholder="{...}" />
-            <marker date="1438563070715" expanded="true" signature="5611:6157" placeholder="{...}" />
+            <marker date="1438592488562" expanded="true" signature="5536:5537" placeholder="{...}" />
+            <marker date="1438592488562" expanded="true" signature="104412:105715" placeholder="{...}" />
+            <marker date="1438592488562" expanded="true" signature="104412:105795" placeholder="{...}" />
           </folding>
         </state>
       </provider>
@@ -707,8 +723,9 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="302" column="13" selection-start-line="302" selection-start-column="13" selection-end-line="302" selection-end-column="13" />
           <folding>
-            <marker date="1438563070715" expanded="true" signature="5536:6157" placeholder="{...}" />
-            <marker date="1438563070715" expanded="true" signature="5611:6157" placeholder="{...}" />
+            <marker date="1438592488562" expanded="true" signature="5536:5537" placeholder="{...}" />
+            <marker date="1438592488562" expanded="true" signature="104412:105715" placeholder="{...}" />
+            <marker date="1438592488562" expanded="true" signature="104412:105795" placeholder="{...}" />
           </folding>
         </state>
       </provider>
@@ -782,8 +799,9 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="292" column="13" selection-start-line="292" selection-start-column="13" selection-end-line="292" selection-end-column="13" />
           <folding>
-            <marker date="1438563070715" expanded="true" signature="5536:6157" placeholder="{...}" />
-            <marker date="1438563070715" expanded="true" signature="5611:6157" placeholder="{...}" />
+            <marker date="1438592488562" expanded="true" signature="5536:5537" placeholder="{...}" />
+            <marker date="1438592488562" expanded="true" signature="104412:105715" placeholder="{...}" />
+            <marker date="1438592488562" expanded="true" signature="104412:105795" placeholder="{...}" />
           </folding>
         </state>
       </provider>
@@ -925,11 +943,12 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/server.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-11.586206">
-          <caret line="321" column="9" selection-start-line="321" selection-start-column="9" selection-end-line="321" selection-end-column="9" />
+        <state vertical-scroll-proportion="-16.862068">
+          <caret line="330" column="0" selection-start-line="330" selection-start-column="0" selection-end-line="330" selection-end-column="0" />
           <folding>
-            <marker date="1438563070715" expanded="true" signature="5536:6157" placeholder="{...}" />
-            <marker date="1438563070715" expanded="true" signature="5611:6157" placeholder="{...}" />
+            <marker date="1438592488562" expanded="true" signature="5536:5537" placeholder="{...}" />
+            <marker date="1438592488562" expanded="true" signature="104412:105715" placeholder="{...}" />
+            <marker date="1438592488562" expanded="true" signature="104412:105795" placeholder="{...}" />
           </folding>
         </state>
       </provider>
@@ -945,7 +964,7 @@
     <entry file="file://$PROJECT_DIR$/phonegap/www/js/multiplayer.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.2930693">
-          <caret line="115" column="40" selection-start-line="115" selection-start-column="40" selection-end-line="115" selection-end-column="40" />
+          <caret line="117" column="40" selection-start-line="117" selection-start-column="40" selection-end-line="117" selection-end-column="40" />
           <folding />
         </state>
       </provider>
@@ -953,7 +972,7 @@
     <entry file="file://$PROJECT_DIR$/phonegap/www/js/menu.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-69.75862">
-          <caret line="119" column="24" selection-start-line="119" selection-start-column="12" selection-end-line="119" selection-end-column="24" />
+          <caret line="123" column="24" selection-start-line="123" selection-start-column="12" selection-end-line="123" selection-end-column="24" />
           <folding />
         </state>
       </provider>
@@ -1001,15 +1020,15 @@
     <entry file="file://$PROJECT_DIR$/phonegap/www/js/loader.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="62" column="41" selection-start-line="62" selection-start-column="41" selection-end-line="62" selection-end-column="51" />
+          <caret line="65" column="6" selection-start-line="64" selection-start-column="41" selection-end-line="64" selection-end-column="51" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/phonegap/www/js/game.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.3831683">
-          <caret line="483" column="46" selection-start-line="483" selection-start-column="46" selection-end-line="483" selection-end-column="46" />
+        <state vertical-scroll-proportion="0.63564354">
+          <caret line="512" column="46" selection-start-line="512" selection-start-column="46" selection-end-line="512" selection-end-column="46" />
           <folding />
         </state>
       </provider>

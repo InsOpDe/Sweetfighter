@@ -95,7 +95,11 @@ var menu = {
     gameover : function(data){
         keyboard.block = true;
         setTimeout(function(){
-            game.phaser.destroy();
+            try{
+                game.phaser.destroy();
+            } catch(e){
+                console.log(e);
+            }
             console.log(data);
             var text = "";
             $('#gameover').removeClass('youwin');

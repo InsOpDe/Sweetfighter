@@ -19,6 +19,9 @@ var game = {
     characterGroup:undefined,
     effectGroup:undefined,
     interfaceGroup:undefined,
+    screenGroup:undefined,
+    screen:undefined,
+    screenReady:false,
     sprite:undefined,
     cursors:undefined,
     interface:undefined,
@@ -68,6 +71,19 @@ var game = {
         game.foregroundGroup = game.phaser.add.group();
         game.effectGroup = game.phaser.add.group();
         game.interfaceGroup = game.phaser.add.group();
+        game.screenGroup = game.phaser.add.group();
+        
+        game.screen = game.phaser.add.sprite(0,0,'screen');
+        game.screen.fixedToCamera = true;
+        game.screen.animations.add('ready',[0,1,2,3,4]);
+        game.screen.animations.add('fight',[5]);
+        game.screen.animations.add('ko',[6]);
+        game.screen.animations.add('timeout',[7]);
+        
+        game.screen.animations.play('ready', 5 , true);
+        game.screenReady = false;
+        
+        
 
         //Background
         game.ebene1 = game.phaser.add.tileSprite(0, 0, game.options.mapX, game.options.mapY, 'ebene1');
@@ -363,6 +379,17 @@ var game = {
     jumpTimer : 0,
     direction : false,
     update : function() {
+        console.log(game.options.fight + " " + game.screenReady);
+        if(game.options.fight && !game.screenReady){
+            game.screen.animations.play('fight',5,true);
+            game.screenReady = true;
+            setTimeout(function(){game.screen.kill();},500);
+        }
+        if(timerCountdown.timer === 0){
+            game.screen.revive();
+            game.screen.animations.play('timeout',5,true);
+        }
+        
         var char = game[game.options.color];
         var fi = game.options.characters[game.options.color].framesinfo;
 
@@ -427,6 +454,8 @@ var game = {
                 if(!game[color].koAlready){
                     game[color].animations.play('ko', 10, false);
                     game[color].koAlready = Date.now();
+                    game.screen.revive();
+                    game.screen.animations.play('ko',5,true);
                 } else if(game[color].koAlready + 500 < Date.now()) {
 
                     game[color].animations.play('dead', 5, false);
