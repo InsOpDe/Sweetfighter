@@ -968,9 +968,6 @@ var handleProjectile = {
             var block = controls[characterRed.sid].right;
             if((characterRed.x > p1hitboxrightX && p1hitboxrightX > p2hitboxleftX) || (characterRed.x < p1hitboxleftX && p1hitboxleftX < p2hitboxrightX)){
                 if(p1hitboxtopY < p2hitboxbotY || !(p1hitboxtopY > p2hitboxbotY) && p1hitboxbotY > p2hitboxtopY){
-                    if(!characterBlue.attack.projectile.pierce){
-                        characterBlue.attack.projectile.exist = false;
-                    }
                     if(!block || characterRed.jump){
                         characterRed.characterinfo.hp -= characterBlue.attack.projectile.damage*characterBlue.attack.mode.dmgMultiplicator;
                         if(characterRed.characterinfo.hp < 0){
@@ -978,14 +975,21 @@ var handleProjectile = {
                         }
                         characterRed.attack.hitstun.gotHit = true;
                         characterRed.attack.hitstun.timer = new hitstunTimer(characterBlue.attack.projectile.hitstun);
-                        handlePush(characterBlue,characterRed,"right",characterBlue.attack.projectile.push,"projectile");
+                        
+                        if(!characterBlue.attack.projectile.pierce){
+                            characterBlue.attack.projectile.exist = false;
+                            handlePush(characterBlue,characterRed,"right",characterBlue.attack.projectile.push,"projectile");
+                        }
                     } else if(block && !characterRed.attack.hitstun.gotHit && !characterRed.jump){
                         characterRed.attack.block = true;
                         if(characterRed.characterinfo.hp > 1){
                             characterRed.characterinfo.hp -= 1;
                         }
                         characterRed.attack.hitstun.timer = new hitstunTimer(100);
-                        handlePush(characterBlue,characterRed,"right",5,"projectile");
+                        if(!characterBlue.attack.projectile.pierce){
+                            characterBlue.attack.projectile.exist = false;
+                            handlePush(characterBlue,characterRed,"right",characterBlue.attack.projectile.push,"projectile");
+                        }
                     }
                 }
             }
@@ -1004,9 +1008,6 @@ var handleProjectile = {
             var block = controls[characterBlue.sid].left;
             if((characterBlue.x > p1hitboxrightX2 && p1hitboxrightX2 > p2hitboxleftX2) || (characterBlue.x < p1hitboxleftX2 && p1hitboxleftX2 < p2hitboxrightX2)){
                 if(p1hitboxtopY2 < p2hitboxbotY2 || !(p1hitboxtopY2 > p2hitboxbotY2) && p1hitboxbotY2 > p2hitboxtopY2){
-                    if(!characterRed.attack.projectile.pierce){
-                        characterRed.attack.projectile.exist = false;
-                    }
                     if(!block || characterBlue.jump){
                         characterBlue.characterinfo.hp -= characterRed.attack.projectile.damage*characterRed.attack.mode.dmgMultiplicator;
                         if(characterBlue.characterinfo.hp < 0){
@@ -1014,14 +1015,21 @@ var handleProjectile = {
                         }
                         characterBlue.attack.hitstun.gotHit = true;
                         characterBlue.attack.hitstun.timer = new hitstunTimer(characterRed.attack.projectile.hitstun);
-                        handlePush(characterRed,characterBlue,"left",characterRed.attack.projectile.push,"projectile");
+                        
+                        if(!characterRed.attack.projectile.pierce){
+                            characterRed.attack.projectile.exist = false;
+                            handlePush(characterRed,characterBlue,"left",characterRed.attack.projectile.push,"projectile");
+                        }
                     } else if(block && !characterBlue.attack.hitstun.gotHit && !characterBlue.jump){
                         characterBlue.attack.block = true;
                         if(characterBlue.characterinfo.hp > 1){
                             characterBlue.characterinfo.hp -= 1;
                         }
                         characterBlue.attack.hitstun.timer = new hitstunTimer(100);
-                        handlePush(characterRed,characterBlue,"left",5,"projectile");
+                        if(!characterRed.attack.projectile.pierce){
+                            characterRed.attack.projectile.exist = false;
+                            handlePush(characterRed,characterBlue,"left",characterRed.attack.projectile.push,"projectile");
+                        }
                     }
                 }
             }
