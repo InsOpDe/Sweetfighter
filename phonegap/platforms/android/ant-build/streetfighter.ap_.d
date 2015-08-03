@@ -80,7 +80,6 @@ C:\Users\Marcel-Privat\streetfighter\phonegap\platforms\android\assets\www\img\m
 C:\Users\Marcel-Privat\streetfighter\phonegap\platforms\android\assets\www\img\menu\desert.png \
 C:\Users\Marcel-Privat\streetfighter\phonegap\platforms\android\assets\www\img\menu\frau.png \
 C:\Users\Marcel-Privat\streetfighter\phonegap\platforms\android\assets\www\img\menu\frau2.png \
-C:\Users\Marcel-Privat\streetfighter\phonegap\platforms\android\assets\www\img\menu\frauavatar.psd \
 C:\Users\Marcel-Privat\streetfighter\phonegap\platforms\android\assets\www\img\menu\jungle.png \
 C:\Users\Marcel-Privat\streetfighter\phonegap\platforms\android\assets\www\img\menu\menu_leer.png \
 C:\Users\Marcel-Privat\streetfighter\phonegap\platforms\android\assets\www\img\menu\muaythai.png \

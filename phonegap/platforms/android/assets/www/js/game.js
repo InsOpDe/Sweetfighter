@@ -8,8 +8,10 @@ var game = {
         initTouchInterface();
         initShake();
 
+        musicPlaying = false;
         if(app)media.pause();
         $('#menumusic').trigger("pause");
+
         
         $('#waiting').hide();
     },
@@ -46,6 +48,8 @@ var game = {
         game.audio.music = game.phaser.add.audio('music');
         game.audio.music.addMarker('music', 0, 45);
         game.audio.music.play('music');
+        musicPlaying = true;
+        if(app)playMusic(true);
 
         game.audio.punch1 = game.phaser.add.audio('punch1');
         game.audio.punch1.addMarker('punch1', 0, 0.35);
@@ -477,6 +481,7 @@ var game = {
     punched : function() {
         var rand = Math.floor(Math.random() * 3) + 1;
         game.audio['punch'+rand].play('punch'+rand);
+        if(app)playSound('punch'+rand+'.wav');
         //if(!game.audio['punch1'].isPlaying)
         //    game.audio['punch1'].play('punch1');
     }
