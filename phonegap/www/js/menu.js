@@ -1,7 +1,33 @@
 musicPlaying = true;
 var menu = {
     options : {character:'muaythai',map:'desert'},
+    uiTemp:true,
+    blink: false,
     init : function() {
+
+        setInterval(function(){
+            //console.log("++++");
+            //var rand = Math.random();
+            //var ui;
+            //if(rand <0.5){
+            //    ui = $('#fight');
+            //} else {
+            //    ui = $('#ranking')
+            //}
+            //if(menu.uiTemp) menu.uiTemp.removeClass('animation');
+            //menu.uiTemp = ui;
+            //ui.addClass('animation');
+            $('#ranking').removeClass('animation');
+            $('#fight').removeClass('animation');
+            if(menu.uiTemp && menu.blink){
+                $('#ranking').addClass('animation');
+                $('#fight').addClass('animation');
+                menu.uiTemp = false;
+            } else {
+                menu.uiTemp = true;
+            }
+
+        },2000);
         menu.onResize();
         menu.fight = $('#fight');
         menu.fight.bind('click tap',menu.clicked)
@@ -12,6 +38,7 @@ var menu = {
             $('#shadow').hide();
             $('#gameover').hide();
             $('#back').hide();
+            menu.blink = true;
         });
 
         $('#menumusicbutton').bind('click tap',function(){
@@ -32,6 +59,7 @@ var menu = {
 
         multiplayer.init();
         $('#loginbutton').click(function(){
+            menu.blink = true;
             var name = $('#name').val();
             var pass = $('#pass').val();
             multiplayer.socket.emit('login', {name:name,pass:pass} );
@@ -48,6 +76,7 @@ var menu = {
 
 
         $('#ranking').click(function(){
+            menu.blink = false;
             $('#shadow').show();
             $('#rankingtable').show();
             $('#back').show();
@@ -63,6 +92,7 @@ var menu = {
         });
     },
     clicked : function(e){
+        menu.blink = false;
         $('#shadow').show();
 //        var element = $(e.currentTarget);
 
@@ -120,6 +150,9 @@ var menu = {
             $('#menumusicbutton').show();
             removeTouchInterface();
             removeShake();
+            musicPlaying = false;
+            if(app)media.pause();
+
             $('#menumusic').trigger("play");
             musicPlaying = true;
             if(app)media.play();

@@ -103,6 +103,9 @@ a {
 @keyframes fight {
     50% {background-image: url("../img/menu/boxring_hl.png");}
 }
+@keyframes ranking {
+    50% {background-image: url("../img/menu/bild_hl.png");}
+}
 
 @keyframes fightZoom {
     0% {
@@ -174,7 +177,7 @@ a {
         background-image: url("../img/menu/bild.png");
         background-size:contain;
         background-repeat: no-repeat;
-        animation-name: fight;
+        animation-name: ranking;
         cursor: pointer;
     }
     

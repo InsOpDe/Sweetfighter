@@ -8,6 +8,7 @@ var game = {
         initTouchInterface();
         initShake();
 
+
         musicPlaying = false;
         if(app)media.pause();
         $('#menumusic').trigger("pause");
@@ -41,6 +42,9 @@ var game = {
     create : function() {
         // spiel ist aktiv auch wenn das fenster nicht fokussiert ist
         game.phaser.stage.disableVisibilityChange = true;
+
+
+
 
         //Scaling for mobile devices
         if (this.game.device.desktop === false){
@@ -379,7 +383,11 @@ var game = {
     jumpTimer : 0,
     direction : false,
     update : function() {
-        console.log(game.options.fight + " " + game.screenReady);
+
+        if(app)
+            $('#gamescreen canvas').css('margin-top','0');
+
+        //console.log(game.options.fight + " " + game.screenReady);
         if(game.options.fight && !game.screenReady){
             game.screen.animations.play('fight',5,true);
             game.screenReady = true;

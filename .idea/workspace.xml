@@ -2,8 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="9f154007-a0da-4088-8b9b-04a4b67cd507" name="Default" comment="Merge remote-tracking branch 'origin/jonnyWS'&#10;&#10;Conflicts:&#10;&#9;node_modules/express/node_modules/basic-auth/package.json&#10;&#9;node_modules/express/node_modules/commander/package.json&#10;&#9;node_modules/express/node_modules/connect/node_modules/body-parser/node_modules/iconv-lite/package.json&#10;&#9;node_modules/express/node_modules/connect/node_modules/body-parser/node_modules/raw-body/package.json&#10;&#9;node_modules/express/node_modules/connect/node_modules/body-parser/package.json&#10;&#9;node_modules/express/node_modules/connect/node_modules/compression/node_modules/accepts/node_modules/mime-types/package.json&#10;&#9;node_modules/express/node_modules/connect/node_modules/compression/node_modules/accepts/package.json&#10;&#9;node_modules/express/node_modules/connect/node_modules/compression/node_modules/compressible/node_modules/mime-db/package.json&#10;&#9;node_modules/express/node_modules/connect/node_modules/compression/node_modules/compressible/package.json&#10;&#9;node_modules/express/node_modules/connect/node_modules/compression/package.json&#10;&#9;node_modules/express/node_modules/connect/node_modules/csurf/node_modules/csrf/node_modules/base64-url/package.json&#10;&#9;node_modules/express/node_modules/connect/node_modules/csurf/node_modules/csrf/node_modules/scmp/package.json&#10;&#9;node_modules/express/node_modules/connect/node_modules/errorhandler/node_modules/accepts/node_modules/mime-types/package.json&#10;&#9;node_modules/express/node_modules/connect/node_modules/errorhandler/node_modules/accepts/package.json&#10;&#9;node_modules/express/node_modules/connect/node_modules/errorhandler/package.json&#10;&#9;node_modules/express/node_modules/connect/node_modules/express-session/node_modules/uid-safe/node_modules/base64-url/package.json&#10;&#9;node_modules/express/node_modules/connect/node_modules/method-override/package.json&#10;&#9;node_modules/express/node_modules/connect/node_modules/morgan/package.json&#10;&#9;node_modules/express/node_modules/connect/node_modules/multiparty/package.json&#10;&#9;node_modules/express/node_modules/connect/node_modules/pause/package.json&#10;&#9;node_modules/express/node_modules/connect/node_modules/qs/package.json&#10;&#9;node_modules/express/node_modules/connect/node_modules/serve-index/node_modules/accepts/package.json&#10;&#9;node_modules/express/node_modules/connect/node_modules/serve-index/package.json&#10;&#9;node_modules/express/node_modules/connect/node_modules/type-is/HISTORY.md&#10;&#9;node_modules/express/node_modules/connect/node_modules/type-is/node_modules/mime-types/node_modules/mime-db/package.json&#10;&#9;node_modules/express/node_modules/connect/node_modules/type-is/node_modules/mime-types/package.json&#10;&#9;node_modules/express/node_modules/connect/node_modules/type-is/package.json&#10;&#9;node_modules/express/node_modules/connect/node_modules/vhost/HISTORY.md&#10;&#9;node_modules/express/node_modules/connect/node_modules/vhost/README.md&#10;&#9;node_modules/express/node_modules/connect/node_modules/vhost/index.js&#10;&#9;node_modules/express/node_modules/connect/node_modules/vhost/package.json&#10;&#9;node_modules/express/node_modules/connect/package.json&#10;&#9;node_modules/express/node_modules/mkdirp/node_modules/minimist/package.json&#10;&#9;node_modules/express/node_modules/mkdirp/package.json&#10;&#9;node_modules/express/node_modules/send/node_modules/mime/package.json&#10;&#9;node_modules/express/node_modules/vary/package.json&#10;&#9;node_modules/express/package.json&#10;&#9;node_modules/socket.io/node_modules/debug/package.json&#10;&#9;node_modules/socket.io/node_modules/engine.io/node_modules/ws/package.json&#10;&#9;node_modules/socket.io/node_modules/engine.io/package.json&#10;&#9;node_modules/socket.io/node_modules/socket.io-client/node_modules/engine.io-client/package.json&#10;&#9;node_modules/socket.io/node_modules/socket.io-client/package.json&#10;&#9;node_modules/socket.io/node_modules/socket.io-parser/node_modules/benchmark/package.json&#10;&#9;node_modules/socket.io/package.json&#10;">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/phonegap/www/img/Screen.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/phonegap/plugins/fetch.json" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/phonegap/platforms/android/ant-build/dexedLibs/classes-109dc18af3352ad331dac782fc2f7905.jar" afterPath="$PROJECT_DIR$/phonegap/platforms/android/ant-build/dexedLibs/classes-109dc18af3352ad331dac782fc2f7905.jar" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/phonegap/platforms/android/ant-build/classes.dex" afterPath="$PROJECT_DIR$/phonegap/platforms/android/ant-build/classes.dex" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/phonegap/platforms/android/CordovaLib/ant-build/classes.jar" afterPath="$PROJECT_DIR$/phonegap/platforms/android/CordovaLib/ant-build/classes.jar" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/phonegap/platforms/android/ant-build/streetfighter-debug-unaligned.apk" afterPath="$PROJECT_DIR$/phonegap/platforms/android/ant-build/streetfighter-debug-unaligned.apk" />
@@ -16,14 +15,14 @@
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/phonegap/platforms/android/ant-build/classes.dex.d" afterPath="$PROJECT_DIR$/phonegap/platforms/android/ant-build/classes.dex.d" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/phonegap/platforms/android/assets/www/js/game.js" afterPath="$PROJECT_DIR$/phonegap/platforms/android/assets/www/js/game.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/phonegap/www/js/game.js" afterPath="$PROJECT_DIR$/phonegap/www/js/game.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/phonegap/platforms/android/assets/www/js/loader.js" afterPath="$PROJECT_DIR$/phonegap/platforms/android/assets/www/js/loader.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/phonegap/www/js/loader.js" afterPath="$PROJECT_DIR$/phonegap/www/js/loader.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/phonegap/www/css/main.css.map" afterPath="$PROJECT_DIR$/phonegap/www/css/main.css.map" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/phonegap/www/css/main.css" afterPath="$PROJECT_DIR$/phonegap/www/css/main.css" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/phonegap/www/css/main.scss" afterPath="$PROJECT_DIR$/phonegap/www/css/main.scss" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/phonegap/www/js/menu.js" afterPath="$PROJECT_DIR$/phonegap/www/js/menu.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/phonegap/platforms/android/assets/www/js/multiplayer.js" afterPath="$PROJECT_DIR$/phonegap/platforms/android/assets/www/js/multiplayer.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/phonegap/www/js/multiplayer.js" afterPath="$PROJECT_DIR$/phonegap/www/js/multiplayer.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/server.js" afterPath="$PROJECT_DIR$/server.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/phonegap/www/js/mobile.js" afterPath="$PROJECT_DIR$/phonegap/www/js/mobile.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/phonegap/platforms/android/ant-build/streetfighter-debug-unaligned.apk.d" afterPath="$PROJECT_DIR$/phonegap/platforms/android/ant-build/streetfighter-debug-unaligned.apk.d" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/phonegap/platforms/android/ant-build/streetfighter.ap_.d" afterPath="$PROJECT_DIR$/phonegap/platforms/android/ant-build/streetfighter.ap_.d" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <list id="9148195e-34ee-4c77-819a-7e88c73954d4" name="Failed commit: Default" comment="Merge remote-tracking branch 'origin/jonnyWS'&#10;&#10;Conflicts:&#10;&#9;server.js&#10;" />
     <ignored path="streetfighter.iws" />
@@ -44,7 +43,7 @@
     <favorites_list name="streetfighter" />
   </component>
   <component name="FileEditorManager">
-    <splitter split-orientation="horizontal" split-proportion="0.68363404">
+    <splitter split-orientation="horizontal" split-proportion="0.56785715">
       <split-first>
         <leaf>
           <file leaf-file-name="index.html" pinned="false" current-in-tab="false">
@@ -67,17 +66,17 @@
             <entry file="file://$PROJECT_DIR$/phonegap/www/js/mobile.js">
               <provider selected="true" editor-type-id="text-editor">
                 <state vertical-scroll-proportion="0.0">
-                  <caret line="16" column="29" selection-start-line="16" selection-start-column="29" selection-end-line="16" selection-end-column="29" />
+                  <caret line="60" column="8" selection-start-line="60" selection-start-column="8" selection-end-line="60" selection-end-column="8" />
                   <folding />
                 </state>
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="menu.js" pinned="false" current-in-tab="false">
+          <file leaf-file-name="menu.js" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/phonegap/www/js/menu.js">
               <provider selected="true" editor-type-id="text-editor">
-                <state vertical-scroll-proportion="-69.75862">
-                  <caret line="123" column="24" selection-start-line="123" selection-start-column="12" selection-end-line="123" selection-end-column="24" />
+                <state vertical-scroll-proportion="0.35031185">
+                  <caret line="61" column="30" selection-start-line="61" selection-start-column="30" selection-end-line="61" selection-end-column="30" />
                   <folding />
                 </state>
               </provider>
@@ -93,11 +92,11 @@
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="game.js" pinned="false" current-in-tab="true">
+          <file leaf-file-name="game.js" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/phonegap/www/js/game.js">
               <provider selected="true" editor-type-id="text-editor">
-                <state vertical-scroll-proportion="0.63564354">
-                  <caret line="512" column="46" selection-start-line="512" selection-start-column="46" selection-end-line="512" selection-end-column="46" />
+                <state vertical-scroll-proportion="-25.206896">
+                  <caret line="411" column="29" selection-start-line="411" selection-start-column="29" selection-end-line="411" selection-end-column="29" />
                   <folding />
                 </state>
               </provider>
@@ -131,22 +130,21 @@
       </split-first>
       <split-second>
         <leaf>
-          <file leaf-file-name="multiplayer.js" pinned="false" current-in-tab="true">
+          <file leaf-file-name="multiplayer.js" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/phonegap/www/js/multiplayer.js">
               <provider selected="true" editor-type-id="text-editor">
-                <state vertical-scroll-proportion="0.2930693">
+                <state vertical-scroll-proportion="-10.206897">
                   <caret line="117" column="40" selection-start-line="117" selection-start-column="40" selection-end-line="117" selection-end-column="40" />
                   <folding />
                 </state>
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="main.scss" pinned="false" current-in-tab="false">
+          <file leaf-file-name="main.scss" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/phonegap/www/css/main.scss">
               <provider selected="true" editor-type-id="text-editor">
-                <state vertical-scroll-proportion="-15.781818">
-                  <caret line="362" column="7" selection-start-line="362" selection-start-column="7" selection-end-line="362" selection-end-column="7" />
-                  <caret line="363" column="45" selection-start-line="363" selection-start-column="45" selection-end-line="363" selection-end-column="45" />
+                <state vertical-scroll-proportion="0.34323433">
+                  <caret line="106" column="48" selection-start-line="106" selection-start-column="48" selection-end-line="106" selection-end-column="48" />
                   <folding />
                 </state>
               </provider>
@@ -163,15 +161,15 @@
     <option name="CHANGED_PATHS">
       <list>
         <option value="$PROJECT_DIR$/.gitignore" />
-        <option value="$PROJECT_DIR$/phonegap/www/css/main.scss" />
         <option value="$PROJECT_DIR$/phonegap/www/js/input.js" />
         <option value="$PROJECT_DIR$/server.js" />
         <option value="$PROJECT_DIR$/phonegap/www/index.html" />
         <option value="$PROJECT_DIR$/phonegap/www/js/loader.js" />
         <option value="$PROJECT_DIR$/phonegap/www/js/multiplayer.js" />
-        <option value="$PROJECT_DIR$/phonegap/www/js/menu.js" />
         <option value="$PROJECT_DIR$/phonegap/www/js/mobile.js" />
         <option value="$PROJECT_DIR$/phonegap/www/js/game.js" />
+        <option value="$PROJECT_DIR$/phonegap/www/css/main.scss" />
+        <option value="$PROJECT_DIR$/phonegap/www/js/menu.js" />
       </list>
     </option>
   </component>
@@ -185,8 +183,8 @@
   <component name="ProjectFrameBounds">
     <option name="x" value="-8" />
     <option name="y" value="-8" />
-    <option name="width" value="1936" />
-    <option name="height" value="1176" />
+    <option name="width" value="2064" />
+    <option name="height" value="1128" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="false">
     <OptionsSetting value="true" id="Add" />
@@ -527,10 +525,10 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1936" height="1176" extended-state="6" />
+    <frame x="-8" y="-8" width="2064" height="1128" extended-state="7" />
     <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.19166666" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.1796875" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -917,15 +915,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/phonegap/www/css/main.scss">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-15.781818">
-          <caret line="362" column="7" selection-start-line="362" selection-start-column="7" selection-end-line="362" selection-end-column="7" />
-          <caret line="363" column="45" selection-start-line="363" selection-start-column="45" selection-end-line="363" selection-end-column="45" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/phonegap/www/img/menu/frau.png">
       <provider selected="true" editor-type-id="images">
         <state />
@@ -963,16 +952,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/phonegap/www/js/multiplayer.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.2930693">
+        <state vertical-scroll-proportion="-10.206897">
           <caret line="117" column="40" selection-start-line="117" selection-start-column="40" selection-end-line="117" selection-end-column="40" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/phonegap/www/js/menu.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-69.75862">
-          <caret line="123" column="24" selection-start-line="123" selection-start-column="12" selection-end-line="123" selection-end-column="24" />
           <folding />
         </state>
       </provider>
@@ -1009,14 +990,6 @@
         <state />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/phonegap/www/js/mobile.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="16" column="29" selection-start-line="16" selection-start-column="29" selection-end-line="16" selection-end-column="29" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/phonegap/www/js/loader.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -1025,10 +998,34 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/phonegap/www/js/mobile.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="60" column="8" selection-start-line="60" selection-start-column="8" selection-end-line="60" selection-end-column="8" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/phonegap/www/js/game.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.63564354">
-          <caret line="512" column="46" selection-start-line="512" selection-start-column="46" selection-end-line="512" selection-end-column="46" />
+        <state vertical-scroll-proportion="-25.206896">
+          <caret line="411" column="29" selection-start-line="411" selection-start-column="29" selection-end-line="411" selection-end-column="29" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/phonegap/www/css/main.scss">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.34323433">
+          <caret line="106" column="48" selection-start-line="106" selection-start-column="48" selection-end-line="106" selection-end-column="48" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/phonegap/www/js/menu.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.35031185">
+          <caret line="61" column="30" selection-start-line="61" selection-start-column="30" selection-end-line="61" selection-end-column="30" />
           <folding />
         </state>
       </provider>

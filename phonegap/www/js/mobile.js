@@ -52,7 +52,9 @@ function playMusic(ingame){
         var path = getMediaURL('ingame.wav');
 
     media = new Media(path, function(){
-        },function(e){alert("error " + JSON.stringify(e))},
+        },function(e){
+            //alert("error " + JSON.stringify(e))
+        },
         function(e){
             if(e == 4 && musicPlaying){
                 //media.play();
