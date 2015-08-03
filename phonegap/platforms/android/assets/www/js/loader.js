@@ -45,6 +45,8 @@ var loader = {
         game.phaser.load.image('dmgbar', 'img/Damagebar.png');
         game.phaser.load.image('meterbar', 'img/Meterbar.png');
         
+        game.phaser.load.spritesheet('screen', 'img/Screen.png', 700, 400 , 8);
+        
         //Have to be a spritesheet later on, with all avatar icons
         game.phaser.load.spritesheet('avatar', 'img/avatar.png', 180, 180 , 2);
         

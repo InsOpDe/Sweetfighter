@@ -75,6 +75,7 @@ D:\Dokumente\GIT\Sweetfighter\phonegap\platforms\android\assets\www\img\Meterbar
 D:\Dokumente\GIT\Sweetfighter\phonegap\platforms\android\assets\www\img\Meterbar_P2.png \
 D:\Dokumente\GIT\Sweetfighter\phonegap\platforms\android\assets\www\img\muaythaiblue.png \
 D:\Dokumente\GIT\Sweetfighter\phonegap\platforms\android\assets\www\img\muaythaired.png \
+D:\Dokumente\GIT\Sweetfighter\phonegap\platforms\android\assets\www\img\Screen.png \
 D:\Dokumente\GIT\Sweetfighter\phonegap\platforms\android\assets\www\img\menu\back.png \
 D:\Dokumente\GIT\Sweetfighter\phonegap\platforms\android\assets\www\img\menu\bild.png \
 D:\Dokumente\GIT\Sweetfighter\phonegap\platforms\android\assets\www\img\menu\boxring.png \

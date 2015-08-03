@@ -55,6 +55,7 @@ var multiplayer = {
         multiplayer.socket.on('command', function (data) {
             var actions = data.actions.players;
             timerCountdown.timer = data.actions.meta.timer;
+            game.options.fight = data.actions.meta.fight;
             
             
             //hier werden die positionen übertragen
