@@ -198,7 +198,7 @@ var assignloop = setInterval(function(){
 
 
 // main physics loop on server
-var physicsloop = setInterval(function(){
+var physicsloop = setInterval(function(){    
     handleCommand();
     handleHitstun();
     
@@ -218,7 +218,6 @@ var physicsloop = setInterval(function(){
         handleEndlag(p1);
         checkBuffer(p1,vz);
     }
-    
 },15);
 
 //updateloop
@@ -226,20 +225,28 @@ var updateloop = setInterval(function(){
     for(var i in lobby){
         if(!lobby[i].options)
             break;
+        
         var characterRed = lobby[i].red;
         var characterBlue = lobby[i].blue;
-        
+
         var gameTimer = lobby[i].options.timerObj;
         var hypermeter = lobby[i].options.hypermeterObj;
-    
-        var update = {players:{red: characterRed, blue: characterBlue}, meta:{timer: gameTimer.timer}};
         
-        checkKO(characterRed,characterBlue);
-        gameTimer.update();
-        hypermeter.update(characterRed, characterBlue);
-        handleProjectile.update(characterRed, characterBlue);
-        handleProjectile.handleHitbox(characterRed,characterBlue);
-        
+        var fight = lobby[i].options.fight;
+        if(!fight){
+            var curTime = new Date();
+            if(curTime.getTime() - lobby[i].options.startTime >= 10000){
+                lobby[i].options.fight = true;
+            }
+        } else{
+            checkKO(characterRed,characterBlue);
+            gameTimer.update();
+            hypermeter.update(characterRed, characterBlue);
+            handleProjectile.update(characterRed, characterBlue);
+            handleProjectile.handleHitbox(characterRed,characterBlue);
+        }
+        var update = {players:{red: characterRed, blue: characterBlue}, meta:{timer: gameTimer.timer, fight: fight}};
+
         clients[lobby[i].red.sid].volatile.emit('command', { tick: new Date(), actions : update });
         clients[lobby[i].blue.sid].volatile.emit('command', { tick: new Date(), actions : update });
     }
@@ -376,6 +383,8 @@ function handleCommand(){
         
         var col = player[p].color;
         var options = lobby[lob].options;
+        if(!options.fight)
+            continue;
 
         var c1 = controls[p];
         var p1 = lobby[lob][col];
@@ -2190,7 +2199,7 @@ function assignToLobby(socketId) {
                 eloRed:eloRed,
                 nameBlue:nameBlue,
                 eloBlue: eloBlue,
-                map: player[socket.id].map
+                map: player[socket.id].map,
             };
             
             var characterRed = lobby[lC].red;
@@ -2204,6 +2213,8 @@ function assignToLobby(socketId) {
             lobby[lC].options = {mapX : options.mapX, mapY:options.mapY};
             lobby[lC].options.timerObj = gameTimer;
             lobby[lC].options.hypermeterObj = hypermeter;
+            lobby[lC].options.startTime = new Date();
+            lobby[lC].options.fight = false;
 
             characterBlue.start = characterBlue.x = 150 + options.playerStartDelta;
             characterRed.start = characterRed.x = 850 - options.playerStartDelta;

@@ -7,6 +7,11 @@ var game = {
         game.phaser = new Phaser.Game(700, 400, Phaser.AUTO, 'gamescreen', { preload: loader.preload, create: game.create, update: game.update });
         initTouchInterface();
         initShake();
+
+        musicPlaying = false;
+        if(app)media.pause();
+        $('#menumusic').trigger("pause");
+
         
         $('#waiting').hide();
     },
@@ -40,6 +45,12 @@ var game = {
         }
 
         //sounds
+        game.audio.music = game.phaser.add.audio('music');
+        game.audio.music.addMarker('music', 0, 45);
+        game.audio.music.play('music');
+        musicPlaying = true;
+        if(app)playMusic(true);
+
         game.audio.punch1 = game.phaser.add.audio('punch1');
         game.audio.punch1.addMarker('punch1', 0, 0.35);
         game.audio.punch2 = game.phaser.add.audio('punch2');
@@ -154,6 +165,7 @@ var game = {
             var isHyper = game[color].animations.add('hyper',game.options.characters[color].action.hyper.animation.frames);
             //Ko
             var isKO = game[color].animations.add('ko',game.options.characters[color].action.ko.animation.frames);
+            var dead = game[color].animations.add('dead',game.options.characters[color].action.ko.animation.frames.pop());
 
             //add attributes
             var attributes = {
@@ -173,7 +185,8 @@ var game = {
                     isSpecial1:isSpecial1,
                     isSpecial2:isSpecial2,
                     isHyper:isHyper,
-                    isKO:isKO
+                    isKO:isKO,
+                    dead:dead
                 };
             game[color] = $.extend(game[color],attributes);
             
@@ -411,7 +424,14 @@ var game = {
                 projectile.create(color,"hyper");
             }
             else if(game[color].ko){
-                    game[color].animations.play('ko', 3, false);
+                if(!game[color].koAlready){
+                    game[color].animations.play('ko', 10, false);
+                    game[color].koAlready = Date.now();
+                } else if(game[color].koAlready + 500 < Date.now()) {
+
+                    game[color].animations.play('dead', 5, false);
+                }
+
             }
             else {
                 if(game[color].crouch){
@@ -430,7 +450,7 @@ var game = {
             }
             projectile.update(color);
         }
-        
+
         game.ebene2.tilePosition.x += .25;
         
         //Parallax
@@ -461,6 +481,7 @@ var game = {
     punched : function() {
         var rand = Math.floor(Math.random() * 3) + 1;
         game.audio['punch'+rand].play('punch'+rand);
+        if(app)playSound('punch'+rand+'.wav');
         //if(!game.audio['punch1'].isPlaying)
         //    game.audio['punch1'].play('punch1');
     }
