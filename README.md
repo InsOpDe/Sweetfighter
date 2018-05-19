@@ -4,7 +4,7 @@ QuartettApp
 Mobile Lab Apps Quartett App
 
 Erstmal nen SSH Key machen:
-ssh-keygen -t rsa -C "Marcel.Michelfelder@uni-ulm.de"
+ssh-keygen -t rsa -C "qqq@bbb.de"
 
 
 Da schaut ihr dann in die *.pub datei und kopiert den Text bei euch in den Einstellungen in SSH.
